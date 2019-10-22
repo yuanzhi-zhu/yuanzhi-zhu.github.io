@@ -1,10 +1,10 @@
 ---
 layout: page
 title: About
-description: 打码改变世界
-keywords: Zhuang Ma, 马壮
+description: It is never too LAZY to learn
+keywords: Yuanzhi Zhu
 comments: true
-menu: 关于
+menu: About
 permalink: /about/
 ---
 
