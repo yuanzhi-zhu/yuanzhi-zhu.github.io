@@ -1,9 +1,9 @@
 - name: Software Engineer Keywords
   keywords:
-      - Java
       - C++
       - Python
-      - Design Patterns
+      - Matlab
+      - FEM
 
 - name: Mobile Developer Keywords
   keywords:
@@ -12,8 +12,3 @@
 
 - name: Windows Developer Keywords
   keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
