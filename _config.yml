@@ -5,12 +5,12 @@ baseurl:
 url: https://yuanzhi-zhu.github.io
 date_format: "ordinal"
 title: Yuanzhi Zhu
-subtitle: "打码改变人生"
+subtitle: "It is never too LAZY to learn"
 description: "It is never too LAZY to learn"
-keywords: 码志, Zhuang Ma, mzlogin, mazhuang
+keywords: Yuanzhi Zhu
 timezone: Asia/Beijing
 encoding: "utf-8"
-side_bar_repo_limit: 5
+side_bar_repo_limit: 3
 
 # ---------------- #
 #      Author      #
@@ -18,7 +18,7 @@ side_bar_repo_limit: 5
 author: Yuanzhi Zhu
 organization: 
 organization_url: 
-github_username: mzlogin
+github_username: yuanzhi-zhu
 location: Munich, Germany
 email: zyzero@buaa.edu.cn
 
