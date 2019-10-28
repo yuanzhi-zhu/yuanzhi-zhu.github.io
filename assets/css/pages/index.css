@@ -5,6 +5,11 @@ background-size: cover
     
 }
 
+.home .site-header {
+    background: #ffffff;
+    color: #000
+}
+
 .home .banner .collection-head {
     color: #fff;
     background: 0 0;
