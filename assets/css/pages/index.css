@@ -1,6 +1,14 @@
-.home .banner,
+.home .banner {
+    
+background-image: url('feynman.jpg');
+    
+}
+
+
 .home .site-header {
-    background-image: url('feynman.jpg');
+    background: #4183c4;
+    color: #fff
+    
 }
 
 .home .banner .collection-head {
