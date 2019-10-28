@@ -1,6 +1,6 @@
 .home .banner,
 .home .site-header {
-    background-image: url('/assets/images/feynman.jpg') no-repeat scroll left center;
+    background: url(../../images/feynman.jpg) no-repeat scroll left center;
     color: #fff
 }
 
