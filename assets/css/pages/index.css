@@ -1,3 +1,5 @@
+
+/*
 .home .banner {
     
 background-image: url('../../images/feynman.jpg');
@@ -8,8 +10,15 @@ background-image: url('../../images/feynman.jpg');
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-    
-    
+}
+*/
+
+.home .banner {
+background-image: url('../../images/feynman.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right center;
+  background-size: auto;
 }
 
 /*
