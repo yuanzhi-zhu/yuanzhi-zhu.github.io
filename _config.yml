@@ -10,7 +10,7 @@ description: "It is never too LAZY to learn"
 keywords: Yuanzhi Zhu
 timezone: Asia/Beijing
 encoding: "utf-8"
-side_bar_repo_limit: 3
+side_bar_repo_limit: 0
 
 # ---------------- #
 #      Author      #
