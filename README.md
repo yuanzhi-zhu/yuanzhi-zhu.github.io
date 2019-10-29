@@ -15,7 +15,7 @@
 
 **[OnlinePreview &rarr;](https://yuanzhi-zhu.github.io)**
 
-![screenshot home](https://mazhuang.org/assets/images/screenshots/home.png)
+![screenshot home](https://yuanzhi-zhu.github.io/assets/images/screenshots/myhome.png)
 
 ## Comment
 
