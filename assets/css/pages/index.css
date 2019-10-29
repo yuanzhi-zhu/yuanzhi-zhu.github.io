@@ -21,6 +21,7 @@ background-size: cover
     border-bottom: none
 }
 
+/*
 .home .site-header h1 a {
     color: rgba(0,0,0,0.8)
 }
@@ -32,7 +33,7 @@ background-size: cover
 .home .site-header .site-header-nav-item:hover {
     color: #000
 }
-
+*/
 
 @media (max-width:50em) {
   .home .collapsed .icon-bar {
