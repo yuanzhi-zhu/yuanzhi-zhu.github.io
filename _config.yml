@@ -5,7 +5,7 @@ baseurl:
 url: https://yuanzhi-zhu.github.io
 date_format: "ordinal"
 title: Yuanzhi Zhu
-subtitle: "<font color="black">It is never too LAZY to learn</font>"
+subtitle: "It is never too LAZY to learn"
 description: "It is never too LAZY to learn"
 keywords: Yuanzhi Zhu
 timezone: Asia/Beijing
@@ -15,7 +15,7 @@ side_bar_repo_limit: 0
 # ---------------- #
 #      Author      #
 # ---------------- #
-author: <font color="black">Yuanzhi Zhu</font>
+author: Yuanzhi Zhu
 organization: 
 organization_url: 
 github_username: yuanzhi-zhu
