@@ -1,7 +1,7 @@
 ---
 layout: post
-title: How to express yourself better
-categories: thoughts
+title: The way out
+categories: Thoughts
 description: It is challenging to make others believe you potential
 keywords: express yourself
 ---
