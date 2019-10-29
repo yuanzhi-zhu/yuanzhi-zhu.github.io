@@ -14,8 +14,8 @@ background-image: url('../../images/feynman.jpg');
 */
 
 .home .banner {
-background-image: url('../../images/feynman.jpg');
-  background-size: cover;
+    background-image: url('../../images/feynman.jpg');
+    background-size: cover;
 }
 
 /*
