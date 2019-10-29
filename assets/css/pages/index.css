@@ -1,7 +1,11 @@
 .home .banner {
     
-background-image: url('../../images/feynman.jpg');
-background-size: auto;
+background-image: url('../../images/feynman.jpg');  no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+    
     
 }
 
