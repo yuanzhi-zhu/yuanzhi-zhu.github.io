@@ -26,3 +26,6 @@ permalink: /about/
 {% endfor %}
 </div>
 {% endfor %}
+
+
+<script type="text/javascript" id="clstr_globe" src="//cdn.clustrmaps.com/globe.js?d=5XlKTd1OHQI_bIzYLIz1ip29OgUjxc2bgXSB1W0mI28"></script>
