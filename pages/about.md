@@ -28,4 +28,4 @@ permalink: /about/
 {% endfor %}
 
 ## Global Map
-<script type="text/javascript" id="clstr_globe" src="//cdn.clustrmaps.com/globe.js?d=5XlKTd1OHQI_bIzYLIz1ip29OgUjxc2bgXSB1W0mI28"></script>
+<script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?d=5XlKTd1OHQI_bIzYLIz1ip29OgUjxc2bgXSB1W0mI28&cl=ffffff&w=a"></script>
