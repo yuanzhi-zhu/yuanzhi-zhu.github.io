@@ -16,7 +16,7 @@ permalink: /links/
   {% endif %}
 {% endfor %}
 
-> Friendly Links
+> Useful Links
 
 {% for link in site.data.links %}
   {% if link.src == 'www' %}
