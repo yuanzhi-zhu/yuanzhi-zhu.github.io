@@ -30,17 +30,17 @@ navs:
     href: /
     label: Home
 
-  -
-    href: /categories/
-    label: Category
+#  -
+#    href: /categories/
+#    label: Category
 
 #   -
 #     href: /archives/
 #     label: 归档
 
-  -
-    href: /wiki/
-    label: Wiki
+#  -
+#    href: /wiki/
+#    label: Wiki
 
   -
     href: /links/

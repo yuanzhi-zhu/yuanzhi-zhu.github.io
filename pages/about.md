@@ -1,4 +1,4 @@
----
+﻿---
 layout: page
 title: About
 description: It is never too LAZY to learn
@@ -8,7 +8,16 @@ menu: About
 permalink: /about/
 ---
 
+## About
 
+[{{ Curriculum Vitae }}]({{ /documents/Yuanzhi-Zhu-CV.pdf }})
+
+Research interests: Data science, Image processing, Human-computer interaction, Spintronics
+
+
+## Education
+
+B.S. in Electronic, Beihang University (Jul 2019)
 
 ## Contact
 
@@ -16,7 +25,7 @@ permalink: /about/
 * {{ website.sitename }}：[@{{ website.name }}]({{ website.url }})
 {% endfor %}
 
-## Skill Keywords
+## Skills
 
 {% for category in site.data.skills %}
 ### {{ category.name }}

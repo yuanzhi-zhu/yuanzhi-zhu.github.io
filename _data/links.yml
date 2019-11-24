@@ -14,3 +14,7 @@
 - name: S-c-i-H-u-b  
   url: http://gen.lib.rus.ec/
   src: www
+
+- name: Neural Networks and Deep Learning
+  url: http://neuralnetworksanddeeplearning.com/
+  src: www
