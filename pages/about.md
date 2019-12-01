@@ -10,14 +10,16 @@ permalink: /about/
 
 ## About
 
-[{{ Curriculum Vitae }}]({{ /documents/Yuanzhi-Zhu-CV.pdf }})
+<img src="/images/About_Me.jpg" width="320" height="320" />
 
-Research interests: Data science, Image processing, Human-computer interaction, Spintronics
+[Curriculum Vitae](./documents/Yuanzhi-Zhu-CV.pdf)
 
+Research interests: Signal processing, Data science, Human-computer interaction, Spintronics
 
 ## Education
 
-B.S. in Electronic, Beihang University (Jul 2019)
+B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
+B.S. Exchange in Electrical and Computer Engineering, Technical University of Munich(Oct 2019 - Mar 2020))
 
 ## Contact
 
