@@ -19,6 +19,7 @@ Research interests: Signal processing, Data science, Human-computer interaction,
 ## Education
 
 B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
+
 B.S. Exchange in Electrical and Computer Engineering, Technical University of Munich(Oct 2019 - Mar 2020))
 
 ## Contact

@@ -76,12 +76,12 @@ gems:
     - jekyll-feed
     - jemoji
 #     - jekyll-mentions
-collections:
-    wiki:
-        output: true
-        permalink: /wiki/:path/
+#collections:
+#    wiki:
+#        output: true
+#        permalink: /wiki/:path/
 
-repository: mzlogin/mzlogin.github.io
+repository: yuanzhi-zhu/yuanzhi-zhu.github.io
 
 # ---------------- #
 #      Comments    #
