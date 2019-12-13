@@ -1,6 +1,6 @@
 ﻿---
 layout: post
-title: Play Jupyter on Your Android
+title: Run-OOMMF-on-Your-Android
 categories: Android
 description: 
 keywords: OOMMF, Android, Termux
@@ -13,9 +13,9 @@ keywords: OOMMF, Android, Termux
 
 1. The first thing you need to do is making sure to get Termux installed in your phone as I have introduced in [my last Blog](https://yuanzhi-zhu.github.io/2019/12/09/Play-Jupyter-on-Your-Android/). 
 
-2. Then you need to install [AnLinux](https://github.com/EXALAB/AnLinux-App) from PlayStore and follow the structions in this app to download an Ubantu OS under Termux. Then follow the instructions in AnLinux to install a Desktop Environment, which will install a VNC server at the same time (set your password and remenber your VNC port).
+2. Then you need to install [AnLinux](https://github.com/EXALAB/AnLinux-App) (This app give you the necessary to complete your Ubuntu) from PlayStore and follow the structions in this app to download an Ubantu OS under Termux. Then follow the instructions in AnLinux to install a Desktop Environment, which will install a VNC server at the same time (set your password and remenber your VNC port).
 
-3. To use this Destop Environment, you need to download a [VNC client](https://www.realvnc.com/en/connect/download/viewer/) on your phone. If your want to view the previous Ubuntu localhost on the same smart phone you download the VNC, the IP address to visit the Ubuntu is '127.0.0.1'. For the following steps, you can run the VNC on your PC to control your phone more conveniently.
+3. To use this Destop Environment (this requires about 1.5 GB storage, be careful), you need to download a [VNC client](https://www.realvnc.com/en/connect/download/viewer/) on your phone. If your want to view the previous Ubuntu localhost on the same smart phone you download the VNC, the IP address to visit the Ubuntu is '127.0.0.1'. For the following steps, you can run the VNC on your PC to control your phone more conveniently.
 
 ## Installation of OOMMF
 
@@ -37,6 +37,8 @@ apt-get install w3m-img
 w3m google.com
 ```
 
+Bonus: Using w3m to visit Reddit is cooool and data saving.
+
 2.2 Another way to get the source code is derectly using terminal by typing the following command on the terminal in Ubuntu:
 
 ```
@@ -48,9 +50,9 @@ By Enter 'ls' we can see the unzipped oommf folder.
 
 3. Since we are on an Android phone, the oommf can not recognize our platform, we need to look up [here](https://math.nist.gov/oommf/doc/userguide12b3/userguide/Advanced_Installation.html#sec:platformNames) for solution.
 
-3.1 Add a new file [linux.tcl](./documents/blog/linux001.pdf) in the folder 'oommf/config/names'.
+3.1 Add a new file [linux.tcl](./documents/blog/OOMMF/linux001.pdf) in the folder 'oommf/config/names'.
 
-3.2 Add a new file [linux.tcl](./documents/blog/linux002.pdf) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
+3.2 Add a new file [linux.tcl](./documents/blog/OOMMF/linux002.pdf) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
 
 3.3 Now you can test it in the /oommf folder at terminal by enter:
 
@@ -67,7 +69,7 @@ tclsh oommf.tcl pimake distclean
 tclsh oommf.tcl pimake
 ```
 
-This will take about 30 minutes.
+This will take about 30 minutes (on my Mi6: Snapdragon 835).
 
 ## Run OOMMF
 

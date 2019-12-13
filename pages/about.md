@@ -40,4 +40,4 @@ B.S. Exchange in Electrical and Computer Engineering, Technical University of Mu
 {% endfor %}
 
 ## Global Map
-<script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?d=5XlKTd1OHQI_bIzYLIz1ip29OgUjxc2bgXSB1W0mI28&cl=ffffff&w=a"></script>
+## <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?d=5XlKTd1OHQI_bIzYLIz1ip29OgUjxc2bgXSB1W0mI28&cl=ffffff&w=a"></script>
