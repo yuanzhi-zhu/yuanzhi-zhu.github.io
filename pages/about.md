@@ -25,7 +25,7 @@ B.S. Exchange in Electrical and Computer Engineering, Technical University of Mu
 ## Contact
 
 {% for website in site.data.social %}
-* {{ website.sitename }}：[@{{ website.name }}]({{ website.url }})
+* {{ website.sitename }}: [@{{ website.name }}]({{ website.url }})
 {% endfor %}
 
 ## Skills
@@ -50,6 +50,5 @@ B.S. Exchange in Electrical and Computer Engineering, Technical University of Mu
 ## Publication
 
 {% for artical in site.data.publications %}
-* {{ publications.authors }}
-  {{ publications.name }}[@{{ publications.available }}]({{ publications.url }})
+* {{ publications.authors }}{{ publications.name }}[{{ publications.available }}]({{ publications.url }})
 {% endfor %}
