@@ -51,8 +51,9 @@ B.S. Exchange in Electrical and Computer Engineering, Technical University of Mu
 
 {% for artical in site.data.publications %}
 * {{ publications.authors }}
-{{ publications.name }}{% if publications.availablity == 'available' %}
-[@{{ publications.available }}]({{ publications.url }})
+  {{ publications.name }}
+  {% if publications.availablity == 'available' %}
+  [@{{ publications.available }}]({{ publications.url }})
   {% endif %}
 {% endfor %}
 

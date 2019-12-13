@@ -1,6 +1,6 @@
 ﻿---
 layout: post
-title: Run-OOMMF-on-Your-Android
+title: Run OOMMF on Your Android
 categories: Android
 description: 
 keywords: OOMMF, Android, Termux
