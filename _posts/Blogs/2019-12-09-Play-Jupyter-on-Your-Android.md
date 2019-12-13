@@ -20,7 +20,6 @@ You can install Python on it, which means that basicly you can do everything wit
 ```
 pkg install apt
 apt update && apt upgrade
-}
 ```
 
 3. Install Python3, git, clang, FFTW
@@ -30,7 +29,6 @@ apt install python
 apt install git
 apt install clang
 apt install fftw
-}
 ```
 
 ## Installing the Scipy Stack
@@ -39,7 +37,6 @@ apt install fftw
 
 ```
 LDFLAGS=" -lm -lcompiler_rt" pip install numpy
-}
 ```
 
 2. For matplotlib, we'll need to install a few more dependencies:
@@ -47,7 +44,6 @@ LDFLAGS=" -lm -lcompiler_rt" pip install numpy
 ```
 apt install freetype freetype-dev libpng libpng-dev pkg-config
 LDFLAGS=" -lm -lcompiler_rt" pip install matplotlib
-}
 ```
 
 3. And for Jupyter we need to install the zmq library as well:
@@ -56,14 +52,12 @@ LDFLAGS=" -lm -lcompiler_rt" pip install matplotlib
 ```
 apt install libzmq libzmq-dev
 LDFLAGS=" -lm -lcompiler_rt" pip install jupyter
-}
 ```
 
 4. Install Pandas:
 
 ```
 LDFLAGS=" -lm -lcompiler_rt" pip install pandas
-}
 ```
 
 You can install them one by one and maybe the -dev packages are not necessary.
@@ -74,11 +68,10 @@ And the installation of numpy, matplotlib, pandas and jupyter will take a while.
 
 ## Run Jupyter Notebook
 
-To get a Jupyter notebook server running, so the same thing you would on any other computer:
+To get a Jupyter notebook server running, you need to do same thing you would on any other computer:
 
 ```
 jupyter notebook
-}
 ```
 
-Paste one of the links into Chrome or Firefox (or other browsers) and enjoin the trip!
+Paste one of the links shown in the terminal into Chrome or Firefox (or other browsers like Duckduckgo) and enjoin the trip!
