@@ -1,8 +1,8 @@
-﻿---
+---
 layout: post
 title: Run OOMMF on Your Android
 categories: Android
-description: 
+description:  none
 keywords: OOMMF, Android, Termux
 ---
 ## Introduction to OOMMF
@@ -31,7 +31,7 @@ apt-get install tk tk-dev
 
 2.1 Since there seem to be no web browser in the Ubantu, you can using the following code to surfing:
 
-```
+```bash
 apt-get install w3m
 apt-get install w3m-img
 w3m google.com
@@ -41,7 +41,7 @@ Bonus: Using w3m to visit Reddit is cooool and data saving.
 
 2.2 Another way to get the source code is derectly using terminal by typing the following command on the terminal in Ubuntu:
 
-```
+```bash
 wget https://math.nist.gov/oommf/dist/oommf12b3_20190927.tar.gz
 tar -zxvf oommf12b3_20190927.tar.gz
 ```
@@ -50,9 +50,9 @@ By Enter 'ls' we can see the unzipped oommf folder.
 
 3. Since we are on an Android phone, the oommf can not recognize our platform, we need to look up [here](https://math.nist.gov/oommf/doc/userguide12b3/userguide/Advanced_Installation.html#sec:platformNames) for solution.
 
-3.1 Add a new file [linux.tcl](./documents/blog/OOMMF/linux001.pdf) in the folder 'oommf/config/names'.
+3.1 Add a new file [linux.tcl](/documents/blog/OOMMF/linux001.pdf) in the folder 'oommf/config/names'.
 
-3.2 Add a new file [linux.tcl](./documents/blog/OOMMF/linux002.pdf) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
+3.2 Add a new file [linux.tcl](/documents/blog/OOMMF/linux002.pdf) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
 
 3.3 Now you can test it in the /oommf folder at terminal by enter:
 
@@ -64,7 +64,7 @@ You will see the Platform Name is linux.
 
 3.4 Then you should re-make the OOMMF in the /oommf folder at terminal by enter:
 
-```
+```bash
 tclsh oommf.tcl pimake distclean
 tclsh oommf.tcl pimake
 ```
@@ -75,6 +75,6 @@ This will take about 30 minutes (on my Mi6: Snapdragon 835).
 
 To get OOMMF running, you need to do same thing you would on any other computer by entering the following in the /oommf folder:
 
-```
+```bash
 tclsh oommf.tcl
 ```

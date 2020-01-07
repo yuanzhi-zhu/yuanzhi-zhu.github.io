@@ -1,8 +1,8 @@
-﻿---
+---
 layout: post
 title: Play Jupyter on Your Android
 categories: Android
-description: 
+description:  Install Jupyter on Android device
 keywords: Jupyter, Python, Android, Termux
 ---
 ## Introduction to Termux

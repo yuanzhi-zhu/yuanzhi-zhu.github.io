@@ -12,7 +12,7 @@ permalink: /about/
 
 <img src="/images/About_Me.jpg" width="320" height="320" />
 
-[Curriculum Vitae](./documents/Yuanzhi-Zhu-CV.pdf)
+[Curriculum Vitae](/documents/Yuanzhi-Zhu-CV.pdf)
 
 Research interests: Signal processing, Data science, Human-computer interaction, Spintronics
 
