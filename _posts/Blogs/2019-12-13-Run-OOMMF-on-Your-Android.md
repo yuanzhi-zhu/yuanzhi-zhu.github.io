@@ -50,9 +50,9 @@ By Enter 'ls' we can see the unzipped oommf folder.
 
 3. Since we are on an Android phone, the oommf can not recognize our platform, we need to look up [here](https://math.nist.gov/oommf/doc/userguide12b3/userguide/Advanced_Installation.html#sec:platformNames) for solution.
 
-3.1 Add a new file [linux.tcl](/documents/blog/OOMMF/linux001.pdf) in the folder 'oommf/config/names'.
+3.1 Add a new file [linux.tcl](/documents/blog/OOMMF/linux001.tcl) in the folder 'oommf/config/names'.
 
-3.2 Add a new file [linux.tcl](/documents/blog/OOMMF/linux002.pdf) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
+3.2 Add a new file [linux.tcl](/documents/blog/OOMMF/linux002.tcl) in the folder 'oommf/config/platforms' (you should rename they with the same name 'linux.tcl' even they have different content)
 
 3.3 Now you can test it in the /oommf folder at terminal by enter:
 
