@@ -7,9 +7,9 @@ keywords: Python, Matplotlib, Animation
 ---
 ## Why I Want To Do This
 
-As you can see in my previous blogs, I have find the way to play jupyter and oommf with my Android device. Also I can use the python package oommfc to run oommf interactively. However, the oommfc is way worse than I think: by using it you will losing some very important features of oommf because it just creates and writes codes into a .mif file in a very limited way.
+As you can see in my previous blogs, I have find the way to play Jupyter and OOMMF with my Android device. Also I can use the python package OOMMF to run OOMMF interactively. However, the OOMMFC is way worse than I think: by using it you will losing some very important features of OOMMF because it just creates and writes codes into a .mif file in a very limited way.
 
-I still want to run oommf with jupyter because I do not want to open a desktop environment for my phone. And I can using subprocesee.Popen to run oommf in command line. The results, .omf files, are created in the same folder where the .mif file locates and I want to get a animation in the jupyter cell, which you can't also do with oommfc.
+I still want to run OOMMF with Jupyter because I do not want to open a desktop environment for my phone. And I can using ``subprocesee.Popen`` to run OOMMF in command line. The results, .omf files, are created in the same folder where the .mif file locates and I want to get a animation in the Jupyter cell, which you can't also do with OOMMFC.
 
 ## How TO Realize The Animation
 
@@ -54,7 +54,7 @@ Also you can download the gif file use command:
 ani.save(gif_name, dpi=80, writer='imagemagick')
 ```
 
-Another advantage of this is that jupyter itself as an text editor can be used to edit the .mif file very freely.
+Another advantage of this is that Jupyter itself as an text editor can be used to edit the .mif file very freely.
 
 Finally, I have equipped my Xiaomi 6 so as it can run OOMMF anywhere I want. And it gonna be better at some place I can control my phone through the local area network with any computer under that local network.
 

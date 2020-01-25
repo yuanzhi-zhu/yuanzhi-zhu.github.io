@@ -33,13 +33,14 @@ To get the desired data, we need to know the structure of the specific website.
    limit sets the number of answers loaded by this url, offset sets the location of the first answer in this url. Apparently, all of these answers are well sorted.
 
    Now we know how the answers in a specific question are structured, the next step is to using Python code do it automatically.
+   
 ## Python Code
 
 I write the code in Jupyter, you can download the file [here](/documents/blog/Crawler/For_ZhiHu_Answers.ipynb).
 
-The main point here is to using function get in ```requests``` package to send request and get the 
+The main point here is to using function ``get`` in ``requests`` package to send request and get the html source back from the server. Then Using package ``BeautifulSoup4`` to prettify the source and using ``find`` function to find the tag we are interested. 
 
-
+The data/information we are interested is just buried in some of these tags transferred back from the server. We can find them and get the new answers and the repeat this process over and over again. That all we need to do this time.
 
 ## Bonus: Get the Hidden Content of Zhihu Article
 
