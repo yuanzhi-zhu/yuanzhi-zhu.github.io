@@ -15,9 +15,9 @@ Besides the language, the people themselves are largely different, too. German, 
 
 And now, from September, my new life started in Zurich. 
 
-![](/images/blog/Master_ETH/ETH.png)
+![](/images/blog/Master_ETH/ETH.jpg)
 
-##Study in ETH
+## Study in ETH
 
 By writing this post, it is about the end of the first semester, after the first snow in Zurich since I came. I think it is time to make a summary about study life in ETH and too see if I can do better in the coming 2021.
 
