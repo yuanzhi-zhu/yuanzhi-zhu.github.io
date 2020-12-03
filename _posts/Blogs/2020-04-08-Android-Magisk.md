@@ -1,17 +1,17 @@
 ---
 layout: post
-title: Study Crawler Using Python
-categories: Python
+title: Introduction to Magisk for Android
+categories: Android
 description:  none
-keywords: Python, Crawler, HTML, Zhihu
+keywords: Android, Magisk, Root
 ---
-## Introduction to HTML
+## Introduction to Magisk
 
-Hypertext Markup Language (HTML)](https://en.wikipedia.org/wiki/HTML) is the standard markup language for documents designed to be displayed in a web browser. It can be assisted by technologies such as Cascading Style Sheets (CSS) and scripting languages such as JavaScript.
+![](/images/blog/Magisk/logo.png)
 
-Web browsers receive HTML documents from a web server or from local storage and render the documents into multimedia web pages. HTML describes the structure of a web page semantically and originally included cues for the appearance of the document.
+[Magisk](https://github.com/topjohnwu/Magisk)  is a suite of open source tools for customizing Android, supporting devices higher than Android 4.2. It covers fundamental parts of Android customization: root, boot scripts, SELinux patches, AVB2.0 / dm-verity / forceencrypt removals etc.
 
-To get the desired data, we need to know the structure of the specific website.
+Magisk is known as a “systemless” root method. It’s essentially a way to modify the system without *actually* modifying it. Modifications are stored safely in the boot partition instead of modifying the real system files. This is the most important feature of this tool. Since the original system files remain unchanged, modifications can go undetected by Google [SafetyNet](https://forum.xda-developers.com/apps/magisk/guide-magisk-troubleshooting-t3641417/post73145987#post73145987).
 
 ## Web Source of Zhihu
 

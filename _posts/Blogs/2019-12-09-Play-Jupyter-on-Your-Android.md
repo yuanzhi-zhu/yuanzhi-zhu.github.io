@@ -39,7 +39,15 @@ apt install fftw
 LDFLAGS=" -lm -lcompiler_rt" pip install numpy
 ```
 
-2. For matplotlib, we'll need to install a few more dependencies:
+If this is unsuccessful(or some packages in the future), you can try to install them using apt-get install: 
+
+```python
+apt-get install python-numpy
+```
+
+
+
+1. For matplotlib, we'll need to install a few more dependencies:
 
 ```
 apt install freetype freetype-dev libpng libpng-dev pkg-config
