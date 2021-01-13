@@ -8,10 +8,11 @@ menu: Link
 permalink: /links/
 ---
 
-> 
+> Friends
 
 {% for link in site.data.links %}
   {% if link.src == 'life' %}
+
 * [{{ link.name }}]({{ link.url }})
   {% endif %}
 {% endfor %}

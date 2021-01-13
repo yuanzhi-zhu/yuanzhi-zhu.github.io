@@ -1,4 +1,4 @@
-﻿---
+---
 layout: page
 title: About
 description: It is never too LAZY to learn

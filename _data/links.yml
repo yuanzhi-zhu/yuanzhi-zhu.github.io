@@ -18,3 +18,8 @@
 - name: Neural Networks and Deep Learning
   url: http://neuralnetworksanddeeplearning.com/
   src: www
+
+- name: Mind map for PAI
+  url: https://yuanzhi-zhu.github.io/documents/PAI_mindmap.html
+  src: www
+  
