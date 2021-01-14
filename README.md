@@ -19,17 +19,9 @@
 
 ## Comment
 
-modify the config。
+**Comment：** currently disqus, gitment and gitalk are supported, which one is OK, and gitalk is recommended. The links about how to config them are pasted on Comments in file \_config.yml.
 
-   modify file: \_config.yml
-
-   **Comment：** currently disqus、gitment and gitalk are supported，which one is OK, and gitalk is recommanded。The links about how to condfig them are pasted on Comments in file \_config.yml.
-
-   **!!：** If you prefer disqus, due to the defect in how disqus handles username and domain-whitelist. Please remember to modify disqus.username to  your own or clear this part. Record on this can be seen at [Issues#2][1]。
-
-## Notice
-
-Arrange your website acoording to [chinese-copywriting-guidelines][2]
+**!!: ** If you prefer disqus, due to the defect in how disqus handles username and domain-whitelist. Please remember to modify disqus.username to  your own or clear this part. Record on this can be seen at [Issues#2][1].
 
 ## Acknowledgement
 
