@@ -1,19 +1,10 @@
-#- name: 码志
-#  url: http://mazhuang.org
-#  src: life
-
-#- name: 水寒的博客   
-#  url: https://dp2px.com
+#- name: GRE&TOEFL Courses   
+#  url: http://k3pang.top/
 #  src: www
 
-
-- name: GRE&TOEFL Courses   
-  url: http://k3pang.top/
-  src: www
-
-- name: S-c-i-H-u-b  
-  url: http://gen.lib.rus.ec/
-  src: www
+#- name: S-c-i-H-u-b  
+#  url: http://gen.lib.rus.ec/
+#  src: www
 
 - name: Neural Networks and Deep Learning
   url: http://neuralnetworksanddeeplearning.com/

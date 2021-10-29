@@ -1,14 +1,15 @@
-- name: Software Engineer Keywords
+#- name: Software Engineer Keywords
+- name: Programming
   keywords:
       - C++
       - Python
       - Matlab
       - FEM
 
-- name: Mobile Developer Keywords
-  keywords:
-      - Android
-      - Reverse Engineering
+#- name: Mobile Developer Keywords
+#  keywords:
+#      - Android
+#      - Reverse Engineering
 
 #- name: Windows Developer Keywords
 #  keywords:

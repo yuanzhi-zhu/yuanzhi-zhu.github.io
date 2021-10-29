@@ -22,7 +22,7 @@ B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
 
 B.S. Exchange in Electrical and Computer Engineering, Technical University of Munich(Oct 2019 - Mar 2020)
 
-M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich(ETH)(Sep 2020-)
+M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich(ETH)(Sep 2020 -)
 
 ## Contact
 
