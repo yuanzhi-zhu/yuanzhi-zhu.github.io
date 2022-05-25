@@ -1,10 +1,10 @@
 #- name: Software Engineer Keywords
 - name: Programming
   keywords:
-      - C++
       - Python
+      - C
+      - C++
       - Matlab
-      - FEM
 
 #- name: Mobile Developer Keywords
 #  keywords:
