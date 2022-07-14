@@ -70,8 +70,14 @@
     <script src="{{ site.url }}/assets/vendor/jquery/dist/jquery.min.js"></script>
     <script src="{{ site.url }}/assets/js/jquery-ui.js"></script>
     <script src="{{ site.url }}/assets/js/main.js"></script>
+
+    {% if page.mathjax %}
+        {% include mathjax.html %}
+    {% endif %}
+    <!--
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    -->
 </head>
 <body class="{{ page.class }}" data-mz="{{ page.class }}">
     <header class="site-header">
