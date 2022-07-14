@@ -5,51 +5,50 @@ categories: Research
 description: none
 keywords: Computer Vision, Normalizing Flow, Real NVP
 ---
-
 **Prerequisite**: Normalizing Flow
 
 # Overview
+    
+**Normalizing Flow (NF)** is a kind of generative model just like GANs and VAEs but provides injective mapping between data \\(X\\) and latent variable \\(Z\\) (from a simple distribution) with exact likelihood calculations. Among all the NFs, real NVP is one of the most important, which stands for real-valued non-volume preserving (real NVP) transformation, a set of powerful invertible and learnable transformations.
 
-**Normalizing Flow (NF)** is a kind of generative model just like GANs and VAEs but provides injective mapping between data X and latent variable Z (from a simple distribution) with exact likelihood calculations. Among all the NFs, real NVP is one of the most important, which stands for real-valued non-volume preserving (real NVP) transformation, a set of powerful invertible and learnable transformations.
-
-**Target**: The goal here is to build a learnable, reversible transformation between a source domain (distribution) and a latent(simple distribution) domain $Z$ or another target domain. 
+**Target**: The goal here is to build a learnable, reversible transformation between a source domain (distribution) and a latent(simple distribution) domain \\(Z\\) or another target domain. 
 Just like most of the other NFs, we can train the real NVP by doing maximum likelihood estimation (MLE). 
 
 From now on we just consider the following situation: source domain is images of a style and target domain is Gaussian distribution.
 
-We need to first write the likelihood of source images $p_X(X)$ in a form that is easy to compute.
-Given an image $x \in X$, a simple prior probability distribution $p_Z$ on a latent variable $z \in Z$, and a bijection $f : X \rightarrow Z$ (with $g = f^{−1}$ ), the change of variable formula defines a model distribution on $X$ by (as we assume $p_Z$ is Gaussian):
+We need to first write the likelihood of source images \\(p_X(X)\\) in a form that is easy to compute.
+Given an image \\(x \in X\\), a simple prior probability distribution \\(p_Z\\) on a latent variable \\(z \in Z\\), and a bijection \\(f : X \rightarrow Z\\) (with \\(g = f^{−1}\\) ), the change of variable formula defines a model distribution on \\(X\\) by (as we assume \\(p_Z\\) is Gaussian):
 
 $$p_X(x) = p_Z(f(x))\left| \text{det}\left(\frac{\partial f(x)}{\partial x^T}\right)\right|$$
 
 $$\text{log}(p_X(x)) = \text{log}\left(p_Z(f(x))\right) + \text{log} \left( \left| \text{det}\left(\frac{\partial f(x)}{\partial x^T}\right)\right|\right)$$
 
-where $p_Z(f(x))$ is easy to get given $z=f(x)$, $\left| \text{det}\left(\frac{\partial f(x)}{\partial x^T}\right)\right|$ is the determinant of Jacobian, which can be construct to be computational efficient, too.
+where \\(p_Z(f(x))\\) is easy to get given \\(z=f(x)\\), \\(\mid \text{det}(\frac{\partial f(x)}{\partial x^T})\mid\\) is the determinant of Jacobian, which can be construct to be computational efficient, too.
 
-$f$ can be decomposed to many invertible component: $f = f_1 \circ f_2 \circ ... \circ f_n$ just like deep neural network.
+\\(f\\) can be decomposed to many invertible component: \\(f = f_1 \circ f_2 \circ ... \circ f_n\\) just like deep neural network.
 
-We describe here a batch of images as tensor of size $\text{batch}.\text{size}() = (B,C,H,W)$.
+We describe here a batch of images as tensor of size \\(\text{batch}.\text{size}() = (B,C,H,W)\\).
 
-For simplicity, we set batch_size $B=1$. 
-For any input image, we expect to get a latent variable $z\sim N(0,1)$. In order to calculate $\text{log} p_X(x)$, the model is also required to keep track the sum of log determinant of Jacobian (sldj) $J = \log \det \frac{\partial f(x)}{\partial x^T}$.
+For simplicity, we set batch_size \\(B=1\\). 
+For any input image, we expect to get a latent variable \\(z\sim N(0,1)\\). In order to calculate \\(\text{log} p_X(x)\\), the model is also required to keep track the sum of log determinant of Jacobian (sldj) \\(J = \log \det \frac{\partial f(x)}{\partial x^T}\\).
 
 # Pre-process
 
-We further assume the value of each element in this tensor $\in [0,1]$. 
+We further assume the value of each element in this tensor \\(\in [0,1]\\). 
 
 The next step is to de-quantize these images, to make the values a continues distribution. (Since the discrete data distribution has differential entropy of negative infinity, this can lead to arbitrary high likelihoods even on test data. To avoid this case, it is becoming best practice to add real-valued noise to the integer pixel values to de-quantize the data):
 
 ```python
 x = (x * 255. + torch.rand_like(x)) / 256.      # [0,1] with noise
 ```
-Notice: now for the same input images, the model will give each time slightly different $z\in Z$.
+Notice: now for the same input images, the model will give each time slightly different \\(z\in Z\\).
 
 According to https://arxiv.org/abs/1605.08803, Section 4.1, we will model logits:
 
 ```python
 y = x.log() - (1. - x).log()            
 ```
-Since $x\in [0,1]$, it's dangerous to apply directly log to them, so we apply a data_constraint $\beta=0.9$ to $x$:
+Since \\(x\in [0,1]\\), it's dangerous to apply directly log to them, so we apply a data_constraint \\(\beta=0.9\\) to \\(x\\):
 
 ```python
 # Convert to logits
@@ -68,9 +67,9 @@ ldj = F.softplus(y) + F.softplus(-y) \
 ldj = ldj.view(ldj.size(0), -1).sum(-1)
 ```
 
-As commented above, $\text{F.softplus}(x) = \text{log}(1+e^{x})$, and it's obvious that $\text{F.softplus}(\text{log}(1-\beta)-\text{log}(\beta)) = \text{log}(1/\beta)$.
+As commented above, \\(\text{F.softplus}(x) = \text{log}(1+e^{x})\\), and it's obvious that \\(\text{F.softplus}(\text{log}(1-\beta)-\text{log}(\beta)) = \text{log}(1/\beta)\\).
 
-For $\text{F.softplus}(y) + \text{F.softplus}(-y)$, the reader can verify it is correct themselves or go through the next few lines.
+For \\(\text{F.softplus}(y) + \text{F.softplus}(-y)\\), the reader can verify it is correct themselves or go through the next few lines.
 
 $$\text{F.softplus}(y) + \text{F.softplus}(-y)\\
 =\text{F.softplus}\left( \text{log}\left( \frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right) + \text{F.softplus}\left(- \text{log}\left(\frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right)\\
@@ -81,10 +80,10 @@ $$
 # Real NVP model
 
 ## Coupling Layer
-The very key component of Real NVP is the coupling layer, which is used to passing information while keep the sldj easy to compute. The original figure of coupling from the paper illustrates the forward and inverse operation of this coupling layer. In this coupling layer, the input $x$ is split into two $x_1$ and $x_2$ by channel, and then propagates according to this figure.
+The very key component of Real NVP is the coupling layer, which is used to passing information while keep the sldj easy to compute. The original figure of coupling from the paper illustrates the forward and inverse operation of this coupling layer. In this coupling layer, the input \\(x\\) is split into two \\(x_1\\) and \\(x_2\\) by channel, and then propagates according to this figure.
 ![](/images/blog/real_NVP/coupling-layer.png)
 
-Indeed, this figure is about the so called affine coupling layer (with scale and bias terms), where the functions $s$ and $t$ can be arbitrary complex neural networks (even attention module or with additional/conditional information injected).
+Indeed, this figure is about the so called affine coupling layer (with scale and bias terms), where the functions \\(s\\) and \\(t\\) can be arbitrary complex neural networks (even attention module or with additional/conditional information injected).
 
 
 ```python
@@ -107,7 +106,7 @@ else:
 x = torch.cat((x_change, x_id), dim=1)
 ```
 
-This structure is invertible because $y_1=x_1$ is guaranteed for both forward and inverse propagation. On the other hand, this also means that the we can't keep those channels unchanged all the time. One way to do so is to swap the position of $x_1$ and $x_2$ recursively like in the figure below. (in Glow model, the $1\times 1$ invertible convolution is introduced to better mitigate this issue.)
+This structure is invertible because \\(y_1=x_1\\) is guaranteed for both forward and inverse propagation. On the other hand, this also means that the we can't keep those channels unchanged all the time. One way to do so is to swap the position of \\(x_1\\) and \\(x_2\\) recursively like in the figure below. (in Glow model, the \\(1\times 1\\) invertible convolution is introduced to better mitigate this issue.)
 
 ![](/images/blog/real_NVP/alternating-pattern.png)
 
@@ -116,9 +115,9 @@ This structure is invertible because $y_1=x_1$ is guaranteed for both forward an
 Before the coupling layer, the checkerboard masking and squeezing is introduced, as shown in the following figure:
 ![](/images/blog/real_NVP/squeeze-mask.png)
 
-As you may get from this figure, each sub-channel after squeezing is just a scaled smaller image. This makes suer that $x_1$ and $x_2$ contain the information from the original image evenly.
+As you may get from this figure, each sub-channel after squeezing is just a scaled smaller image. This makes suer that \\(x_1\\) and \\(x_2\\) contain the information from the original image evenly.
 
-According to the original paper: The squeezing operation reduces the $4 × 4 × 1$ tensor (on the left) into a $2 × 2 × 4$ tensor (on the right). Before the squeezing operation, a checkerboard pattern is used for coupling layers while a channel-wise masking pattern is used afterward.
+According to the original paper: The squeezing operation reduces the \\(4 × 4 × 1\\) tensor (on the left) into a \\(2 × 2 × 4\\) tensor (on the right). Before the squeezing operation, a checkerboard pattern is used for coupling layers while a channel-wise masking pattern is used afterward.
 
 These operations are both invertible because they are both linear operations.
 
@@ -142,4 +141,4 @@ x, sldj = self.scale(x, sldj, reverse)
 x = torch.cat((x, x_split), dim=1)
 x = squeeze(x, reverse=True)
 ```
-Every time after the squeeze, $x$ is split into $x$ and $x_{split}$, where $x$ will be processed in the following scale blocks and $x_{split}$ will remain unchanged. After $x$ is processed, it's concatenated with $x_{split}$ to form the output with same size.
+Every time after the squeeze, \\(x\\) is split into \\(x\\) and \\(x_{split}\\), where \\(x\\) will be processed in the following scale blocks and \\(x_{split}\\) will remain unchanged. After \\(x\\) is processed, it's concatenated with \\(x_{split}\\) to form the output with same size.
