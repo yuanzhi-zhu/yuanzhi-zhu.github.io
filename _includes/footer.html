@@ -70,6 +70,9 @@
     <script type="text/javascript" src="https://basis-learning.github.io/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     {% endif %}
     -->
+    {% if page.mathjax %}
+        {% include mathjax.html %}
+    {% endif %}
 
     {% if site.google.analytics_id %}
     <div style="display:none">
