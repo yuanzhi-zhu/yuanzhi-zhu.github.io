@@ -6,7 +6,7 @@ description: none
 keywords: Computer Vision, Normalizing Flow, Real NVP
 mathjax: true
 ---
-<span style="color:red">If the math expressions are not rendered properly, click [here](https://yuanzhi-zhu.github.io/documents/Introduction_to_Real_NVP.html)</span>
+<span style="color:red">If the math expressions are not rendered properly, click [here](https://yuanzhi-zhu.github.io/documents/blog/realNVP/Introduction_to_Real_NVP.html)</span>
 
 **Prerequisite**: Normalizing Flow
 
