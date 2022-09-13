@@ -49,6 +49,14 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
   {% endif %}
 {% endfor %}
 
+## Slides
+
+{% for link in site.data.slides %}
+  {% if link.src == 'www' %}
+* [{{ link.name }}]({{ link.url }})
+  {% endif %}
+{% endfor %}
+
 ## Publication
 
 {% for artical in site.data.publications %}
