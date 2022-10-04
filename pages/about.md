@@ -14,7 +14,7 @@ permalink: /about/
 
 [Curriculum Vitae](/documents/Yuanzhi-Zhu-CV.pdf)
 
-Research Interests: Natural Language Processing(Conversational QA), Human-Computer Interaction, Spintronics
+Research Interests: Computer Vision, Natural Language Processing, Spintronics
 
 ## Education
 
