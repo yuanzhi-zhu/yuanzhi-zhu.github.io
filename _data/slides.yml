@@ -1,8 +1,8 @@
 - name: Advanced Architecture in NLP
-  url: /documents/SiDNN.pdf
+  url: /documents/slides/SiDNN.pdf
   src: www
   
 - name: Score-based Generative Models
-  url: /documents/score_based_models_SP.pdf
+  url: /documents/slides/score_based_models_SP.pdf
   src: www
   
