@@ -6,3 +6,6 @@
   url: /documents/slides/score_based_models.pdf
   src: www
   
+- name: Conditional/Controllable Diffusion Models
+  url: /documents/slides/diffusion_models_for_IR.pdf
+  src: www  
