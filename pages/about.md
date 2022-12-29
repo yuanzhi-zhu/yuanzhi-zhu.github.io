@@ -37,19 +37,6 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
   {{ artical.name }}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
-<!---
-## Skills
-
-{% for category in site.data.skills %}
-{{ category.name }}
-<div class="btn-inline">
-{% for keyword in category.keywords %}
-<button class="btn btn-outline" type="button">{{ keyword }}</button>
-{% endfor %}
-</div>
-{% endfor %}
--->
-
 ## Useful Links
 
 {% for link in site.data.links %}
