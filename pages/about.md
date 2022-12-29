@@ -20,7 +20,7 @@ Research Interests: Computer Vision, Natural Language Processing, Spintronics
 
 B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
 
-B.S. Exchange in Electrical and Computer Engineering, Technical University of Munich(Oct 2019 - Mar 2020)
+B.S. exchange in Electrical and Computer Engineering, Technical University of Munich(Oct 2019 - Mar 2020)
 
 M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich(ETH)(Sep 2020 -)
 
@@ -30,6 +30,14 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
 * {{ website.sitename }}: [@{{ website.name }}]({{ website.url }})
 {% endfor %}
 
+## Publication
+
+{% for artical in site.data.publications %}
+* {{ artical.authors }}
+  {{ artical.name }}[ DOI: {{ artical.available }}]({{ artical.url }})
+{% endfor %}
+
+<!---
 ## Skills
 
 {% for category in site.data.skills %}
@@ -40,6 +48,7 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
 {% endfor %}
 </div>
 {% endfor %}
+-->
 
 ## Useful Links
 
@@ -55,12 +64,4 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
   {% if link.src == 'www' %}
 * [{{ link.name }}]({{ link.url }})
   {% endif %}
-{% endfor %}
-
-## Publication
-
-{% for artical in site.data.publications %}
-* {{ artical.authors }}
-  {{ artical.name }}[ DOI: {{ artical.available }}]({{ artical.url }})
-
 {% endfor %}
