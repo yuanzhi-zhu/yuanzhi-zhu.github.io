@@ -2,10 +2,14 @@
   url: /documents/slides/SiDNN.pdf
   src: www
   
-- name: Score-based Generative Models
-  url: /documents/slides/score_based_models.pdf
-  src: www
+# - name: Score-based Generative Models
+#   url: /documents/slides/score_based_models.pdf
+#   src: www
   
-- name: Conditional/Controllable Diffusion Models
-  url: /documents/slides/diffusion_models_for_IR.pdf
+# - name: Conditional/Controllable Diffusion Models
+#   url: /documents/slides/diffusion_models_for_IR.pdf
+#   src: www  
+  
+- name: Denoising Diffusion Models for Plug-and-Play Image Restoration
+  url: /documents/slides/pnp_diffusion_models_for_IR.pdf
   src: www  
