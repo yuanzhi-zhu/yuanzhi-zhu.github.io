@@ -10,6 +10,6 @@
 #   url: /documents/slides/diffusion_models_for_IR.pdf
 #   src: www  
   
-- name: Denoising Diffusion Models for Plug-and-Play Image Restoration
-  url: /documents/slides/pnp_diffusion_models_for_IR.pdf
-  src: www  
+# - name: Denoising Diffusion Models for Plug-and-Play Image Restoration
+#   url: /documents/slides/pnp_diffusion_models_for_IR.pdf
+#   src: www  
