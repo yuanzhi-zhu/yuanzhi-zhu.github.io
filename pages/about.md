@@ -31,8 +31,22 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
 {% endfor %}
 
 ## Publication
+{% for artical in site.data.conference %}
+* {{ artical.authors }}
+  {{ artical.name }}
+  arxiv: {{ artical.arxiv_num }}
+  {% if artical.paper_url != '' %}
+  [ [paper] ]({{ artical.paper_url }})
+  {% endif %}
+  {% if artical.arxiv_url != '' %}
+  [ [arxiv] ]({{ artical.arxiv_url }})
+  {% endif %}
+  {% if artical.code_url != '' %}
+  [ [code] ]({{ artical.code_url }})
+  {% endif %}
+{% endfor %}
 
-{% for artical in site.data.publications %}
+{% for artical in site.data.periodical %}
 * {{ artical.authors }}
   {{ artical.name }}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
