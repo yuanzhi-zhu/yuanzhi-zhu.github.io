@@ -14,7 +14,7 @@ permalink: /about/
 
 [Curriculum Vitae](/documents/Yuanzhi-Zhu-CV.pdf)
 
-Research Interests: Computer Vision, Natural Language Processing, Spintronics
+Research Interests: Image Restoration, Generative Models~~, Spintronics~~
 
 ## Education
 
