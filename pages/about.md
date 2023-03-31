@@ -22,7 +22,7 @@ B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
 
 B.S. exchange in Electrical and Computer Engineering, Technical University of Munich (Oct 2019 - Mar 2020)
 
-M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich (ETH) (Sep 2020 -)
+M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich (ETHz) (Sep 2020 -)
 
 ## Contact
 
@@ -31,24 +31,18 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
 {% endfor %}
 
 ## Publication
-{% for artical in site.data.conference %}
-* {{ artical.authors }}
-  {{ artical.name }}
+{% for artical in site.data.conferences %}
+* {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
+  **{{ artical.name }}**
   arxiv: {{ artical.arxiv_num }}
-  {% if artical.paper_url != '' %}
-  [ [paper] ]({{ artical.paper_url }})
-  {% endif %}
-  {% if artical.arxiv_url != '' %}
+  [ [paper] ]({{artical.paper_url }})
   [ [arxiv] ]({{ artical.arxiv_url }})
-  {% endif %}
-  {% if artical.code_url != '' %}
   [ [code] ]({{ artical.code_url }})
-  {% endif %}
 {% endfor %}
 
-{% for artical in site.data.periodical %}
-* {{ artical.authors }}
-  {{ artical.name }}[ DOI: {{ artical.available }}]({{ artical.url }})
+{% for artical in site.data.journals %}
+* {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
+  **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
 ## Useful Links
