@@ -1,6 +1,14 @@
-- authors: Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool.
-  name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion."
-  arxiv_num: 2303.06840
+- authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
+  name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
+  publication: '_CVPRW-NTIRE_ (2023).'
+  arxiv_num: 
   paper_url: 
+  arxiv_url: 
+  code_url: https://github.com/yuanzhi-zhu/DiffPIR
+  slides_url: https://yuanzhi-zhu.github.io/documents/slides/pnp_diffusion_models_for_IR.pdf
+
+- authors: Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool.
+  name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
+  arxiv_num: 2303.06840
   arxiv_url: https://arxiv.org/abs/2303.06840
   code_url: 

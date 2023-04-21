@@ -34,10 +34,8 @@ M.S in Information Technology and Electrical Engineering, Swiss Federal Institut
 {% for artical in site.data.conferences %}
 * {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
   **{{ artical.name }}**
-  arxiv: {{ artical.arxiv_num }}
-  [ [paper] ]({{artical.paper_url }})
-  [ [arxiv] ]({{ artical.arxiv_url }})
-  [ [code] ]({{ artical.code_url }})
+  {{ artical.publication }} {% if artical.arxiv_num %} *arxiv*: {{ artical.arxiv_num }} {% endif %}
+  {% if artical.paper_url %} [ [paper] ]({{artical.paper_url }}) {% endif %} {% if artical.arxiv_url %} [ [arxiv] ]({{ artical.arxiv_url }}) {% endif %} {% if artical.code_url %} [ [code] ]({{ artical.code_url }}) {% endif %} {% if artical.slides_url %} [ [slides] ]({{ artical.slides_url }}) {% endif %}
 {% endfor %}
 
 {% for artical in site.data.journals %}
