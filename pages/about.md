@@ -18,7 +18,7 @@ Research Interests: Image Restoration, Generative Models~~, Spintronics~~
 
 ## Education
 
-B.S. in Electronic and Information Engineering, Beihang University (Jul 2019)
+B.S. in Electronic and Information Engineering, Beihang University (Sep 2016 - Jun 2020)
 
 B.S. exchange in Electrical and Computer Engineering, Technical University of Munich (Oct 2019 - Mar 2020)
 
