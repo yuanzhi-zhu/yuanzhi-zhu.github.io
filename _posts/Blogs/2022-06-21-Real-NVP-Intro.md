@@ -6,7 +6,6 @@ description: none
 keywords: Computer Vision, Normalizing Flow, Real NVP
 mathjax: true
 ---
-<span style="color:red">If the math expressions are not rendered properly, click [here](https://yuanzhi-zhu.github.io/documents/blog/realNVP/Introduction_to_Real_NVP.html)</span>
 
 **Prerequisite**: Normalizing Flow
 
@@ -14,7 +13,7 @@ mathjax: true
     
 **Normalizing Flow (NF)** is a kind of generative model just like GANs and VAEs but provides injective mapping between data $X$ and latent variable $Z$ (from a simple distribution) with exact likelihood calculations. Among all the NFs, real NVP is one of the most important, which stands for real-valued non-volume preserving (real NVP) transformation, a set of powerful invertible and learnable transformations.
 
-**Target**: The goal here is to build a learnable, reversible transformation between a source domain (distribution) and a latent(simple distribution) domain $Z$ or another target domain. 
+**Target**: The goal here is to build a learnable, reversible transformation between a source domain (distribution) and a latent (simple distribution) domain $Z$ or another target domain. 
 Just like most of the other NFs, we can train the real NVP by doing maximum likelihood estimation (MLE). 
 
 From now on we just consider the following situation: source domain is images of a style and target domain is Gaussian distribution.
