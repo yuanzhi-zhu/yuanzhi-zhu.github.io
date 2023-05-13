@@ -9,10 +9,19 @@ permalink: /about/
 ---
 
 ## About
-
-<div style="display: flex; align-items: center;">
+<style>
+    @media (max-width: 600px) {
+        .bio-container {
+            flex-direction: column;
+        }
+        .bio-text {
+            margin-left: 0;
+        }
+    }
+</style>
+<div class="bio-container" style="display: flex; align-items: center;">
     <img src="/images/About_Me.jpg" width="320" height="320" alt="About Me" />
-    <div style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px;">
+    <div class="bio-text" style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px;">
         <p>I’m currently a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Dr. Kai Zhang</a> and <a href="https://apchenstu.github.io/">Dr. Anpei Chen</a>.</p>
         <p>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Restoration and Novel View Synthesis.</p>
         <div style="display: flex; align-items: center;">
