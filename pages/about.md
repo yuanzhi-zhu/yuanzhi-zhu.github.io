@@ -10,25 +10,22 @@ permalink: /about/
 
 ## About
 
-<img src="/images/About_Me.jpg" width="320" height="320" />
+<div style="display: flex; align-items: center;">
+    <img src="/images/About_Me.jpg" width="320" height="320" alt="About Me" />
+    <div style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px;">
+        <p>I’m currently a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Dr. Kai Zhang</a> and <a href="https://apchenstu.github.io/">Dr. Anpei Chen</a>.</p>
+        <p>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Restoration and Novel View Synthesis.</p>
+        <div style="display: flex; align-items: center;">
+            {% for website in site.data.social %}
+                <a href="{{ website.url }}" style="margin-right: 12px; background-color: white; display: inline-block;">
+                    <img src="/assets/logos/{{ website.sitename }}.png" alt="{{ website.sitename }} logo" width="30" height="30" style="vertical-align: middle;"/>
+                </a>
+            {% endfor %}
+        </div>
+        <p><a href="/documents/Yuanzhi-Zhu-CV.pdf">Curriculum Vitae</a></p>
+    </div>
+</div>
 
-[Curriculum Vitae](/documents/Yuanzhi-Zhu-CV.pdf)
-
-Research Interests: Image Restoration, Generative Models~~, Spintronics~~
-
-## Education
-
-B.S. in Electronic and Information Engineering, Beihang University (Sep 2016 - Jun 2020)
-
-B.S. exchange in Electrical and Computer Engineering, Technical University of Munich (Oct 2019 - Mar 2020)
-
-M.S in Information Technology and Electrical Engineering, Swiss Federal Institute of Technology in Zürich (ETHz) (Sep 2020 -)
-
-## Contact
-
-{% for website in site.data.social %}
-* {{ website.sitename }}: [@{{ website.name }}]({{ website.url }})
-{% endfor %}
 
 ## Publication
 {% for artical in site.data.conferences %}
