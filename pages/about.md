@@ -52,8 +52,8 @@ permalink: /about/
   **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
-<div class="container">
-  <div class="column" style="margin-right: 100px;">
+<div class="container" style="margin-left: -30px;">
+  <div class="column" style="margin-right: 150px;">
     <h2>Useful Links</h2>
     <ul>
       {% for link in site.data.links %}
