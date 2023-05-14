@@ -29,7 +29,7 @@ permalink: /about/
         <p>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Restoration and Novel View Synthesis.</p>
         <div style="display: flex; align-items: center;">
             {% for website in site.data.social %}
-                <a href="{{ website.url }}" style="margin-right: 12px; background-color: white; display: inline-block;">
+                <a href="{{ website.url }}" style="margin-right: 13.5px; background-color: white; display: inline-block;">
                     <img src="/assets/logos/{{ website.sitename }}.png" alt="{{ website.sitename }} logo" width="30" height="30" style="vertical-align: middle;"/>
                 </a>
             {% endfor %}
@@ -52,18 +52,26 @@ permalink: /about/
   **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
-## Useful Links
+<div class="container">
+  <div class="column" style="margin-right: 100px;">
+    <h2>Useful Links</h2>
+    <ul>
+      {% for link in site.data.links %}
+        {% if link.src == 'www' %}
+          <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="column">
+    <h2>Slides</h2>
+    <ul>
+      {% for link in site.data.slides %}
+        {% if link.src == 'www' %}
+          <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 
-{% for link in site.data.links %}
-  {% if link.src == 'www' %}
-* [{{ link.name }}]({{ link.url }})
-  {% endif %}
-{% endfor %}
-
-## Slides
-
-{% for link in site.data.slides %}
-  {% if link.src == 'www' %}
-* [{{ link.name }}]({{ link.url }})
-  {% endif %}
-{% endfor %}
