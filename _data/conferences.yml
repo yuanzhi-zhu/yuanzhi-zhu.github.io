@@ -2,10 +2,10 @@
   name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
   publication: '_CVPRW-NTIRE_ (2023).'
   arxiv_num: 
-  paper_url: https://yuanzhi-zhu.github.io/documents/paper/diffusion_models_for_pnp_IR.pdf
+  paper_url: /documents/paper/diffusion_models_for_pnp_IR.pdf
   arxiv_url: 
   code_url: https://github.com/yuanzhi-zhu/DiffPIR
-  slides_url: https://yuanzhi-zhu.github.io/documents/slides/diffusion_models_for_pnp_IR.pdf
+  slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
 
 - authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
   name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
