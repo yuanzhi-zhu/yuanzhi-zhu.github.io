@@ -6,7 +6,7 @@ url: https://yuanzhi-zhu.github.io
 date_format: "ordinal"
 title: Yuanzhi Zhu
 subtitle: "It is never too LAZY to learn"
-description: "It is never too LAZY to learn"
+# description: "It is never too LAZY to learn"
 keywords: Yuanzhi Zhu
 timezone: Europe/Berlin
 encoding: "utf-8"
@@ -20,7 +20,7 @@ organization:
 organization_url: 
 github_username: yuanzhi-zhu
 location: Zürich, Switzerland
-email: yuazhu@student.ethz.ch
+# email: yuazhu@student.ethz.ch
 
 # ---------------- #
 #    Navigation    #
@@ -36,11 +36,7 @@ navs:
 
 #   -
 #     href: /archives/
-#     label: 归档
-
-#  -
-#    href: /wiki/
-#    label: Wiki
+#     label: Archives
 
 #  -
 #    href: /links/
