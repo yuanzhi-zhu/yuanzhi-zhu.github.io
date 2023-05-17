@@ -1,9 +1,9 @@
 - authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
   name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
-  publication: '_CVPRW-NTIRE_ (2023).'
-  arxiv_num: 
+  publication: '_CVPRW_ (2023).'
+  arxiv_num: 2305.08995
   paper_url: /documents/paper/diffusion_models_for_pnp_IR.pdf
-  arxiv_url: 
+  arxiv_url: https://arxiv.org/abs/2305.08995
   code_url: https://github.com/yuanzhi-zhu/DiffPIR
   slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
 
