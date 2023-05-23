@@ -23,7 +23,9 @@ Given an image $x \in X$, a simple prior probability distribution $p_Z$ on a lat
 
 $$p_X(x) = p_Z(f(x))\left| \text{det}\left(\frac{\partial f(x)}{\partial x^T}\right)\right|$$
 
+<div style="overflow-x: auto; white-space: nowrap;">
 $$\text{log}(p_X(x)) = \text{log}\left(p_Z(f(x))\right) + \text{log} \left( \left| \text{det}\left(\frac{\partial f(x)}{\partial x^T}\right)\right|\right)$$
+</div>
 
 where $p_Z(f(x))$ is easy to get given $z=f(x)$, $\mid \text{det}(\frac{\partial f(x)}{\partial x^T})\mid$ is the determinant of Jacobian, which can be construct to be computational efficient, too.
 
@@ -45,7 +47,7 @@ x = (x * 255. + torch.rand_like(x)) / 256.      # [0,1] with noise
 ```
 Notice: now for the same input images, the model will give each time slightly different $z\in Z$.
 
-According to https://arxiv.org/abs/1605.08803, Section 4.1, we will model logits:
+According to https://arxiv.org/abs/1605.08803, Section 4.1, we will model logits $y = \log(x) - \log(1 - x)$:
 
 ```python
 y = x.log() - (1. - x).log()            
@@ -73,17 +75,26 @@ As commented above, $\text{F.softplus}(x) = \text{log}(1+e^{x})$, and it's obvio
 
 For $\text{F.softplus}(y) + \text{F.softplus}(-y)$, the reader can verify it is correct themselves or go through the next few lines.
 
-$$\text{F.softplus}(y) + \text{F.softplus}(-y)\\
-=\text{F.softplus}\left( \text{log}\left( \frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right) + \text{F.softplus}\left(- \text{log}\left(\frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right)\\
-=\text{log}\left( 1+\frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) + \text{log}\left( 1+\frac{1-(2x-1)\beta}{1+(2x-1)\beta} \right) \\
-= \text{log}\left( \frac{2}{1-(2x-1)\beta} \right) + \text{log}\left( \frac{2}{1+(2x-1)\beta} \right) = \frac{\partial y}{\partial x} * \frac{1}{\beta}
-$$
+<div style="overflow-x: auto; white-space: nowrap;">
+    $$
+    \begin{align*}
+    &\qquad \text{F.softplus}(y) + \text{F.softplus}(-y) \\
+    &=\text{F.softplus}\left( \text{log}\left( \frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right) + \text{F.softplus}\left(- \text{log}\left(\frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) \right)\\
+    &=\text{log}\left( 1+\frac{1+(2x-1)\beta}{1-(2x-1)\beta} \right) + \text{log}\left( 1+\frac{1-(2x-1)\beta}{1+(2x-1)\beta} \right) \\
+    &= \text{log}\left( \frac{2}{1-(2x-1)\beta} \right) + \text{log}\left( \frac{2}{1+(2x-1)\beta} \right) \\
+    &= \frac{\partial y}{\partial x} * \frac{1}{\beta}
+    \end{align*}
+    $$
+</div>
+
 
 # Real NVP model
 
 ## Coupling Layer
 The very key component of Real NVP is the coupling layer, which is used to passing information while keep the sldj easy to compute. The original figure of coupling from the paper illustrates the forward and inverse operation of this coupling layer. In this coupling layer, the input $x$ is split into two $x_1$ and $x_2$ by channel, and then propagates according to this figure.
-![](/images/blog/real_NVP/coupling-layer.png)
+<p align="center">
+  <img src="/images/blog/real_NVP/coupling-layer.png" alt="Description of image" width="600">
+</p>
 
 Indeed, this figure is about the so called affine coupling layer (with scale and bias terms), where the functions $s$ and $t$ can be arbitrary complex neural networks (even attention module or with additional/conditional information injected).
 
@@ -110,12 +121,15 @@ x = torch.cat((x_change, x_id), dim=1)
 
 This structure is invertible because $y_1=x_1$ is guaranteed for both forward and inverse propagation. On the other hand, this also means that the we can't keep those channels unchanged all the time. One way to do so is to swap the position of $x_1$ and $x_2$ recursively like in the figure below. (in Glow model, the $1\times 1$ invertible convolution is introduced to better mitigate this issue.)
 
-![](/images/blog/real_NVP/alternating-pattern.png)
-
+<p align="center">
+  <img src="/images/blog/real_NVP/alternating-pattern.png" alt="Description of image" width="400">
+</p>
 
 ## Squeezing and Masking
 Before the coupling layer, the checkerboard masking and squeezing is introduced, as shown in the following figure:
-![](/images/blog/real_NVP/squeeze-mask.png)
+<p align="center">
+  <img src="/images/blog/real_NVP/squeeze-mask.png" alt="Description of image" width="400">
+</p>
 
 As you may get from this figure, each sub-channel after squeezing is just a scaled smaller image. This makes suer that $x_1$ and $x_2$ contain the information from the original image evenly.
 
@@ -130,7 +144,10 @@ The squeeze operation mentioned above enable a multi-scale architecture used in 
 if num_scales > 1:
     self.next = _RealNVP(*args,num_scales=num_scales - 1)
 ```
-![](/images/blog/real_NVP/multi-scale.png)
+
+<p align="center">
+  <img src="/images/blog/real_NVP/multi-scale.png" alt="Description of image" width="400">
+</p>
 
 As you can see in the figure, in each scale the size of the image is halved but with full connection to the next scale(information passing).
 
