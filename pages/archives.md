@@ -3,7 +3,6 @@ layout: page
 title: Archives
 description: Archive by year
 keywords: Archives
-comments: false
 menu: Archives
 permalink: /archives/
 ---

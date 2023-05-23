@@ -79,31 +79,6 @@ plugins:
 
 repository: yuanzhi-zhu/yuanzhi-zhu.github.io
 
-# ---------------- #
-#      Comments    #
-# ---------------- #
-# support provider: disqus, gitment, gitalk
-comments_provider: gitalk
-
-# !!!Important!!! Please modify infos below to yours
-# https://disqus.com
-#disqus:
-#    username: 
-## https://imsun.net/posts/gitment-introduction/
-#gitment:
-#    owner: mzlogin
-#    repo: blog-comments
-#    oauth:
-#        client_id: d2e1cbbd298958076462
-#        client_secret: b42a4178e5fd4a7cf63189ef4b1453b05c375709
-# https://github.com/gitalk/gitalk#install
-gitalk:
-    owner: yuanzhi-zhu
-    repo: yuanzhi-zhu
-    clientID: 7fdcca9624f082f2fd1e
-    clientSecret: 7408a6bc70b766c85f3eaff22433262e00c848e2
-# when using other support providers you can display Disqus be click
-lazy_load_disqus : false
 
 # ---------------- #
 #      Search      #

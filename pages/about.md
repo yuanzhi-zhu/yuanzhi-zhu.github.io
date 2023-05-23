@@ -3,7 +3,6 @@ layout: page
 title: About
 description: It is never too LAZY to learn
 keywords: Yuanzhi Zhu
-comments: true
 menu: About
 permalink: /about/
 ---

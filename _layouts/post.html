@@ -26,32 +26,34 @@ layout: default
   </div>
 </section>
 -->
-
+<style>
+  hr {
+      border: none;
+      height: 3px;
+      color: #424242; /* The line color is now orange */
+      background-color: #424242; /* Also the line color is now orange */
+      margin-top: 50px; /* Adds space above the line */
+      margin-bottom: 20px; /* Adds space below the line */
+      background: linear-gradient(to right, transparent, #424242, transparent);
+      border-radius: 10px; /* Adjust this to change how rounded the ends are */
+  }
+</style>
 <!-- / .banner -->
 <section class="container content">
 <div class="columns">
-  <!--
-                <div class="column two-thirds">
-                    <article class="article-content markdown-body">
-                        {{ content }}
-                    </article>
-                    <div class="share">
-                        {% include sns-share.html %}
-                    </div>
-                    <div class="comment">
-                        {% include comments.html %}
-                    </div>
-                </div>
-                <div class="column one-third">
-                    {% include sidebar-search.html %} {% include sidebar-qrcode.html %} {% include sidebar-popular-repo.html %}
-                </div>
-            -->
   <article class="article-content markdown-body">
     {{ content }}
   </article>
-  <div class="comment">
-    {% include comments.html %}
-  </div>
+  <hr>
+  <div id="utterances-comments" style="width: 100%">
+    <script src="https://utteranc.es/client.js"
+          repo="yuanzhi-zhu/yuanzhi-zhu.github.io"
+          issue-term="pathname"
+          theme="github-light"
+          crossorigin="anonymous"
+          async>
+    </script>
+  </div>  
 </div>
 </section>
 <!-- /section.content -->
