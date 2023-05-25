@@ -8,11 +8,11 @@ mathjax: true
 ---
 
 
-The [last post](2022/06/21/Real-NVP-Intro/) was written around one year ago, when I decided to switch my semester project topic from style transfor with normalizing flow to applications (image restoration) of diffusion models.
+The [last post](2022/06/21/Real-NVP-Intro/) was written around one year ago, when I decided to switch my semester project topic from style transfer with normalizing flow to applications (image restoration) of diffusion models.
 
-In my current engineering-oriented master thesis, I find myself longing for the elegance of theory of diffusion models. As a solution, I have made the decision to dedicate my spare time to learning Bayesian sampling.
+In my current engineering-oriented master's thesis, I find myself longing for the elegance of the theory of diffusion models. As a solution, I have made the decision to dedicate my spare time to learning Bayesian sampling.
 
-Hence I will write a series of posts to record this learning process and to improve my understanding of this topic by reorganizing the knowledge. In this post, I will start with some basics and a brief introduction of this topic.
+Hence I will write a series of posts to record this learning process and to improve my understanding of this topic by reorganizing my knowledge. In this post, I will start with some basics and a brief introduction to this topic.
 
 ## Introduction
 
@@ -35,13 +35,15 @@ Most of the time we only have some prior knowledge about $z$ and the likelihood 
 </div>
 where the evidence term (also called marginal likelihood) served as a normalization constant in the denominator can be formulated as:
 
+<div style="overflow-x: auto; white-space: nowrap;">
 $$ p(x)=\int p(x,z)dz=\int p(x|z)p(z)dz $$
+</div>
 
 <!-- Here goes an example of Image Restoration (IR), the task is to estimate the ground truth image $x_0$ give measurement $y$ and we can write the posterior as $p(x_0\|y)=\frac{p(y\|x_0)p(x_0)}{p(y)}$. The prior knowledge $p(x_0)$ may tell us we are observing bird, and the measurement comes from the degradation model $y=\mathcal{H}x_0 +n$ -->
 
 Beyond point estimation (MLE, MAP), we can use the posterior distribution to get posterior expectations of function of $z$, such as mean and marginals.
 
-However, this integral is usually analytically _intractable_ to calculate or evaluate, which lead to intractable posterior, and most Bayesian inference requires numerical approximation of intractable integrals.
+However, this integral is usually analytically _intractable_ to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of intractable integrals.
 
 
 <div style="font-size: 12px;">
@@ -75,19 +77,23 @@ For any choice of inference model $q_{\phi}({z}\|{x})$, including the choice of 
 </div>
 where the first term is _variational lower bound_, also called the _evidence lower bound_ (ELBO):
 
+<div style="overflow-x: auto; white-space: nowrap;">
 $$
 \mathcal{L}_{\theta,\phi}({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x},{z})-\log q_{\phi}({z}|{x})\right]
 $$
+</div>
 
 and the second term is the Kullback-Leibler (KL) divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$, which is non-negative: 
 
 $$D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x})) \geq 0$$
 
-The common goal is to maxmize the ELBO, that is, to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$). Additionally, the ELBO can be reorganized as the following in Variational Autoencoder (VAE):
+The common goal is to maximize the ELBO, that is, to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$). Additionally, the ELBO can be reorganized as the following in Variational Autoencoder (VAE):
 
+<div style="overflow-x: auto; white-space: nowrap;">
 $$
 \mathcal{L}_{\theta,\phi}({x};z)=\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{\log p_{\theta}({x}|{z})}_{\text{Negative reconstruction error}}+\underbrace{\log p_{\theta}({z})-\log q_{\phi}({z}|{x})}_{\text{Regularization (align) terms}}]
 $$
+</div>
 
 <div style="font-size: 12px;">
 <p style='margin-bottom: 10px;'>
@@ -95,7 +101,7 @@ For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introductio
 </div>
 
 ##### Markov Chain Monte Carlo
-We can also use Monte Carlo method to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use Markov Chain Monte Carlo (MCMC), which aimed at simulating a Markov chain whose stationary distribution is the target posterior densities. And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain!
+We can also use Monte Carlo methods to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use Markov Chain Monte Carlo (MCMC), which is aimed at simulating a Markov chain whose stationary distribution is the target posterior densities. And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain!
 
 The ultimate goal of this series of posts is to learn various MCMC techniques exactly!
 
