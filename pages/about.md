@@ -14,7 +14,8 @@ permalink: /about/
             flex-direction: column;
         }
         .bio-text {
-            margin-left: 0;
+            margin-left: 10px !important;
+            margin-right: 10px !important;
         }
     }
 </style>
