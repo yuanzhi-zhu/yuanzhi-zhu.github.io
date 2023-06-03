@@ -6,6 +6,10 @@
 #  url: http://gen.lib.rus.ec/
 #  src: www
 
+- name: "Probabilistic Machine Learning: Advanced Topics"
+  url: https://probml.github.io/pml-book/book2.html
+  src: www
+
 - name: Neural Networks and Deep Learning
   url: http://neuralnetworksanddeeplearning.com/
   src: www

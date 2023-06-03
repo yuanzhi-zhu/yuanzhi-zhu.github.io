@@ -43,7 +43,7 @@ permalink: /about/
 </div>
 
 
-## Publication
+## Publications
 {% for artical in site.data.conferences %}
 * {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
   **{{ artical.name }}**
@@ -56,8 +56,8 @@ permalink: /about/
   **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
-<div class="container" style="margin-left: -30px;">
-  <div class="column" style="margin-right: 150px;">
+<div class="container" style="display: flex; justify-content: space-between;">
+  <div class="column" style="flex: 1; margin-right: 75px;">
     <h2>Useful Links</h2>
     <ul>
       {% for link in site.data.links %}
@@ -67,7 +67,7 @@ permalink: /about/
       {% endfor %}
     </ul>
   </div>
-  <div class="column">
+  <div class="column" style="flex: 1;">
     <h2>Slides</h2>
     <ul>
       {% for link in site.data.slides %}
@@ -78,6 +78,31 @@ permalink: /about/
     </ul>
   </div>
 </div>
+
+
+<div class="container" style="display: flex; justify-content: space-between;">
+  <div class="column" style="flex: 1; margin-right: 75px;">
+    <h2>Recommended Sites</h2>
+    <ul>
+      {% for link in site.data.blogs %}
+        {% if link.src == 'www' %}
+          <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="column" style="flex: 1;">
+    <!-- <h2>Collaborators</h2>
+    <ul>
+      {% for link in site.data.collaborators %}
+        {% if link.src == 'www' %}
+          <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul> -->
+  </div>
+</div>
+
 
 <script>
 document.getElementById("show-more-button").addEventListener("click", function() {
