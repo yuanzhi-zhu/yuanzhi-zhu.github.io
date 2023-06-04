@@ -7,7 +7,6 @@ menu: About
 permalink: /about/
 ---
 
-## About
 <style>
     @media (max-width: 600px) {
         .bio-container {
@@ -18,13 +17,20 @@ permalink: /about/
             margin-right: 10px !important;
         }
     }
+    @media (max-width: 700px) {
+        .my_container {
+            flex-direction: column;
+        }
+    }
 </style>
+
+## About
 <div class="bio-container" style="display: flex; align-items: center;">
-    <div class="image-container" style="width: 256; flex-shrink: 0;">
-        <img src="/images/About_Me.jpg" width="256" height=auto alt="About Me" />
+    <div class="image-container" style="width: 256px; flex-shrink: 0;">
+        <img src="/images/About_Me.jpg" width="256px" height=auto alt="About Me" />
         <p style="color:gray; font-size:0.7em">The person *NOT* wearing a blue cravat is me</p>
     </div>
-    <div class="bio-text" style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px;">
+    <div class="bio-text" style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px; text-align: justify;">
         <p style='margin-bottom: 5px;'>I’m Yuanzhi Zhu and I’m currently a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Dr. Kai Zhang</a> and <a href="https://apchenstu.github.io/">Dr. Anpei Chen</a>.</p>
         <p style='margin-bottom: 5px;'>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Restoration and Novel View Synthesis.</p>
         <div id="extra-bio" style="display: none; margin-bottom: 5px;">
@@ -56,8 +62,8 @@ permalink: /about/
   **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
 {% endfor %}
 
-<div class="container" style="display: flex; justify-content: space-between;">
-  <div class="column" style="flex: 1; margin-right: 75px;">
+<div class="my_container" style="display: flex; justify-content: space-between;">
+  <div class="my_column" style="flex: 1; margin-right: 75px;">
     <h2>Useful Links</h2>
     <ul>
       {% for link in site.data.links %}
@@ -67,7 +73,7 @@ permalink: /about/
       {% endfor %}
     </ul>
   </div>
-  <div class="column" style="flex: 1;">
+  <div class="my_column" style="flex: 1;">
     <h2>Slides</h2>
     <ul>
       {% for link in site.data.slides %}
@@ -80,8 +86,8 @@ permalink: /about/
 </div>
 
 
-<div class="container" style="display: flex; justify-content: space-between;">
-  <div class="column" style="flex: 1; margin-right: 75px;">
+<div class="my_container" style="display: flex; justify-content: space-between;">
+  <div class="my_column" style="flex: 1; margin-right: 75px;">
     <h2>Recommended Sites</h2>
     <ul>
       {% for link in site.data.blogs %}
@@ -91,7 +97,7 @@ permalink: /about/
       {% endfor %}
     </ul>
   </div>
-  <div class="column" style="flex: 1;">
+  <div class="my_column" style="flex: 1;">
     <!-- <h2>Collaborators</h2>
     <ul>
       {% for link in site.data.collaborators %}
