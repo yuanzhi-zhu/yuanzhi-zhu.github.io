@@ -74,7 +74,7 @@ permalink: /about/
     </ul>
   </div>
   <div class="my_column" style="flex: 1;">
-    <h2>Slides</h2>
+    <h2><a href="https://yuanzhi-zhu.github.io/documents/slides/" style="text-decoration: none; color: inherit;">Slides</a></h2>
     <ul>
       {% for link in site.data.slides %}
         {% if link.src == 'www' %}

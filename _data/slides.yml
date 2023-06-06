@@ -1,6 +1,6 @@
-- name: Advanced Architecture in NLP
-  url: /documents/slides/SiDNN.pdf
-  src: www
+# - name: Advanced Architecture in NLP
+#   url: /documents/slides/SiDNN.pdf
+#   src: www
   
 # - name: Score-based Generative Models
 #   url: /documents/slides/score_based_models.pdf
@@ -9,4 +9,8 @@
 # - name: Prompt to Prompt
 #   url: /documents/slides/prompt_to_prompt.pdf
 #   src: www  
+  
+- name: Denoising Diffusion Models for PnP IR
+  url: /documents/slides/diffusion_models_for_pnp_IR.pdf
+  src: www  
   

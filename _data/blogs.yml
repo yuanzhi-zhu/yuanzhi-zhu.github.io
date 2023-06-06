@@ -10,4 +10,8 @@
 - name: Alex Alemi's Blog
   url: https://blog.alexalemi.com/
   src: www
+
+# - name: Ermon Group Blog
+#   url: https://ermongroup.github.io/blog/
+#   src: www
   
