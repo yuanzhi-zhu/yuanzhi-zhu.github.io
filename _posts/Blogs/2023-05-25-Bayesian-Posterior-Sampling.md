@@ -10,7 +10,7 @@ mathjax: true
 
 The [last post](2022/06/21/Real-NVP-Intro/) was written around one year ago, when I decided to switch my semester project topic from style transfer with normalizing flow to applications (image restoration) of diffusion models.
 
-In my current engineering-oriented master's thesis, I find myself longing for the elegance of the theory of diffusion models. As a solution, I have made the decision to dedicate my spare time to learning Bayesian sampling.
+In my current engineering-oriented master's thesis, I find myself longing for the elegance of the theory of diffusion models. As a solution, I have made the decision to dedicate my spare time to learning Bayesian sampling (sampling method for bayesian inference).
 
 Hence I will write a series of posts to record this learning process and to improve my understanding of this topic by reorganizing my knowledge. In this post, I will start with some basics and a brief introduction to this topic.
 
@@ -19,7 +19,7 @@ Hence I will write a series of posts to record this learning process and to impr
 #### Bayesian Inference Problem & Challenging
 
 <p align="center">
-  <img src="/images/blog/Bayesian_Posterior_Sampling/Introduction/Bayes.png" alt="Bayes Theorem" width="700">
+  <img src="/images/blog/Bayesian_Posterior_Sampling/Introduction/Bayes.png" alt="Bayes Theorem" width="600">
   <br/>
   <em>Figure 1: Visual representation of Bayes' Theorem.</em>
 </p>
@@ -28,14 +28,14 @@ Hence I will write a series of posts to record this learning process and to impr
 >
 > ------ [_Probabilistic Machine Learning: Advanced Topics_](https://probml.github.io/pml-book/book2.html) by Kevin Patrick Murphy. MIT Press, 2023.
 
-To be specific, we assume the dependence between unknown random latent variable $z$ and the available data $x$ is <span style="color:#FF8C00">probabilistic</span> and what we want to do is to estimate $z$ given $x$ with $p(z\| x)$, which we call posterior. 
-Most of the time we only have some prior knowledge about $z$ and the likelihood model $p(x\|z)$ (or $p_\theta(x, z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf)), we can compute the posterior $p(z\| x)$ using Bayes's rule (see _Figure 1_ for visual illustration):
-<div style="overflow-x: auto; white-space: nowrap;">
+To be specific, we assume the dependence between unknown random latent variable $z$ and the available data $x$ is <span style="color:#FFA000">probabilistic</span> and what we want to do is to estimate $z$ given $x$ with $p(z\| x)$, which we call posterior. 
+Most of the time we only have some prior knowledge about $z$ $p(z)$ and the likelihood model $p(x\|z)$ (or equivalently the deep latent variable model $p_\theta(x, z)=p_\theta(z)p_\theta(x\|z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf)), we can compute the posterior $p(z\| x)$ using Bayes's rule (see _Figure 1_ for visual illustration):
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
   $$p(z|x)=\frac{p(x|z)p(z)}{p(x)}$$
 </div>
 where the evidence term (also called marginal likelihood) served as a normalization constant in the denominator can be formulated as:
 
-<div style="overflow-x: auto; white-space: nowrap;">
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ p(x)=\int p(x,z)dz=\int p(x|z)p(z)dz $$
 </div>
 
@@ -43,7 +43,7 @@ $$ p(x)=\int p(x,z)dz=\int p(x|z)p(z)dz $$
 
 Beyond point estimation (MLE, MAP), we can use the posterior distribution to get posterior expectations of function of $z$, such as mean and marginals.
 
-However, this integral is usually analytically _intractable_ to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of intractable integrals.
+However, this integral is usually analytically _intractable_ to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of such intractable integrals.
 
 
 <div style="font-size: 12px;">
@@ -60,38 +60,44 @@ In this post we will briefly go through the two main methods that can be used to
 
 Variational inference (VI) is a method in machine learning that approximates complex probability distributions by finding the most similar, simpler and hence _tractable_ distribution $q(z)$ from a _specified family_ $\mathcal{Q}$, thereby enabling efficient computation and handling of uncertainty.
 
-Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z)$. 
-<span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z)$.</span>
+Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z\|{x})$. 
+<span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
 
-For any choice of inference model $q_{\phi}({z}\|{x})$, including the choice of variational parameters $\phi$, we have:
+The goal of variational inference is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the Kullback-Leibler (KL) divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
 
-<div style="overflow-x: auto; white-space: nowrap;">
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$q^{\star}_{\phi} = \underset{q_{\phi}\in \mathcal{Q}}{\operatorname{\arg\min }} D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))$$
+</div>
+
+It's easy to get:
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
-    \log p_\theta({ x})&=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_\theta({x})\right]\\ 
-    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{p_\theta({x},{z})}{p_\theta({z}|{x})}\right]\right] \\
-    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[{\frac{p_{\theta}({x},{z})}{q_{\phi}({z}|{x})}}{\frac{q_{\phi}({z}|{x})}{p_{\theta}({z}|{x})}}\right]\right] \\
-    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{p_{\theta}({x},{z})}{q_{\phi}({z}|{x})}\right]\right]+\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{q_{\phi}({z}|{x})}{p_{\theta}({z}|{x})}\right]\right]
+    D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))&=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{q_{\phi}({z}|{x})}{p_{\theta}({z}|{x})}\right]\right] \\ 
+    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{q_{\phi}({z}|{x})p_{\theta}({x})}{p_{\theta}({x},{z})}\right]\right] \\
+    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{q_{\phi}({z}|{x})}{p_{\theta}({x},{z})}\right]\right] + \mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x})\right]\\
+    &=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{q_{\phi}({z}|{x})}{p_{\theta}({x},{z})}\right]\right] + \log p_{\theta}({x})\\
     \end{align*}
     $$
 </div>
-where the first term is _variational lower bound_, also called the _evidence lower bound_ (ELBO):
 
-<div style="overflow-x: auto; white-space: nowrap;">
+For convention, we can rewrite this as: 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+    $$
+    \log p_\theta({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{p_{\theta}({x},{z})}{q_{\phi}({z}|{x})}\right]\right]+D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))
+    $$
+</div>
+
+where the log evidence $\log p_\theta({x})$ does not change with the choise of $\theta$ or $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in RHS is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _evidence lower bound_ (ELBO):
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \mathcal{L}_{\theta,\phi}({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x},{z})-\log q_{\phi}({z}|{x})\right]
 $$
 </div>
 
-and the second term is the Kullback-Leibler (KL) divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$, which is non-negative: 
-
-$$D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x})) \geq 0$$
-
-The common goal is to maximize the ELBO, that is, to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$). Additionally, the ELBO can be reorganized as the following in Variational Autoencoder (VAE):
-
-<div style="overflow-x: auto; white-space: nowrap;">
-$$
-\mathcal{L}_{\theta,\phi}({x};z)=\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{\log p_{\theta}({x}|{z})}_{\text{Negative reconstruction error}}+\underbrace{\log p_{\theta}({z})-\log q_{\phi}({z}|{x})}_{\text{Regularization (align) terms}}]
+Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO. Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE), where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$ \mathcal{L}_{\theta,\phi}({x};z)=-\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{-\log p_{\theta}({x}|{z})}_{\text{Negative reconstruction error}}+\underbrace{\log q_{\phi}({z}|{x})-\log p_{\theta}({z})}_{\text{Regularization (align) terms}}]
 $$
 </div>
 
@@ -101,7 +107,7 @@ For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introductio
 </div>
 
 ##### Markov Chain Monte Carlo
-We can also use Monte Carlo methods to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use Markov Chain Monte Carlo (MCMC), which is aimed at simulating a Markov chain whose stationary distribution is the target posterior densities. And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain!
+We can also use Monte Carlo methods to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use Markov Chain Monte Carlo (MCMC), which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain! 
 
 The ultimate goal of this series of posts is to learn various MCMC techniques exactly!
 
