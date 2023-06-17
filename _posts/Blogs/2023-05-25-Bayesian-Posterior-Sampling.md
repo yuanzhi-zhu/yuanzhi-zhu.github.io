@@ -29,14 +29,23 @@ Hence I will write a series of posts to record this learning process and to impr
 > ------ [_Probabilistic Machine Learning: Advanced Topics_](https://probml.github.io/pml-book/book2.html) by Kevin Patrick Murphy. MIT Press, 2023.
 
 To be specific, we assume the dependence between unknown random latent variable $z$ and the available data $x$ is <span style="color:#FFA000">probabilistic</span> and what we want to do is to estimate $z$ given $x$ with $p(z\| x)$, which we call posterior. 
-Most of the time we only have some prior knowledge about $z$ $p(z)$ and the likelihood model $p(x\|z)$ (or equivalently the deep latent variable model $p_\theta(x, z)=p_\theta(z)p_\theta(x\|z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf)), we can compute the posterior $p(z\| x)$ using Bayes's rule (see _Figure 1_ for visual illustration):
+Most of the time we only have some prior knowledge about $z$ as $p(z)$ and the likelihood model $p(x\|z)$, or equivalently the deep latent variable model $p_\theta(x, z)=p_\theta(z)p_\theta(x\|z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf), where $\theta$ can be estimated with maximizing likelihood (Maximizing likelihood is equivalent to minimizing the Kullback-Leibler (KL) divergence between $p_{\mathrm{data}}(\mathbf{x})$ and $p_{\theta}(\mathbf{x})$, which is usually intractable to compute directly in bayesian modeling):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
-  $$p(z|x)=\frac{p(x|z)p(z)}{p(x)}$$
+    $$
+    \begin{align*}
+    -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\left[\log p_\theta(\mathbf{x})\right] &= D_{K L}(p_{\mathrm{data}}(\mathbf{x})\lVert p_{\theta}(\mathbf{x}))-\underbrace{\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})} \left[ \log p_{\mathrm{data}}(\mathbf{x})\right]}_{\text{constant}} \\ &\approx \prod_{n=1}^{N}\log p_\theta(x_{n}) = \prod_{n=1}^{N}\log [\int p_\theta(z_{n})p_\theta(x_{n}|z_{n})dz_{n}] \\
+    \end{align*}
+    $$
+</div>
+
+We can compute the posterior $p_{\theta}(z\| x)$ using Bayes's rule (see _Figure 1_ for visual illustration):
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+  $$p_{\theta}(z|x)=\frac{p_{\theta}(x|z)p_{\theta}(z)}{p_{\theta}(x)}$$
 </div>
 where the evidence term (also called marginal likelihood) served as a normalization constant in the denominator can be formulated as:
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
-$$ p(x)=\int p(x,z)dz=\int p(x|z)p(z)dz $$
+$$ p_{\theta}(x)=\int p_{\theta}(x,z)dz=\int p_{\theta}(x|z)p_{\theta}(z)dz $$
 </div>
 
 <!-- Here goes an example of Image Restoration (IR), the task is to estimate the ground truth image $x_0$ give measurement $y$ and we can write the posterior as $p(x_0\|y)=\frac{p(y\|x_0)p(x_0)}{p(y)}$. The prior knowledge $p(x_0)$ may tell us we are observing bird, and the measurement comes from the degradation model $y=\mathcal{H}x_0 +n$ -->
@@ -63,7 +72,7 @@ Variational inference (VI) is a method in machine learning that approximates com
 Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z\|{x})$. 
 <span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
 
-The goal of variational inference is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the Kullback-Leibler (KL) divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
+The goal of variational inference is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the KL divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$q^{\star}_{\phi} = \underset{q_{\phi}\in \mathcal{Q}}{\operatorname{\arg\min }} D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))$$
@@ -84,20 +93,23 @@ It's easy to get:
 For convention, we can rewrite this as: 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
-    \log p_\theta({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{p_{\theta}({x},{z})}{q_{\phi}({z}|{x})}\right]\right]+D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))
+    \log p_\theta({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log\left[\frac{p_{\theta}({x},{z})}{q_{\phi}({z}|{x})}\right]\right]+\underbrace{D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}|{x}))}_{\geq 0}
     $$
 </div>
 
-where the log evidence $\log p_\theta({x})$ does not change with the choise of $\theta$ or $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in RHS is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _evidence lower bound_ (ELBO):
+where the log evidence $\log p_\theta({x})$ does not change with the choise of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in RHS is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _evidence lower bound_ (ELBO):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \mathcal{L}_{\theta,\phi}({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x},{z})-\log q_{\phi}({z}|{x})\right]
 $$
 </div>
 
-Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO. Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE), where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
+Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO, and we can optimize it wrt both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM. Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE), where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
-$$ \mathcal{L}_{\theta,\phi}({x};z)=-\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{-\log p_{\theta}({x}|{z})}_{\text{Negative reconstruction error}}+\underbrace{\log q_{\phi}({z}|{x})-\log p_{\theta}({z})}_{\text{Regularization (align) terms}}]
+$$ 
+    \begin{align*}
+    \mathcal{L}_{\theta,\phi}({x};z) &= -[\underbrace{\mathbb{E}_{q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})]}_{\text{expected negative log likelihood}}+\underbrace{D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}))}_{\text{KL from posterior to prior}}] \\ &=-\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{-\log p_{\theta}({x}|{z})}_{\text{Negative reconstruction error}}+\underbrace{\log q_{\phi}({z}|{x})-\log p_{\theta}({z})}_{\text{Regularization (align) terms}}] \\
+    \end{align*}
 $$
 </div>
 
