@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Basysian Posterior Sampling (1) Introduction
+title: Bayesian Posterior Sampling (1) Introduction
 categories: Research
 description: none
-keywords: Basysian Posterior, Variational Inference, VAE, MCMC
+keywords: Bayesian Posterior, Variational Inference, VAE, MCMC
 mathjax: true
 ---
 
@@ -124,11 +124,11 @@ For convention, we can rewrite this as:
     $$
 </div>
 
-where the log evidence $\log p_\theta({x})$ does not change with the choise of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of (\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
+where the log evidence $\log p_\theta({x})$ does not change with the choice of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of (\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
-    \mathcal{L}_{\theta,\phi}({x};{z})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x},{z})-\log q_{\phi}({z}|{x})\right]\label{ELBO}\tag{7}
+    \mathcal{L}_{\theta,\phi}({x})=\mathbb{E}_{q_{\phi}({z}|{x})}\left[\log p_{\theta}({x},{z})-\log q_{\phi}({z}|{x})\right]\label{ELBO}\tag{7}
     \end{align*}
     $$
 </div>
@@ -139,7 +139,7 @@ We can rewrite the ELBO as follows<a href="#ELBO"><sup>3</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \mathcal{L}_{\theta,\phi}({x};{z}) &= \underbrace{\mathbb{E}_{q_{\phi}({z}|{x})}[\log p_{\theta}({x},{z})]}_{\text{expected log joint}}+\underbrace{\mathbb{H}(q_{\phi}({z}|{x}))}_{\text{entropy}}\label{ELBO2}\tag{8}
+    \mathcal{L}_{\theta,\phi}({x}) &= \underbrace{\mathbb{E}_{q_{\phi}({z}|{x})}[\log p_{\theta}({x},{z})]}_{\text{expected log joint}}+\underbrace{\mathbb{H}(q_{\phi}({z}|{x}))}_{\text{entropy}}\label{ELBO2}\tag{8}
     \end{align*}
 $$
 </div>
@@ -147,7 +147,7 @@ $$
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 5px;' id="joint_KL">
-            <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi</p>
+            <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi.</p>
         <p style='margin-bottom: 5px;' id="ELBO">
             <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu for more perspectives on the ELBO.
         </p>
@@ -155,15 +155,15 @@ $$
             <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling.
         </p>
         <p style='margin-bottom: 5px;'>
-            <sup>5</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models</p>
+            <sup>5</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models.</p>
     </div>
 </div>
 
-Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE)<a href="#VAE"><sup>4,5</sup></a>, where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
+Additionally, the ELBO can be reorganized and interpreted as the following in Variational AutoEncoder (VAE)<a href="#VAE"><sup>4,5</sup></a>, where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \mathcal{L}_{\theta,\phi}({x};{z}) &= -[\underbrace{\mathbb{E}_{q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})]}_{\text{expected negative log likelihood}}+\underbrace{D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}))}_{\text{KL from posterior to prior}}] \\ &=-\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{-\log p_{\theta}({x}|{z})}_{\text{reconstruction error}}+\underbrace{\log q_{\phi}({z}|{x})-\log p_{\theta}({z})}_{\text{regularization (align) terms}}] \label{ELBO3}\tag{9}\\
+    \mathcal{L}_{\theta,\phi}({x}) &= -[\underbrace{\mathbb{E}_{q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})]}_{\text{expected negative log likelihood}}+\underbrace{D_{K L}(q_{\phi}({z}|{x})\lVert p_{\theta}({z}))}_{\text{KL from posterior to prior}}] \\ &=-\mathbb{E}_{q_{\phi}({z}|{x})}[\underbrace{-\log p_{\theta}({x}|{z})}_{\text{reconstruction error}}+\underbrace{\log q_{\phi}({z}|{x})-\log p_{\theta}({z})}_{\text{regularization (align) terms}}] \label{ELBO3}\tag{9}\\
     \end{align*}
 $$
 </div>
@@ -172,7 +172,7 @@ Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$ 
     \begin{align*}
-    \mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}[\mathcal{L}_{\theta,\phi}({x};{z})] = -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\mathbb{E}_{\mathbf{z}\sim q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})+\log q_{\phi}({z}|{x})-\log p_{\theta}({z})] \label{objective}\tag{10}
+    \mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}[\mathcal{L}_{\theta,\phi}({x})] = -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\mathbb{E}_{\mathbf{z}\sim q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})+\log q_{\phi}({z}|{x})-\log p_{\theta}({z})] \label{objective}\tag{10}
     \end{align*}
     $$
 </div>
@@ -181,15 +181,15 @@ Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi
 We can also use Monte Carlo methods to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use MCMC, which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. 
 And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain! 
 
-A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalisation constant $Z$:
+A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \pi(x) &= \frac{1}{Z}\tilde{\pi}= \frac{\exp(-V(x))}{Z} \label{target_dist}\tag{11}\\
+    \pi(x) &= \frac{1}{Z}\tilde{\pi}= \frac{\exp(-\beta V(x))}{Z} \label{target_dist}\tag{11}\\
     \end{align*}
 $$
 </div>
-where $\tilde{\pi}$ is known, and $Z$ is unknown. To make the notation consistent, now we rewrite the problem (\ref{KL}) as:
+where $\tilde{\pi}$ is the known unnormalized distribution, $\beta$ is an arbitrary positive constant akin to an inverse temperature, and $V(\cdot)$ can be treated as energy function. To make the notation consistent, now we rewrite the problem (\ref{KL}) as:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -197,15 +197,15 @@ $$
     \end{align*}
 $$
 </div>
-where $D$ is a dissimilarity functional such as KL divergence. We can approximate integrals $\int f(\cdot) d\pi$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers.
+where $D$ is a dissimilarity functional such as KL divergence, $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers.
 
 The ultimate goal of this series of posts is exactly to learn various MCMC techniques to sample from $\pi^\star$! \\
-It's also highly recommanded to try out [this great website](https://chi-feng.github.io/mcmc-demo/) for fantastic MCMC animations first.
+It's also highly recommended to try out [this great website](https://chi-feng.github.io/mcmc-demo/) for fantastic MCMC animations first.
 
 
 The future topics should include:
 - MCMC basics
-- [Dynamics-Based MCMCs](https://changliu00.github.io/static/d_mcmc.pdf)
+- [Dynamics-based MCMCs](https://changliu00.github.io/static/d_mcmc.pdf)
 - Relation to [Wasserstein gradient flows](https://akorba.github.io/resources/Baltimore_July2022_ICMLtutorial.pdf)
   
 <!-- [Dynamics-Based MCMCs](https://changliu00.github.io/static/ManifoldSampling-ChangLiu.pdf) 
