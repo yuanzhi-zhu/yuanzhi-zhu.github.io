@@ -1,8 +1,8 @@
 ---
 layout: default
 ---
-<!--
-<section class="collection-head small geopattern" data-pattern-id="{{ page.title | truncate: 15, ''}}">
+
+<section class="collection-head small geopattern" data-pattern-id="{{ page.title | truncate: 25, ''}}">
   <div class="container">
     <div class="columns">
       <div class="column three-fourths">
@@ -13,19 +13,30 @@ layout: default
             <span class="meta-info">
               <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
             </span>
-            {% endif %} {% for cat in page.categories %}
+            {% endif %}
+            {% if page.categories %}
+            <span class="meta-info" style="margin-left: 30px;">
+              <span class="octicon octicon-file-directory"></span> {{ page.categories }}
+            </span>
+            {% endif %}
+            {% if page.keywords %}
+            <span class="meta-info" style="margin-left: 30px;">
+              <span class="octicon octicon-tag"></span> {{ page.keywords }}
+            </span>
+            {% endif %}
+            <!-- {% for cat in page.categories %}
             <span class="meta-info">
               <span class="octicon octicon-file-directory"></span>
               <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
             </span>
-            {% endfor %}
+            {% endfor %} -->
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
--->
+
 <style>
   hr {
       border: none;

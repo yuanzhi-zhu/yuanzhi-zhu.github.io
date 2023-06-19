@@ -3,12 +3,20 @@ layout: post
 title: Basysian Posterior Sampling (1) Introduction
 categories: Research
 description: none
-keywords: Basysian, Variational Inference, VAE, MCMC
+keywords: Basysian Posterior, Variational Inference, VAE, MCMC
 mathjax: true
 ---
 
+<style>
+    .sidebar {
+        float: right; /* Align the sidebar to the right */
+        width: 300px; /* Set the width of the sidebar */
+        font-family: sans-serif, monospace; /* Example font-family for a light font */
+        margin-left: 30px; /* Add margin to the left of the sidebar */
+    }
+</style>
 
-The [last post](2022/06/21/Real-NVP-Intro/) was written around one year ago, when I decided to switch my semester project topic from style transfer with normalizing flow to applications (image restoration) of diffusion models.
+The [last post](2022/06/21/Real-NVP-Intro/) was written around one year ago, when I decided to switch my semester project topic from _style transfer with normalizing flow_ to [_image restoration with diffusion models_](https://yuanzhi-zhu.github.io/DiffPIR/).
 
 In my current engineering-oriented master's thesis, I find myself longing for the elegance of the theory of diffusion models. As a solution, I have made the decision to dedicate my spare time to learning Bayesian sampling (sampling method for bayesian inference).
 
@@ -59,13 +67,20 @@ where the evidence term (also called marginal likelihood) served as a normalizat
 
 Beyond point estimation (MLE, MAP), we can use the posterior distribution to get posterior expectations of any function $f(z)$, such as mean and marginals. For instance, predicting new output in Bayesian linear regression where $w$ represents the coefficient that we aim to estimate its posterior distribution given the data: $y^\star =\int p(y^\star\|x^\star, w)p(w \| X,y)dw$.
 
-However, this integral is usually analytically _intractable_ to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of such intractable integrals.
+<div class="sidebar" id="intractable">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 10px;'>
+        <sup>1</sup>What do we mean by <em>intractable</em> for the evidence term?
+        <ul> <li> Curse of dimensionality, complex form</li> <li>Analytical solutions are not available</li> <li>Numerical integration is too expensive</li></ul></p>
+    </div>
+</div>
+
+However, this integral is usually analytically _intractable_<a href="#intractable"><sup>1</sup></a> to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of such intractable integrals.
+
 
 
 <div style="font-size: 12px;">
-What do we mean by <em>intractable</em> for the evidence term?
-<ul> <li> Curse of dimensionality, complex form</li> <li>Analytical solutions are not available</li> <li>Numerical integration is too expensive</li>
-</ul>
+
 </div>
 
 #### Two Approaches: Variational Inference & (MCMC) Sampling
@@ -79,7 +94,7 @@ Variational inference (VI) is a method in machine learning that approximates com
 Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z\|{x})$. 
 <span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
 
-The goal of variational inference is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the KL divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
+The **goal of VI** is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the KL divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align}
@@ -88,7 +103,7 @@ The goal of variational inference is to approximate an intractable probability d
     $$
 </div>
 
-It's easy to get:
+It's easy to get<a href="#joint_KL"><sup>2</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
@@ -109,7 +124,7 @@ For convention, we can rewrite this as:
     $$
 </div>
 
-where the log evidence $\log p_\theta({x})$ does not change with the choise of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of (\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _evidence lower bound_ (ELBO):
+where the log evidence $\log p_\theta({x})$ does not change with the choise of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of (\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
@@ -120,7 +135,7 @@ where the log evidence $\log p_\theta({x})$ does not change with the choise of $
 
 Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO, and we can optimize it wrt both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
 
-We can rewrite the ELBO as follows:
+We can rewrite the ELBO as follows<a href="#ELBO"><sup>3</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -129,7 +144,22 @@ $$
 $$
 </div>
 
-Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE), where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
+<div class="sidebar">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 5px;' id="joint_KL">
+            <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi</p>
+        <p style='margin-bottom: 5px;' id="ELBO">
+            <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu for more perspectives on the ELBO.
+        </p>
+        <p style='margin-bottom: 5px;' id="VAE">
+            <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling.
+        </p>
+        <p style='margin-bottom: 5px;'>
+            <sup>5</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models</p>
+    </div>
+</div>
+
+Additionally, the ELBO can be reorganized and interpreted as the following in Variational Autoencoder (VAE)<a href="#VAE"><sup>4,5</sup></a>, where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -145,16 +175,6 @@ Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi
     \mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}[\mathcal{L}_{\theta,\phi}({x};{z})] = -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\mathbb{E}_{\mathbf{z}\sim q_{\phi}({z}|{x})}[-\log p_{\theta}({x}|{z})+\log q_{\phi}({z}|{x})-\log p_{\theta}({z})] \label{objective}\tag{10}
     \end{align*}
     $$
-</div>
-
-
-<div style="font-size: 12px;">
-<p style='margin-bottom: 10px;'>
-It's recommanded to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu for more perspectives on the ELBO.</p>
-<p style='margin-bottom: 10px;'>
-For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling.</p>
-<p style='margin-bottom: 10px;'>
-We can also get the same ELMO starting from the KL divergence between joint distributions, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su</p>
 </div>
 
 ##### Markov Chain Monte Carlo
