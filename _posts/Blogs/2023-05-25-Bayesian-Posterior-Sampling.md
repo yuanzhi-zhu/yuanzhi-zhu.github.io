@@ -29,7 +29,7 @@ Hence I will write a series of posts to record this learning process and to impr
 <p align="center">
   <img src="/images/blog/Bayesian_Posterior_Sampling/Introduction/Bayes.png" alt="Bayes Theorem" width="600">
   <br/>
-  <em>Figure 1: Visual representation of Bayes' Theorem.</em>
+  <em>Figure 1: Visual Representation of Bayes' Theorem.</em>
 </p>
 
 > In the probabilistic approach to machine learning, all unknown quantities — be they predictions about the future, hidden states of a system, or parameters of a model — are treated as random variables, and endowed with probability distributions. The process of inference corresponds to computing the posterior distribution over these quantities, conditioning on whatever data is available.
@@ -93,6 +93,12 @@ Variational inference (VI) is a method in machine learning that approximates com
 
 Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z\|{x})$. 
 <span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
+
+<p align="center">
+  <img src="/images/blog/Bayesian_Posterior_Sampling/Introduction/variational_inference.png" alt="variational_inference" width="600">
+  <br/>
+  <em>Figure 2: Illustration of Variational Inference.</em>
+</p>
 
 The **goal of VI** is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the KL divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
@@ -197,7 +203,7 @@ $$
     \end{align*}
 $$
 </div>
-where $D$ is a dissimilarity functional such as KL divergence, $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers.
+where $D$ is a dissimilarity functional such as KL divergence, and $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers, and $b$ is called the burn-in time.
 
 The ultimate goal of this series of posts is exactly to learn various MCMC techniques to sample from $\pi^\star$! \\
 It's also highly recommended to try out [this great website](https://chi-feng.github.io/mcmc-demo/) for fantastic MCMC animations first.
