@@ -14,4 +14,8 @@
 # - name: Ermon Group Blog
 #   url: https://ermongroup.github.io/blog/
 #   src: www
+
+# - name: Sander Dieleman's Blog
+#   url: https://sander.ai/
+#   src: www
   

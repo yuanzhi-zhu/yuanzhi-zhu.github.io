@@ -78,11 +78,6 @@ Beyond point estimation (MLE, MAP), we can use the posterior distribution to get
 However, this integral is usually analytically _intractable_<a href="#intractable"><sup>1</sup></a> to calculate or evaluate, which leads to intractable posterior, and most Bayesian inference requires numerical approximation of such intractable integrals.
 
 
-
-<div style="font-size: 12px;">
-
-</div>
-
 #### Two Approaches: Variational Inference & (MCMC) Sampling
 
 In this post, I go through the two primary methodologies utilized to address the problem of Bayesian inference: Variational Inference (VI) and Markov Chain Monte Carlo (MCMC).  I will strive to cover the most significant concepts associated with VI, and also provide a brief introduction to MCMC.
@@ -203,7 +198,7 @@ $$
     \end{align*}
 $$
 </div>
-where $D$ is a dissimilarity functional such as KL divergence, and $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers, and $b$ is called the burn-in time.
+where $D$ is a dissimilarity functional such as KL divergence, and $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers, and $b$ is called the **mixing time** or **burn-in time**. Note that the initial samples from the chain should be discarded because they do not come from the stationary distribution; reducing this is one of the most important factors in securing a fast convergence.
 
 The ultimate goal of this series of posts is exactly to learn various MCMC techniques to sample from $\pi^\star$! \\
 It's also highly recommended to try out [this great website](https://chi-feng.github.io/mcmc-demo/) for fantastic MCMC animations first.
