@@ -95,6 +95,7 @@ Most of the time when referring to Variational Inference (VI), we are discussing
   <em>Figure 2: Illustration of Variational Inference.</em>
 </p>
 
+The main idea of variational methods is to cast **inference** as an **optimization** problem.
 The **goal of VI** is to approximate an intractable probability distribution, so as to find $q_{\phi} \in \mathcal{Q}$ that minimize some discrepancy $D$ (here we use the KL divergence) between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
@@ -134,7 +135,7 @@ where the log evidence $\log p_\theta({x})$ does not change with the choice of $
     $$
 </div>
 
-Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO, and we can optimize it wrt both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
+Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it wrt both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
 
 We can rewrite the ELBO as follows<a href="#ELBO"><sup>3</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
@@ -150,7 +151,7 @@ $$
         <p style='margin-bottom: 5px;' id="joint_KL">
             <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi.</p>
         <p style='margin-bottom: 5px;' id="ELBO">
-            <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu for more perspectives on the ELBO.
+            <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu and this famous paper <a href="http://approximateinference.org/accepted/HoffmanJohnson2016.pdf">ELBO surgery</a> by Matthew D. Hoffman and Matthew J. Johnson for more perspectives on the ELBO.
         </p>
         <p style='margin-bottom: 5px;' id="VAE">
             <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling.
@@ -178,8 +179,10 @@ Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi
     $$
 </div>
 
+The optimization of the above equation (\ref{objective}) usually involve taking gradient w.r.t. $\phi$, which is more difficult as we cannot swap the gradient and the expectation like when taking gradient w.r.t. $\theta$. To resolve this issue, we can use methods like [_score function estimator_](https://mpatacchiola.github.io/blog/2021/02/08/intro-variational-inference-2.html) and the [_reparametrization trick_](https://ermongroup.github.io/cs228-notes/extras/vae/).
+
 ##### Markov Chain Monte Carlo
-We can also use Monte Carlo methods to draw enough samples to estimate the posterior. However, it is almost always impossible to directly do so. As a solution, we can use MCMC, which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. 
+Unlike VI which solves inference with optimization, MCMC tackles it via sampling techniques. More specifically, MCMC applies Monte Carlo methods to generate a sufficient number of samples for an accurate estimation of the posterior distribution. However, it is almost always impossible to directly do so. As a solution, we can use MCMC, which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. 
 And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain! 
 
 A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$:
