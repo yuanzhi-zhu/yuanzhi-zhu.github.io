@@ -185,6 +185,8 @@ The optimization of the above equation (\ref{objective}) usually involve taking 
 Unlike VI which solves inference with optimization, MCMC tackles it via sampling techniques. More specifically, MCMC applies Monte Carlo methods to generate a sufficient number of samples for an accurate estimation of the posterior distribution. However, it is almost always impossible to directly do so. As a solution, we can use MCMC, which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. 
 And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain! 
 
+**Optimization**: find the minimum $min_{x\in \mathbb{R}^d} f(x)$ | **Sampling**: draw samples from the density $\pi(x)\propto e^{-f(x)}$
+
 A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
