@@ -49,7 +49,7 @@ where $M$ is a sufficient large constant to ensure $\left[\frac{\tilde\pi(x)}{Mg
 <!-- 
 Saying now we have a sample from $g$, the intuition is that we would like to take this sample if it is highly likely under the distribution $\tilde\pi(x)$, and reject it if otherwise. On the other hand, we also want to consider whether this sample is a likely to occur again under the proposal distribution $g$. -->
 
-Let's now establish that the accepted samples indeed come from the distribution $\pi$. Suppose that the act of accepting a sample is denoted as $A$. Therefore, for any given sample $s$, we can state that:
+Let's now establish that the accepted samples indeed come from the distribution $\pi$ (_asymptotically_ correct). Suppose that the act of accepting a sample is denoted as $A$. Therefore, for any given sample $s$, we can state that:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -93,7 +93,7 @@ and a Markov process is _uniquely_ defined by its transition probabilities $p(x'
 In our case, we always want the Markov chain to have a _unique_ _stationary_ distribution that is indeed $\pi$.
 
 **Markov Chain Properties**
-- Prior $p(X_1)$ and transition probabilities $p(X_{t+1} \| t_n )$ independent of $t$.
+- Prior $p(X_1)$ and transition probabilities $p(X_{t+1} \| X_{t} )=p(x'\| x)$ independent of $t$.
 - _Ergodic_ Markov Chains: there exists a finite $t$ such that every state can be reached from every state in exactly $t$ steps.
 - Stationary Distributions: $\lim\limits_{T \rightarrow \infty}  p\left(X_{T}=x\right)=\pi(x)$, which is independent of $p(X_1)$.
 
@@ -161,14 +161,14 @@ When the proposal $g(x'\|x)$ is independent of previous state $x_t$ — in other
         <p style='margin-bottom: 5px;' id="HD">
             <sup>6</sup>You can test your intuition of high-dimension in lecture note 1, and check the argument why HM is inefficient in high dimension in note 4 from <a href="https://canvas.stanford.edu/courses/66218">this course</a>.</p>
         <p style='margin-bottom: 5px;' id="HD2">
-            <sup>7</sup><a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">This blog</a> by Richard McElreath present a demo on why MH fails in high dimension and motivate the usage of Hamiltonian Monte Carlo.</p>
+            <sup>7</sup><a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">This blog</a> by Richard McElreath present a demo on why MH fails in high dimension and motivate the usage of Hamiltonian Monte Carlo: where a vector field aligned with the typical set counteract the attraction of the mode.</p>
         <p style='margin-bottom: 5px;' id="HD3">
             <sup>8</sup><a href="https://betanalpha.github.io/assets/case_studies/probabilistic_computation.html">This blog</a> and <a href="https://arxiv.org/abs/1701.02434">this paper</a> by Michael Betancourt studies counterintuitive behaviors of high-dimensional spaces which can explain why Metropolis does not scale well enough to high dimensions.</p>
     </div>
 </div>
 
 #### Random Walk Metropolis-Hastings<a href="#RWMH"><sup>5</sup></a>
-When the proposal $g(x'\|x)$ is Gaussian, we get random walk Metropolis-Hastings, where the new state is a random walk based on the previous state. This proposal can be written as following:
+When the proposal $g(x'\|x)$ is Gaussian, we get random walk Metropolis-Hastings (RWM), where the new state is a random walk based on the previous state. This proposal can be written as following:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -185,7 +185,22 @@ where $\tau$ is a scale factor chosen to facilitate rapid mixing, often referred
 Since the proposal $g(x'\|x)$ is now symmetric with $g(x'\|x)=g(x\|x')$, 
 we have simplified $p_{\mathrm{accept}}(x') = \min \left(1, \frac{\tilde\pi\left(x^{\prime}\right)}{\tilde\pi(x)}\right)$. This simplified acceptance probability is more easily understood: if $x'$ is more probable than $x$, we unquestionably transition there, otherwise, we may still move there anyway by change, depending on the relative probabilities.
 
-However, in high-dimensional space<a href="#HD"><sup>6</sup></a>, this classical MH algorithm is not applicable as it will end up without moving at all for a long time<a href="#HD2"><sup>7</sup></a><sup>,</sup><a href="#HD3"><sup>8</sup></a>.
+However, in high-dimensional space<a href="#HD"><sup>6</sup></a>, this classical MH algorithm is not applicable as it will end up without moving at all for a long time<a href="#HD2"><sup>7</sup></a><sup>,</sup><a href="#HD"><sup>6</sup></a>.
+This is because due to the [**concentration of measure**](https://en.wikipedia.org/wiki/Concentration_of_measure), most of the probability mass are concentrating around the _typical set_ which is a narrow crust shape area away from the (high density) mode; almost all proposed jumps will be outside — outside the crust and away from the mode because the ratio between volume of n-ball and n-cube tends to 0<a href="#HD3"><sup>8</sup></a> (thus there is almost 0 probability of falling inside the ball from the sphere) — the typical set and thus will be rejected for mode-seeking algorithms such as MH.
+
+<div style="overflow-x: auto; white-space: nowrap; margin-top: 0px;">
+<center>
+<object data="https://elevanth.org/mcmcdemo2/applet.html#RandomWalkMH,donut" type="text/html" width="600" height="400">
+</object>
+</center>
+<p align="center">
+<em>Figure 1: Visual illustration of random walk Metropolis-Hastings in 2D space.</em>
+</p>
+</div>
+<!-- <center>
+<object data="https://chi-feng.github.io/mcmc-demo/app.html?algorithm=RandomWalkMH&target=donut" type="text/html" width="600" height="400">
+</object>
+</center> -->
 
 <!-- This area of probability mass is a narrow surface that lies far from the mode and is called the typical set.  -->
 

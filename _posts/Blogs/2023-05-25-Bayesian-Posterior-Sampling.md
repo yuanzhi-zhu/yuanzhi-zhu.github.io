@@ -185,17 +185,25 @@ The optimization of the above equation (\ref{objective}) usually involve taking 
 Unlike VI which solves inference with optimization, MCMC tackles it via sampling techniques. More specifically, MCMC applies Monte Carlo methods to generate a sufficient number of samples for an accurate estimation of the posterior distribution. However, it is almost always impossible to directly do so. As a solution, we can use MCMC, which is aimed at simulating a Markov chain whose <span style="color:#FFA000">stationary distribution is $p_{\theta}({z}\|{x})$</span> and hope a <span style="color:#FFA000">fast convergence</span>. 
 And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) to simulate the chain! 
 
-**Optimization**: find the minimum $min_{x\in \mathbb{R}^d} f(x)$ | **Sampling**: draw samples from the density $\pi(x)\propto e^{-f(x)}$
+**Optimization**: find the minimum $min_{x\in \mathbb{R}^d} U(x)$ | **Sampling**: draw samples from the density $\pi(x)\propto e^{-U(x)}$
 
-A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$:
+
+<div class="sidebar">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 5px;' id="gibbs">
+            <sup>6</sup>This is called <a href="https://en.wikipedia.org/wiki/Boltzmann_distribution">Boltzmann distribution</a> (him again🤣), which is also called Gibbs distribution.</p>
+    </div>
+</div>
+
+A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$<a href="#gibbs"><sup>6</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \pi(x) &= \frac{1}{Z}\tilde{\pi}= \frac{\exp(-\beta V(x))}{Z} \label{target_dist}\tag{11}\\
+    \pi(x) &= \frac{1}{Z}\tilde{\pi}= \frac{\exp(-\beta U(x))}{Z} \label{target_dist}\tag{11}\\
     \end{align*}
 $$
 </div>
-where $\tilde{\pi}$ is the known unnormalized distribution, $\beta$ is an arbitrary positive constant akin to an inverse temperature, and $V(\cdot)$ can be treated as energy function. To make the notation consistent, now we rewrite the problem (\ref{KL}) as:
+where $\tilde{\pi}$ is the known unnormalized distribution, $\beta$ is an arbitrary positive constant akin to an inverse temperature, and $U(\cdot)$ can be treated as energy function. To make the notation consistent, now we rewrite the problem (\ref{KL}) as:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
