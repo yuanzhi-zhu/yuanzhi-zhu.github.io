@@ -154,7 +154,7 @@ $$
             <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu and this famous paper <a href="http://approximateinference.org/accepted/HoffmanJohnson2016.pdf">ELBO surgery</a> by Matthew D. Hoffman and Matthew J. Johnson for more perspectives on the ELBO.
         </p>
         <p style='margin-bottom: 5px;' id="VAE">
-            <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling.
+            <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling. For extended ideas in VAE such as $\beta$-VAE, <a href="https://lilianweng.github.io/posts/2018-08-12-vae/">this blog</a> by Lilian Weng would be helpful.
         </p>
         <p style='margin-bottom: 5px;'>
             <sup>5</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models.</p>
@@ -207,11 +207,11 @@ where $\tilde{\pi}$ is the known unnormalized distribution, $\beta$ is an arbitr
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \pi^\star = \underset{\mu\in \mathcal{P}_2(\mathbb{R}^d)}{\operatorname{\arg\min }} D(\mu \lVert \pi) := \mathcal{F}(\mu)\label{KL_MCMC}\tag{12} \\
+    \pi^\star = \underset{\mu\in \mathcal{P}_2(\mathbb{R}^d)}{\operatorname{\arg\min }} D(\mu \lVert \pi) := \mathcal{F}_\pi(\mu)\label{KL_MCMC}\tag{12} \\
     \end{align*}
 $$
 </div>
-where $D$ is a dissimilarity functional such as KL divergence, and $\mathcal{F}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers, and $b$ is called the **mixing time** or **burn-in time**. Note that the initial samples from the chain should be discarded because they do not come from the stationary distribution; reducing this is one of the most important factors in securing a fast convergence.
+where $D$ is a dissimilarity functional such as KL divergence, and $\mathcal{F}\_{\pi}(\mu)$ is a shorthand of $D(\mu \lVert \pi)$. We can approximate integrals $\int f(\cdot) d\pi$ of any function $f(\cdot)$ with samples from the Markov chain as $\frac{1}{n}\Sigma_{i=b}^{b+n-1}f(x_i)$, where $b,n$ are sufficiently large integers, and $b$ is called the **mixing time** or **burn-in time**. Note that the initial samples from the chain should be discarded because they do not come from the stationary distribution; reducing this is one of the most important factors in securing a fast convergence.
 
 The ultimate goal of this series of posts is exactly to learn various MCMC techniques to sample from $\pi^\star$! \\
 It's also highly recommended to try out [this great website](https://chi-feng.github.io/mcmc-demo/) for fantastic MCMC animations first.

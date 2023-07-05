@@ -120,7 +120,7 @@ This means in the in-flow to state $x'$ from $x$ (the probability of being in st
 
 ## Metropolis-Hastings Methods
 In the previous section, we learnt that the key of rejection sampling is <span style="color:#FFA000">**proposal**</span> and <span style="color:#FFA000">**decision rule**</span>. These principles remain applicable in MH techniques.
-In MH methods, instead generate samples independently from proposal $g$, the proposal (with Markov property) $g(x_{t+1}\|x_t)$ generate new candidate based on the current sample value (The samples are correlated.).
+In MH methods, instead generate samples independently from proposal $g$, the proposal (with Markov property) $g(x_{t+1}\|x_t)$ generate new candidate based on the current sample value (The samples are correlated.). And we still need the decision rule to ensure $\pi$ is the stationary distribution.
 
 Again, let have a look at the algorithm first, which is similar to rejection sampling. For each current state $x_t$:
 
@@ -148,7 +148,7 @@ $$
 $$
 </div>
 
-We need to ascertain that our proposal satisfies the detailed balance equation (\ref{Detailed_Balance}). To accomplish this, we can verify (left as exercise) that the left and right sides of the equation are equal using the target distribution $\pi$ and the transition probability $p(x'\|x)$, which is defined in (\ref{transition_kernel}).
+We need to ascertain that our proposal along with the decision rule satisfies the detailed balance equation (\ref{Detailed_Balance}). To accomplish this, we can verify (left as exercise) that the left and right sides of the equation are equal using the target distribution $\pi$ and the transition probability $p(x'\|x)$, which is defined in (\ref{transition_kernel}).
 
 
 #### Rejection Sampling as Special Case
@@ -185,8 +185,8 @@ where $\tau$ is a scale factor chosen to facilitate rapid mixing, often referred
 Since the proposal $g(x'\|x)$ is now symmetric with $g(x'\|x)=g(x\|x')$, 
 we have simplified $p_{\mathrm{accept}}(x') = \min \left(1, \frac{\tilde\pi\left(x^{\prime}\right)}{\tilde\pi(x)}\right)$. This simplified acceptance probability is more easily understood: if $x'$ is more probable than $x$, we unquestionably transition there, otherwise, we may still move there anyway by change, depending on the relative probabilities.
 
-However, in high-dimensional space<a href="#HD"><sup>6</sup></a>, this classical MH algorithm is not applicable as it will end up without moving at all for a long time<a href="#HD2"><sup>7</sup></a><sup>,</sup><a href="#HD"><sup>6</sup></a>.
-This is because due to the [**concentration of measure**](https://en.wikipedia.org/wiki/Concentration_of_measure), most of the probability mass are concentrating around the _typical set_ which is a narrow crust shape area away from the (high density) mode; almost all proposed jumps will be outside — outside the crust and away from the mode because the ratio between volume of n-ball and n-cube tends to 0<a href="#HD3"><sup>8</sup></a> (thus there is almost 0 probability of falling inside the ball from the sphere) — the typical set and thus will be rejected for mode-seeking algorithms such as MH.
+However, in high-dimensional space<a href="#HD"><sup>6</sup></a>, this classical MH algorithm is not applicable as it will end up without moving at all for a long time<a href="#HD2"><sup>7</sup></a><sup>,</sup><a href="#HD"><sup>8</sup></a>.
+This is because due to the [**concentration of measure**](https://en.wikipedia.org/wiki/Concentration_of_measure), most of the probability mass are concentrating around the _typical set_ which is a narrow crust shape area away from the (high density) mode; almost all proposed jumps will be outside — outside the crust and away from the mode because the ratio between volume of n-ball and n-cube tends to 0<a href="#HD3"><sup>6</sup></a> (thus there is almost 0 probability of falling inside the ball from the sphere) — the typical set and thus will be rejected for mode-seeking algorithms such as MH.
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: 0px;">
 <center>

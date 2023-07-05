@@ -44,11 +44,11 @@ The overdamped<a href="#overdamp"><sup>1</sup></a> Langevin Itô diffusion can b
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    d{X_t}=\underbrace{-\nabla U(X_t)\mathrm{d}t}_{\text{drift term}} + \underbrace{\sqrt {2}{B_t}\mathrm{d}t}_{\text{diffusion term}}  \label{LD}\tag{2}
+    d{X_t}=\underbrace{-\nabla U(X_t)\mathrm{d}t}_{\text{drift term}} + \underbrace{\sqrt {2}{B_t}\mathrm{d}t}_{\text{diffusion term}},  \quad X_0\sim p_0 \label{LD}\tag{2}
     \end{align*}
 $$
 </div>
-where $U(X)$ is the (time-dependent) potential function on $\mathbb{R}^d$ and $B_t$ is a d-dimensional standard Brownian Motion (or called the Wiener process). We assume that $U(X)$ is $L$-smooth (or $\nabla U(X)$ is $L$-Lipschitz): i.e. continuously
+where $U(X)$ is the (time-dependent) potential energy function on $\mathbb{R}^d$ and $B_t$ is a d-dimensional standard Brownian Motion (or called the Wiener process). We assume that $U(X)$ is $L$-smooth (or $\nabla U(X)$ is $L$-Lipschitz): i.e. continuously
 differentiable and $||\nabla U(x)-\nabla U(y)|| \leq L||x-y||, \exists L > 0$.
 
 <!-- 
@@ -56,7 +56,7 @@ differentiable and $||\nabla U(x)-\nabla U(y)|| \leq L||x-y||, \exists L > 0$.
  -->
 
 <!-- In our case, we have $\pi(x)=\frac{\exp(-\beta U(x))}{Z}$.  -->
-In order to sample the diffusion paths, we can discrete (\ref{LD}) using the Euler-Maruyama (EM) scheme as following<a href="#GD"><sup>2</sup></a> (similar to (\ref{Des_LD})):
+In order to sample the diffusion paths, we can discrete (\ref{LD}) using the _Euler-Maruyama_ (EM) scheme as following<a href="#GD"><sup>2</sup></a> (similar to (\ref{Des_LD})):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -89,7 +89,7 @@ $$
 $$
 </div>
 
-To verify that $\pi$ is the unique stationary distribution for this FP equation (\ref{FP}), which motivate us to use Langevin dynamics for sampling from $\pi$, we can do any of the following<a href="#Stationary"><sup>5</sup></a>:
+To verify that $\pi$ is the unique stationary distribution for this FP equation (\ref{FP}) and hence the corresponding Langevin diffusion — which motivate us to use Langevin dynamics for sampling from $\pi$ — we can do any of the following<a href="#Stationary"><sup>5</sup></a>:
 - substitute $p_t$ with $\pi$ to verify that it's a stationary distribution ($\partial_t \pi = 0$) 
 - assume we already have a stationary distribution $p_\infty(x), s.t. \partial_t p_\infty=0$ and verify that $p_\infty(x) \propto \exp(-U(x))$. 
 <!-- The readers are encouraged to try both as exercise. -->
@@ -114,13 +114,13 @@ $$
     \end{align*}
 $$
 </div>
-where we define the vector field as $w_t = f_t - \frac{g_t^2}{2} \nabla\log p_t$, and the $g_t$ is somehow related to the temperature of the stationary distribution.
+where we define the vector field as $w_t = f_t - \frac{g_t^2}{2} \nabla\log p_t$, $g_t$ is somehow related to the temperature of the stationary distribution, and $p_0$ is the initial distribution (not necessarily Gaussian).
 
 The corresponding Ordinary Differential Equations (ODE) of a particle moving along this vector field is the so-called <span style="color:#FFA000"><em>**probability flow ODE**</em></span><a href="#PFODE"><sup>8</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \mathrm{d} x = \bigg[f_t(x) - \frac{1}{2}g_t^2 \nabla_{x} \log p_t({x})\bigg] \mathrm{d}t \label{prob_ode} \tag{6}
+    \mathrm{d} x = \bigg[f_t(x) - \frac{1}{2}g_t^2 \nabla_{x} \log p_t({x})\bigg] \mathrm{d}t \quad \Longleftrightarrow \quad \frac{\mathrm{d}x}{\mathrm{d}t} = v_t \label{prob_ode} \tag{6}
     \end{align*}
 $$
 </div>
@@ -132,15 +132,16 @@ Given $f_t$ and $g_t$ which define the forward diffusion process, we can travel 
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 10px;' id="ulaq">
-        <sup>9</sup>Here is an <a href="https://fa.bianp.net/blog/2023/ulaq/">excellent blog</a> by Fabian Pedregosa on the convergence of ULA and why it's biased.</p>
+        <sup>9</sup>Here is an <a href="https://fa.bianp.net/blog/2023/ulaq/">excellent blog</a> by Fabian Pedregosa on the convergence of ULA and why it's asymptotically biased.</p>
         <p style='margin-bottom: 10px;' id="lr">
         <sup>10</sup>Those moments I spent delicately tuning the learning rate in deep learning....</p>
     </div>
 </div>
 
-#### Unadjusted Langevin Algorithm<a href="#ulaq"><sup>9</sup></a>
+#### Unadjusted Langevin Algorithm
 
 When we using eq(\ref{Des_LD2}) for sampling we are implementing the ULA.
+Even though the stationary distribution of the Langevin diffusion is $\pi$, the stationary distribution of ULA is not due to the discretization<a href="#ulaq"><sup>9</sup></a>!
 Note that when $\gamma_i$ is constant, the value of it controls the trade-off between the convergence speed and the accuracy<a href="#lr"><sup>10</sup></a>. 
 ULA can be biased easily with larger step-size $\gamma_i$ and one could use a decreasing step-size or introduce the HM scheme to eliminate the bias.
 
@@ -170,8 +171,17 @@ $$
 </div>
 where the step-sizes $\epsilon_{t}$ decrease towards zero, n is the batch size, and $\eta_{t} \sim \mathcal{N}(0,\epsilon_{t})$.
 
+<div class="sidebar">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 10px;' id="SGLD_ML">
+        <sup>11</sup>SGLD is more related to machine learning.</p>
+    </div>
+</div>
+
 Yes, SGLD is proposed to train a model given the dataset, and the idea is quite simple: We train the model using regular SGD, but add some Gaussian noise to each step. There are two sources of randomness: estimates of the gradient and Gaussian added noise to sample.
 
-https://www.weideng.org/posts/CSGLD/ Dynamic Importance Sampling address the local trap issue.
+https://francisbach.com/rethinking-sgd-noise/
 
-## Remarks
+<!-- https://www.weideng.org/posts/CSGLD/ Dynamic Importance Sampling address the local trap issue. -->
+
+<!-- ## Remarks -->
