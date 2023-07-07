@@ -148,7 +148,7 @@ $$
 $$
 </div>
 
-We need to ascertain that our proposal along with the decision rule satisfies the detailed balance equation (\ref{Detailed_Balance}). To accomplish this, we can verify (left as exercise) that the left and right sides of the equation are equal using the target distribution $\pi$ and the transition probability $p(x'\|x)$, which is defined in (\ref{transition_kernel}).
+We need to ascertain that our proposal along with the decision rule satisfies the detailed balance equation (\ref{Detailed_Balance}). To accomplish this, we can verify (left as exercise) that the left and right sides of the equation are equal using the target distribution $\pi$ and the transition probability $p(x'\|x)$, which is defined in eq(\ref{transition_kernel}).
 
 
 #### Rejection Sampling as Special Case
@@ -163,7 +163,11 @@ When the proposal $g(x'\|x)$ is independent of previous state $x_t$ — in other
         <p style='margin-bottom: 5px;' id="HD2">
             <sup>7</sup><a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">This blog</a> by Richard McElreath present a demo on why MH fails in high dimension and motivate the usage of Hamiltonian Monte Carlo: where a vector field aligned with the typical set counteract the attraction of the mode.</p>
         <p style='margin-bottom: 5px;' id="HD3">
-            <sup>8</sup><a href="https://betanalpha.github.io/assets/case_studies/probabilistic_computation.html">This blog</a> and <a href="https://arxiv.org/abs/1701.02434">this paper</a> by Michael Betancourt studies counterintuitive behaviors of high-dimensional spaces which can explain why Metropolis does not scale well enough to high dimensions.</p>
+            <sup>8</sup><a href="https://betanalpha.github.io/assets/case_studies/probabilistic_computation.html">This blog</a> and <a href="https://arxiv.org/abs/1701.02434">this paper</a> by Michael Betancourt studies counterintuitive behaviors of high-dimensional spaces which can explain why Metropolis does not scale well enough to high dimensions.
+        </p>
+        <p style='margin-bottom: 5px;' id="HD4">
+            <sup>9</sup>You can find a 3D version illustration in <a href="http://arogozhnikov.github.io/2016/12/19/markov_chain_monte_carlo.html">this blog</a> by Alex Rogozhnikov.
+        </p>
     </div>
 </div>
 
@@ -194,7 +198,7 @@ This is because due to the [**concentration of measure**](https://en.wikipedia.o
 </object>
 </center>
 <p align="center">
-<em>Figure 1: Visual illustration of random walk Metropolis-Hastings in 2D space.</em>
+<em>Figure 1: Visual illustration of random walk Metropolis-Hastings in 2D space<a href="#HD4"><sup>9</sup></a>.</em>
 </p>
 </div>
 <!-- <center>

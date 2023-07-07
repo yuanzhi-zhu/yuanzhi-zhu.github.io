@@ -87,7 +87,7 @@ In this post, I go through the two primary methodologies utilized to address the
 Variational inference (VI) is a method in machine learning that approximates complex probability distributions by finding the most similar, simpler and hence _tractable_ distribution $q(z)$ from a _specified family_ $\mathcal{Q}$, thereby enabling efficient computation and handling of uncertainty.
 
 Most of the time when referring to Variational Inference (VI), we are discussing parametric VI. In parametric VI, we use a parameter $\phi$ to represent the variational distribution $q_\phi(z\|{x})$. 
-<span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles ${z^{(i)}}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
+<span style="color:gray">There is another type of VI called particle-based VI, which utilizes a set of particles $\\{z^{(i)}\\}_{i=1}^{N}$ to represent the variational distribution $q(z\|{x})$.</span>
 
 <p align="center">
   <img src="/images/blog/Bayesian_Posterior_Sampling/Introduction/variational_inference.png" alt="variational_inference" width="600">
@@ -126,7 +126,7 @@ For convention, we can rewrite this as:
     $$
 </div>
 
-where the log evidence $\log p_\theta({x})$ does not change with the choice of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of (\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
+where the log evidence $\log p_\theta({x})$ does not change with the choice of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of eq(\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
@@ -135,7 +135,26 @@ where the log evidence $\log p_\theta({x})$ does not change with the choice of $
     $$
 </div>
 
-Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to maximize the ELBO (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it wrt both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
+Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to **maximize the ELBO** (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it w.r.t. both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
+
+<div class="sidebar">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 5px;' id="joint_KL">
+            <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi.</p>
+        <p style='margin-bottom: 5px;' id="ELBO">
+            <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu and this famous paper <a href="http://approximateinference.org/accepted/HoffmanJohnson2016.pdf">ELBO surgery</a> by Matthew D. Hoffman and Matthew J. Johnson for more perspectives on the ELBO.
+        </p>
+        <p style='margin-bottom: 5px;' id="VAE">
+            <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling. 
+        </p>
+        <p style='margin-bottom: 5px;' id="VAE2">
+            <sup>5</sup>For a comprehensive understanding of advanced concepts in VAE such as the $\beta$-VAE, I highly recommend reading Lilian Weng's <a href="https://lilianweng.github.io/posts/2018-08-12-vae/">blog</a>.
+        </p>
+        <p style='margin-bottom: 5px;' id="DM_loss">
+            <sup>6</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models.
+        </p>
+    </div>
+</div>
 
 We can rewrite the ELBO as follows<a href="#ELBO"><sup>3</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
@@ -146,22 +165,7 @@ $$
 $$
 </div>
 
-<div class="sidebar">
-    <div style="font-size: 12px;">
-        <p style='margin-bottom: 5px;' id="joint_KL">
-            <sup>2</sup>We can also get the same ELMO starting from the KL divergence between joint distributions $D_{KL}(q_{\phi}({x},{z})\lVert p_{\theta}({x},{z}))$, see <a href="https://kexue.fm/archives/5343">this blog</a> by Jianlin Su and <a href="https://blog.alexalemi.com/diffusion.html">this blog</a> by Alex Alemi.</p>
-        <p style='margin-bottom: 5px;' id="ELBO">
-            <sup>3</sup>It's recommended to read this <a href="https://caseychu.io/posts/perspectives-on-the-variational-autoencoder/">blog</a> by Casey Chu and this famous paper <a href="http://approximateinference.org/accepted/HoffmanJohnson2016.pdf">ELBO surgery</a> by Matthew D. Hoffman and Matthew J. Johnson for more perspectives on the ELBO.
-        </p>
-        <p style='margin-bottom: 5px;' id="VAE">
-            <sup>4</sup>For VAE, there is a great <a href="https://arxiv.org/abs/1906.02691">introduction</a> by D.P. Kingma and Max Welling. For extended ideas in VAE such as $\beta$-VAE, <a href="https://lilianweng.github.io/posts/2018-08-12-vae/">this blog</a> by Lilian Weng would be helpful.
-        </p>
-        <p style='margin-bottom: 5px;'>
-            <sup>5</sup><a href="https://blog.alexalemi.com/diffusion.html">This great blog</a> by Alex Alemi also derives the diffusion loss through variational perspective for those who are interested in diffusion models.</p>
-    </div>
-</div>
-
-Additionally, the ELBO can be reorganized and interpreted as the following in Variational AutoEncoder (VAE)<a href="#VAE"><sup>4,5</sup></a>, where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
+Additionally, the ELBO can be reorganized and interpreted as the following in Variational AutoEncoder (VAE)<a href="#VAE"><sup>4</sup></a><sup>,</sup><a href="#VAE2"><sup>5</sup></a>, where $\phi$ and $\theta$ represent the encoder and decoder, respectively:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -170,7 +174,7 @@ $$
 $$
 </div>
 
-Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi}({z}\|{x})$ is a deterministic mapping $\psi_{\phi}(x)$. The first term is a _reconstruction error_, proportional to $\|\| x−\mu_\theta(\psi_{\phi}(x))\|\|^2$. And the training objective on given dataset is hence:
+Suppose $p_{\theta}({x}\|{z})=\mathcal{N}(\mu_\theta(z),\sigma^2)$, and $q_{\phi}({z}\|{x})$ is a deterministic mapping $\psi_{\phi}(x)$. The first term is a _reconstruction error_, proportional to $\|\| x−\mu_\theta(\psi_{\phi}(x))\|\|^2$. And the training objective on given dataset is hence<a href="#DM_loss"><sup>6</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$ 
     \begin{align*}
@@ -191,11 +195,11 @@ And guess what, we only need _unnormalized_ probability density (e.g. $p(x,z)$) 
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 5px;' id="gibbs">
-            <sup>6</sup>This is called <a href="https://en.wikipedia.org/wiki/Boltzmann_distribution">Boltzmann distribution</a> (him again🤣), which is also called Gibbs distribution.</p>
+            <sup>7</sup>This is called <a href="https://en.wikipedia.org/wiki/Boltzmann_distribution">Boltzmann distribution</a> (him again🤣), which is also called Gibbs distribution.</p>
     </div>
 </div>
 
-A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$<a href="#gibbs"><sup>6</sup></a>:
+A more general problem setting is: sampling (=generating new examples) from a target distribution $\pi$ over $\mathbb{R}^d$ whose density is known up to an intractable normalization constant $Z$<a href="#gibbs"><sup>7</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
