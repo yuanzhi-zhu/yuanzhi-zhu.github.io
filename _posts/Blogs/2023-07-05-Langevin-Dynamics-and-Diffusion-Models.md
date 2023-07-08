@@ -66,6 +66,11 @@ $$
 </div>
 where $z_i$ is i.i.d $\mathcal{N}(0,I_d)$ and $\gamma_{i}$ is the stepsize, either constant or decreasing to 0.
 
+
+<span style="color:gray">
+The subject of mixing time in MCMC algorithms is quite complex and necessitates substantial analysis skills. Hence, we won't delve into it in this blog post.
+</span>
+
 #### Fokker-Plank Equation
 The Fokker-Planck (FP) equation, a form of partial differential equation (PDE), outlines how a probability distribution changes over time due to the influences of deterministic drift forces and stochastic fluctuations.
 
@@ -106,7 +111,7 @@ To verify that $\pi$ is the unique stationary distribution for this FP equation 
 #### Unadjusted Langevin Algorithm
 
 When we using eq(\ref{Des_LD2}) for sampling we are implementing the ULA.
-Even though the stationary distribution of the Langevin diffusion is $\pi$, the stationary distribution of ULA is not due to the discretization<a href="#ulaq"><sup>6</sup></a>!
+Even though the stationary distribution of the Langevin diffusion is $\pi$, the stationary distribution of ULA is not, due to the discretization<a href="#ulaq"><sup>6</sup></a>!
 Note that when $\gamma_i$ is constant, the value of it controls the trade-off between the convergence speed and the accuracy<a href="#lr"><sup>7</sup></a>. 
 ULA can be biased easily with larger step-size $\gamma_i$ and one could use a decreasing step-size or introduce the HM scheme to eliminate the bias.
 
@@ -169,7 +174,10 @@ Yes, SGLD is proposed to train a model given the dataset<a href="#SGLD_ML"><sup>
         <sup>10</sup><a href="https://proceedings.neurips.cc/paper_files/paper/2019/file/3001ef257407d5a371a96dcd947c7d93-Paper.pdf">Generative Modeling by Estimating Gradients of the Data Distribution</a> Y. Song, S. Ermon. NeuIPS 2019.
         </p>
         <p style='margin-bottom: 10px;' id="smdsm">
-        <sup>11</sup>In <a href="https://kexue.fm/archives/9509">This blog</a> by Jianlin Su you can find some discussion (in Chinese) about denoising score matching and score matching.
+        <sup>11</sup>In <a href="https://kexue.fm/archives/9509">this blog</a> by Jianlin Su you can find some discussion (in Chinese) about the relationship between denoising score matching and score matching.
+        </p>
+        <p style='margin-bottom: 10px;' id="stlmc">
+        <sup>12</sup>In <a href="http://www.offconvex.org/2021/03/01/beyondlogconcave2/">this blog</a> the authors introduced a very similar technique called <em>Simulated Tempering Langevin Monte Carlo</em>.
         </p>
     </div>
 </div>
@@ -180,8 +188,8 @@ Assume now we have access to oracle $s_\theta \approx \nabla \log p_\infty = -\n
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \theta^{\star} = & \arg min \frac{1}{2}\mathbb{E}_{p_{\mathrm{data}}(x)} \left[||s_\theta (x)-\nabla_{x} \log p_{\mathrm{data}}(x)||_{2}^{2} \right] \\ 
-    = & \arg min \mathbb{E}_{p_{\mathrm{data}}(x)}\left[\mathrm{tr}(\nabla_{x}{s}_\theta(x))+\frac{1}{2}||{s}_\theta(x)||_{2}^{2}\right], \label{sm}\tag{7}
+    \theta^{\star} = & \arg \min \frac{1}{2}\mathbb{E}_{p_{\mathrm{data}}(x)} \left[||s_\theta (x)-\nabla_{x} \log p_{\mathrm{data}}(x)||_{2}^{2} \right] \\ 
+    = & \arg \min \mathbb{E}_{p_{\mathrm{data}}(x)}\left[\mathrm{tr}(\nabla_{x}{s}_\theta(x))+\frac{1}{2}||{s}_\theta(x)||_{2}^{2}\right], \label{sm}\tag{7}
     \end{align*}
 $$
 </div>
@@ -212,18 +220,21 @@ $$
 $$
 </div>
 
-In the next section, we will see that the sampling algorithm (\ref{ALD}) is indeed a special case of reverse SDEs, which are associated with a deterministic ODE.
+With the learnt scores $s_\theta(x,\sigma_i) \approx \nabla_x \log p_{\sigma_i}(x)$, we can generate samples according to eq(\ref{ALD}). When $\sigma_i$ is large, modes in $p(x)$ are smoothed out by the Gaussian kernel and $s_\theta(x,\sigma_i)$ points to the _mean_ of the modes; as $\sigma_i$ annealed down, the dynamic will be attracted to the _actual modes_ of the target distribution<a href="#stlmc"><sup>12</sup></a>. 
+
+In the next section, we will see that the sampling algorithm (\ref{ALD}) is indeed a special case of reverse SDEs.
+<!-- , which are associated with a deterministic ODE. -->
 
 #### Score-based Stochastic Differential Equations
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 10px;' id="PFODE">
-        <sup>12</sup><a href="https://openreview.net/forum?id=PxTIG12RRHS">Score-Based Generative Modeling through Stochastic Differential Equations</a>  Y. Song, J. Sohl-Dickstein, D.P. Kingma, A. Kumar, S. Ermon, B. Poole. ICLR 2021.
+        <sup>13</sup><a href="https://openreview.net/forum?id=PxTIG12RRHS">Score-Based Generative Modeling through Stochastic Differential Equations</a>  Y. Song, J. Sohl-Dickstein, D.P. Kingma, A. Kumar, S. Ermon, B. Poole. ICLR 2021.
         </p>
         <p style='margin-bottom: 10px;' id="ULAft">
-        <sup>13</sup>Most of the case in ULA, the <em>drift term</em> is time independent and related to the target distribution, unlike the $f_t$ here in diffusion models.</p>
+        <sup>14</sup>Most of the case in ULA, the <em>drift term</em> is time independent and related to the target distribution, unlike the $f_t$ here in diffusion models.</p>
         <p style='margin-bottom: 10px;' id="FM">
-        <sup>14</sup>You can find more in <a href="https://openreview.net/forum?id=PqvMRDCJT9t">this paper</a> on flow matching by Yaron Lipman <em>et al</em>.</p>
+        <sup>15</sup>You can find more in <a href="https://openreview.net/forum?id=PqvMRDCJT9t">this paper</a> on flow matching by Yaron Lipman <em>et al</em>.</p>
     </div>
 </div>
 
@@ -237,7 +248,7 @@ $$
 $$
 </div>
 
-In another wonderful work by Yang Song _et al_<a href="#PFODE"><sup>12</sup></a>, the authors extend the idea to SDEs in a more general forma<a href="#ULAft"><sup>13</sup></a>:
+In another wonderful work by Yang Song _et al_<a href="#PFODE"><sup>13</sup></a>, the authors extend the idea to SDEs in a more general forma<a href="#ULAft"><sup>14</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -256,7 +267,7 @@ $$
 </div>
 For $f_t=0$ and $g_t=\sqrt{\mathrm{d}[\sigma^2(t)]/\mathrm{d}t}$, we get eq(\ref{ALD}) as a discretization of a special case of eq(\ref{reverseSDE}).
 
-For score-based models (or diffusion models) with forward SDE in the form of eq(\ref{SDE}), we can write the corresponding FP equation in the form of the _continuity equation_<a href="#FM"><sup>14</sup></a>:
+For score-based models (or diffusion models) with forward SDE in the form of eq(\ref{SDE}), we can write the corresponding FP equation in the form of the _continuity equation_<a href="#FM"><sup>15</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -266,7 +277,7 @@ $$
 </div>
 where we define the vector field as $w_t = f_t - \frac{g_t^2}{2} \nabla\log p_t$, $g_t$ is somehow related to the temperature of the stationary distribution, and $p_0$ is the initial distribution (not necessarily Gaussian).
 
-The corresponding Ordinary Differential Equations (ODE) of a particle moving along this vector field is the so-called <span style="color:#FFA000"><em>**probability flow ODE**</em></span> (PFODE)<a href="#PFODE"><sup>12</sup></a>:
+The corresponding Ordinary Differential Equations (ODE) of a particle moving along this vector field is the so-called <span style="color:#FFA000"><em>**probability flow ODE**</em></span> (PFODE)<a href="#PFODE"><sup>13</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}

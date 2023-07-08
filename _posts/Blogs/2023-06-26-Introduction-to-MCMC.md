@@ -77,7 +77,7 @@ $$
 The unconditional acceptance probability $p(A)$ tell us, we need on average $\frac{M}{Z}$ draws to get an accepted sample, which can be very inefficient when $M$ is very large. And especially when we have random variable $x$ in high dimension, rejection sampling suffers from the _"curse of dimensionality"_<a href="#curse"><sup>3</sup></a>.
 <!-- And there are several methods with better proposal $g$ to alleviate this issue. -->
 
-Moreover, in acceptance-rejection method, each draw is independent and information from the last draw is discarded completely (i.e, we may want to explore the its neighbor if the sample from last draw get accepted). It's natural to consider adding some correlation between the closest samples, and this is when Markov chain (or the Markov transition kernel $p(x'\|x)$) is introduced.
+Moreover, in acceptance-rejection method, each draw is independent and information from the last draw is discarded completely (i.e, we may want to explore its neighbor if the sample from last draw get accepted). It's natural to consider adding some correlation between the closest samples, and this is when Markov chain (or the Markov transition kernel $p(x'\|x)$) is introduced.
 
 ## Recap of Markov Chain
 A (discrete-time) Markov chain is a sequence of random variables $X_1, X_2, X_3, ...$ with the Markov property:
@@ -101,7 +101,7 @@ In our case, we always want the Markov chain to have a _unique_ _stationary_ dis
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 5px;' id="detailed_balance">
-            <sup>4</sup>The principle of detailed balance was explicitly introduced for collisions by our favorite <a href="https://en.wikipedia.org/wiki/Ludwig_Boltzmann">Ludwig Boltzmann</a>.</p>
+            <sup>4</sup>The principle of <a href="https://en.wikipedia.org/wiki/Detailed_balance">detailed balance</a> was explicitly introduced for collisions by our favorite <a href="https://en.wikipedia.org/wiki/Ludwig_Boltzmann">Ludwig Boltzmann</a>.</p>
     </div>
 </div>
 
@@ -122,7 +122,7 @@ This means in the in-flow to state $x'$ from $x$ (the probability of being in st
 In the previous section, we learnt that the key of rejection sampling is <span style="color:#FFA000">**proposal**</span> and <span style="color:#FFA000">**decision rule**</span>. These principles remain applicable in MH techniques.
 In MH methods, instead generate samples independently from proposal $g$, the proposal (with Markov property) $g(x_{t+1}\|x_t)$ generate new candidate based on the current sample value (The samples are correlated.). And we still need the decision rule to ensure $\pi$ is the stationary distribution.
 
-Again, let have a look at the algorithm first, which is similar to rejection sampling. For each current state $x_t$:
+Again, let's have a look at the algorithm first, which is similar to rejection sampling. For each current state $x_t$:
 
 > 1. sample $x'$ from proposal $g(x'\|x=x_t)$.
 > 2. accept $x_{t+1}=x'$ with probability $p_{\mathrm{accept}}(x') := p_{\mathrm{accept}}(x'\|x)$, set $x_{t+1}=x_{t}$ with probability $1-p_{\mathrm{accept}}(x')$.
