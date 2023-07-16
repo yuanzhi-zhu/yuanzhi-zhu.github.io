@@ -10,6 +10,7 @@
 
 - authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
   name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
+  publication: '_ICCV_ (2023).'
   arxiv_num: 2303.06840
   arxiv_url: https://arxiv.org/abs/2303.06840
   code_url: 

@@ -210,15 +210,24 @@ $$
 </div> 
 where $\alpha_{i}=\frac{\gamma}{2} \frac{\sigma_i^2}{\sigma_{i+1}^2}$ is the step-size. The only difference between the above eq(\ref{ALD}) and eq(\ref{Des_LD2}) is that the drift term $s_\theta(x_i,\sigma_{i+1}) \approx -\nabla U_i(x_i)$ is no longer fixed and will change with time.
 
-To learn the score function of the perturbed data distribution, we can use the objective of denoising score matching<a href="#sm"><sup>9</sup></a><sup>,</sup><a href="#smdsm"><sup>11</sup></a>:
+To learn the score function of the perturbed data distribution, we can use the objective of _denoising score matching_<a href="#sm"><sup>9</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    & \mathbb{E}_{p_{\sigma_i}(x_i)} \left[||s_\theta (x_i)-\nabla_{x_i} \log p_{\sigma_i}(x_i)||_{2}^{2} \right] 
-    = \mathbb{E}_{x,{x}_i \sim p_{\mathrm{data}}(x)p_{\sigma_i}({x}_i|{x})}\left[||s_\theta (x_i)-\nabla_{x_i} \log p_{\sigma_i}(x_i|x)||_{2}^{2}\right], \label{dsm}\tag{9}
+    \arg\min_\theta \mathbb{E}_{x_i\sim p_{\sigma_i}(x_i)} \left[||s_\theta (x_i)-\nabla_{x_i} \log p_{\sigma_i}(x_i)||_{2}^{2} \right] 
+    = \arg\min_\theta \mathbb{E}_{x,{x}_i \sim p_{\mathrm{data}}(x)p_{\sigma_i}({x}_i|{x})}\left[||s_\theta (x_i)-\nabla_{x_i} \log p_{\sigma_i}(x_i|x)||_{2}^{2}\right], \label{dsm}\tag{9}
     \end{align*}
 $$
 </div>
+
+From score matching to denoising score matching, the difference is a constant term independent of $\theta$<a href="#smdsm"><sup>11</sup></a>: 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$
+\mathbb{E}_{x_i\sim p_{\sigma_i}(x_i)}\left[{\mathbb{E}_{x\sim p_{\sigma_i}(x|x_i)}\left[\left||\nabla_{x_i}\log p_{\sigma_i}(x_i|x)\right||^2\right] - \left||\nabla_{x_i}\log p_{\sigma_i}(x_i)\right||^2}\right]
+$$
+</div>
+
+By matching the score, we are actually minimize the KL divergence between the parameterized and the target (data) probability distribution: $D_\mathrm{KL}(p_{\theta}(x)\|\|p_{data}(x))$.
 
 With the learnt scores $s_\theta(x,\sigma_i) \approx \nabla_x \log p_{\sigma_i}(x)$, we can generate samples according to eq(\ref{ALD}). When $\sigma_i$ is large, modes in $p(x)$ are smoothed out by the Gaussian kernel and $s_\theta(x,\sigma_i)$ points to the _mean_ of the modes; as $\sigma_i$ annealed down, the dynamic will be attracted to the _actual modes_ of the target distribution<a href="#stlmc"><sup>12</sup></a>. 
 
