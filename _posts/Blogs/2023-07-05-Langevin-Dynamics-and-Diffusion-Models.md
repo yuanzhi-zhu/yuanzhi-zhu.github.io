@@ -237,11 +237,11 @@ In the next section, we will see that the sampling algorithm (\ref{ALD}) is inde
 #### Score-based Stochastic Differential Equations
 <div class="sidebar">
     <div style="font-size: 12px;">
-        <p style='margin-bottom: 10px;' id="PFODE">
-        <sup>13</sup><a href="https://openreview.net/forum?id=PxTIG12RRHS">Score-Based Generative Modeling through Stochastic Differential Equations</a>  Y. Song, J. Sohl-Dickstein, D.P. Kingma, A. Kumar, S. Ermon, B. Poole. ICLR 2021.
-        </p>
         <p style='margin-bottom: 10px;' id="ULAft">
-        <sup>14</sup>Most of the case in ULA, the <em>drift term</em> is time independent and related to the target distribution, unlike the $f_t$ here in diffusion models.</p>
+        <sup>13</sup>Most of the case in ULA, the <em>drift term</em> is time independent and related to the target distribution, unlike the $U_t$ here and the score function in diffusion models.</p>
+        <p style='margin-bottom: 10px;' id="PFODE">
+        <sup>14</sup><a href="https://openreview.net/forum?id=PxTIG12RRHS">Score-Based Generative Modeling through Stochastic Differential Equations</a>  Y. Song, J. Sohl-Dickstein, D.P. Kingma, A. Kumar, S. Ermon, B. Poole. ICLR 2021.
+        </p>
         <p style='margin-bottom: 10px;' id="FM">
         <sup>15</sup>You can find more in <a href="https://openreview.net/forum?id=PqvMRDCJT9t">this paper</a> on flow matching by Yaron Lipman <em>et al</em>.</p>
     </div>
@@ -256,25 +256,36 @@ $$
     \end{align*}
 $$
 </div>
+where $U_t\propto -\log p_t$ now also depends on time $t$ comparing to $U\propto -\log p_\infty$ in eq(\ref{LD})<a href="#ULAft"><sup>13</sup></a>.
 
-In another wonderful work by Yang Song _et al_<a href="#PFODE"><sup>13</sup></a>, the authors extend the idea to SDEs in a more general forma<a href="#ULAft"><sup>14</sup></a>:
+In another wonderful work by Yang Song _et al_<a href="#PFODE"><sup>14</sup></a>, the authors construct forward diffusion process, which maps the target distribution to a (usually) simple distribution, in a more general form of SDEs:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    d{x_t}=\underbrace{f_t(x_t)\mathrm{d}t}_{\text{drift term}} + \underbrace{g_t{B_t}\mathrm{d}t}_{\text{diffusion term}},  \label{SDE}\tag{11}
+    d{x_t}={f_t(x_t)\mathrm{d}t} + {g_t{B_t}\mathrm{d}t},  \label{SDE}\tag{11}
     \end{align*}
 $$
 </div>
+Each pair of $f_t$ and $g_t$ define the unique forward process and the corresponding $p_t$ given the initial distribution.
+
+<span style="color:blue">From now on, we will swap the notation of time $t$, such that for $t=0$ we have target distribution $p_0 = \pi$ and for $t=T$ we have simple distribution $p_T$.</span>
 
 Furthermore, there exist the corresponding reverse SDE that can be used for sampling/generation:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
-    \mathrm{d}{x_t} = \left[f_t(x_t) - g_t^2 \nabla_{x} \log p_t({x})\right]\mathrm{d}t + g_t {B_t}\mathrm{d}t, \quad x_0\sim p_0   \label{reverseSDE}\tag{12}
+    \mathrm{d}{x_t} &= \left[f_t(x_t) - g_t^2 \nabla_{x_t} \log p_t({x_t})\right]\mathrm{d}t + g_t {\bar{B}_t}\mathrm{d}t, \quad x_0\sim p_0  
+    % \\ x_t&=x_{t+1}-f_{t+1}(x_{t+1})+g_{t+1}g^T_{t+1}\nabla_{x_t} \log p_t({x_t})+g_{t+1}z_{t+1} 
+    \label{reverseSDE}\tag{12}
     \end{align*}
 $$
 </div>
-For $f_t=0$ and $g_t=\sqrt{\mathrm{d}[\sigma^2(t)]/\mathrm{d}t}$, we get eq(\ref{ALD}) as a discretization of a special case of eq(\ref{reverseSDE}).
+This SDE is only meant for time flows backwards from $T$ to 0, and $dt$ is an infinitesimal _negative_ timestep.
+Now we can sample from the target distribution use this reverse SDE as long as we have access to $s_\theta \approx \nabla \log p_t$. 
+<!-- For $f_t=\nabla_{x} \log p_t({x})$ and $g_t=\sqrt{2}$, we get eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) (note that eq(\ref{reverseSDE}) is reversed in time). -->
+<!-- For $f_t=0$ and $g_t=\sqrt{\mathrm{d}[\sigma^2(t)]/\mathrm{d}t}$, we get eq(\ref{ALD}) as a discretization of a special case of eq(\ref{reverseSDE}). -->
+<!-- Could we find $f_t$ and $g_t$ such that eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) -->
+Note that eq(\ref{ALD2}) and eq(\ref{reverseSDE}) are two different sampling strategies, and we can apply both for sampling<a href="#PFODE"><sup>14</sup></a> (aka. corrector and predictor): we use the corrector to ensure $x_t \sim p_t$ and use the predictor to jump to $p_{t-1}$.
 
 For score-based models (or diffusion models) with forward SDE in the form of eq(\ref{SDE}), we can write the corresponding FP equation in the form of the _continuity equation_<a href="#FM"><sup>15</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
@@ -284,9 +295,9 @@ $$
     \end{align*}
 $$
 </div>
-where we define the vector field as $w_t = f_t - \frac{g_t^2}{2} \nabla\log p_t$, $g_t$ is somehow related to the temperature of the stationary distribution, and $p_0$ is the initial distribution (not necessarily Gaussian).
+where we define the vector field as $w_t = f_t - \frac{g_t^2}{2} \nabla\log p_t$, $g_t$ is somehow related to the temperature of the stationary distribution, and $p_\infty$ is the initial distribution (not necessarily Gaussian).
 
-The corresponding Ordinary Differential Equations (ODE) of a particle moving along this vector field is the so-called <span style="color:#FFA000"><em>**probability flow ODE**</em></span> (PFODE)<a href="#PFODE"><sup>13</sup></a>:
+The corresponding Ordinary Differential Equations (ODE) of a particle moving along this vector field is the so-called <span style="color:#FFA000"><em>**probability flow ODE**</em></span> (PFODE)<a href="#PFODE"><sup>14</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -294,6 +305,8 @@ $$
     \end{align*}
 $$
 </div>
+<!-- It not difficult to verify that for the reverse SDE in the form of eq(\ref{reverseSDE}), the corresponding FP equation is still eq(\ref{FP2}). That's to say, we can use this probability flow ODE to travel either forward or backward. -->
+And we can use this probability flow ODE to travel either forward or backward in time.
 
 Given $f_t$ and $g_t$ which define the forward diffusion process, we can travel backward in time with learned score function $s_\theta \approx \nabla \log p_t$ or the learned vector field $v_\theta \approx f_t - \frac{g_t^2}{2} \nabla\log p_t$.
 
