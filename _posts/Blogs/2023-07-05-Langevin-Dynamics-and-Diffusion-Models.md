@@ -210,6 +210,9 @@ $$
 </div> 
 where $\alpha_{i}=\frac{\gamma}{2} \frac{\sigma_i^2}{\sigma_{i+1}^2}$ is the step-size. The only difference between the above eq(\ref{ALD}) and eq(\ref{Des_LD2}) is that the drift term $s_\theta(x_i,\sigma_{i+1}) \approx -\nabla U_i(x_i)$ is no longer fixed and will change with time.
 
+The sampling algorithm of NCSN, which includes a double loop, can be located in <a href="#pitfall"><sup>10</sup></a>. 
+The outer loop is responsible for determining the noise levels, while the inner loop takes $T$ steps to guarantee that the samples are from the distribution $p_{\sigma_i}$.
+
 To learn the score function of the perturbed data distribution, we can use the objective of _denoising score matching_<a href="#sm"><sup>9</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
@@ -231,7 +234,8 @@ By matching the score, we are actually minimize the KL divergence between the pa
 
 With the learnt scores $s_\theta(x,\sigma_i) \approx \nabla_x \log p_{\sigma_i}(x)$, we can generate samples according to eq(\ref{ALD}). When $\sigma_i$ is large, modes in $p(x)$ are smoothed out by the Gaussian kernel and $s_\theta(x,\sigma_i)$ points to the _mean_ of the modes; as $\sigma_i$ annealed down, the dynamic will be attracted to the _actual modes_ of the target distribution<a href="#stlmc"><sup>12</sup></a>. 
 
-In the next section, we will see that the sampling algorithm (\ref{ALD}) is indeed a special case of reverse SDEs.
+<!-- In the next section, we will see that the sampling algorithm (\ref{ALD}) is indeed a special case of reverse SDEs. -->
+In the next section, we will explore another family of sampling algorithm: reverse SDEs.
 <!-- , which are associated with a deterministic ODE. -->
 
 #### Score-based Stochastic Differential Equations
@@ -266,11 +270,11 @@ $$
     \end{align*}
 $$
 </div>
-Each pair of $f_t$ and $g_t$ define the unique forward process and the corresponding $p_t$ given the initial distribution.
+Each pair of $f_t$ and $g_t$ define the unique forward process and the corresponding marginal $p_t$ given the initial distribution.
 
 <span style="color:blue">From now on, we will swap the notation of time $t$, such that for $t=0$ we have target distribution $p_0 = \pi$ and for $t=T$ we have simple distribution $p_T$.</span>
 
-Furthermore, there exist the corresponding reverse SDE that can be used for sampling/generation:
+Furthermore, we can initiate with samples from the simple distribution $p_T$, and generate samples from target distribution $p_0$ following the dynamics of the corresponding reverse SDE:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -282,10 +286,12 @@ $$
 </div>
 This SDE is only meant for time flows backwards from $T$ to 0, and $dt$ is an infinitesimal _negative_ timestep.
 Now we can sample from the target distribution use this reverse SDE as long as we have access to $s_\theta \approx \nabla \log p_t$. 
-<!-- For $f_t=\nabla_{x} \log p_t({x})$ and $g_t=\sqrt{2}$, we get eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) (note that eq(\ref{reverseSDE}) is reversed in time). -->
+
 <!-- For $f_t=0$ and $g_t=\sqrt{\mathrm{d}[\sigma^2(t)]/\mathrm{d}t}$, we get eq(\ref{ALD}) as a discretization of a special case of eq(\ref{reverseSDE}). -->
 <!-- Could we find $f_t$ and $g_t$ such that eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) -->
 Note that eq(\ref{ALD2}) and eq(\ref{reverseSDE}) are two different sampling strategies, and we can apply both for sampling<a href="#PFODE"><sup>14</sup></a> (aka. corrector and predictor): we use the corrector to ensure $x_t \sim p_t$ and use the predictor to jump to $p_{t-1}$.
+
+Still, for $f_t=\nabla_{x} \log p_t({x})$ and $g_t=\sqrt{2}$, we get eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) (note that eq(\ref{reverseSDE}) is reversed in time), but now the forward diffusion does not lead to the simple Gaussian distribution that we can sample from easily.
 
 For score-based models (or diffusion models) with forward SDE in the form of eq(\ref{SDE}), we can write the corresponding FP equation in the form of the _continuity equation_<a href="#FM"><sup>15</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
