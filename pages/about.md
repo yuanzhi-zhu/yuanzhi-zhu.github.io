@@ -59,7 +59,7 @@ permalink: /about/
 
 {% for artical in site.data.journals %}
 * {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
-  **{{ artical.name }}**, {{artical.info}}[ DOI: {{ artical.available }}]({{ artical.url }})
+  **{{ artical.name }}**, {{artical.info}}[ [DOI: {{ artical.available }}] ]({{ artical.url }})
 {% endfor %}
 
 <div class="my_container" style="display: flex; justify-content: space-between;">

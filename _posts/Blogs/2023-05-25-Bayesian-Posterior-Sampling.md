@@ -135,7 +135,7 @@ where the log evidence $\log p_\theta({x})$ does not change with the choice of $
     $$
 </div>
 
-Therefore, the common mission of to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to **maximize the ELBO** (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it w.r.t. both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
+Therefore, the common mission to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to **maximize the ELBO** (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it w.r.t. both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
 
 <div class="sidebar">
     <div style="font-size: 12px;">

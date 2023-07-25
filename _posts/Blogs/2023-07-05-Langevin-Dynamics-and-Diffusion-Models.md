@@ -3,7 +3,7 @@ layout: post
 title: Bayesian Posterior Sampling (3) Langevin Dynamics and Diffusion Models
 categories: Research
 description: none
-keywords: Bayesian, Langevin Dynamics, Fokker-Plank
+keywords: MCMC, Langevin Dynamics, Fokker-Plank Equation, Diffusion Models
 mathjax: true
 ---
 
@@ -199,7 +199,7 @@ are we safe to use Langevin Algorithm (\ref{Des_LD2}) for image generation in hi
 matching_ and _MCMC sampling with Langevin dynamics_ (suffers from slow mixing time due to separate regions of data manifold).
 
 #### Annealed Langevin Dynamics
-To overcome these issues, Yang Song _et al_ proposed _Noise Conditional Score Network_ (NCSN) $s_\theta(x,\sigma)$, which learns the Gaussian-perturbed data distribution $p_{\sigma_i}(x) = \mathbb{E}\_{x' \sim p(x')}\left[p_{\sigma_i}(x\|x')\right] = \int p(x') \mathcal{N}(x; x', \sigma_i^2 I) \mathrm{d} x' $ with various levels of noise $\sigma_i$. $\\{\sigma_i\\}^T_{i=1}$ is a positive geometric sequence that satisfies $\frac{\sigma_1}{\sigma_2}=\frac{\sigma_i}{\sigma_{i+1}}=\frac{\sigma_{T-1}}{\sigma_T}>1$. Since the distributions $\\{p_{\sigma_i}\\}^T_{i=1}$ are all perturbed by Gaussian noise, _their supports span the whole
+To overcome these issues, Yang Song _et al._ proposed _Noise Conditional Score Network_ (NCSN) $s_\theta(x,\sigma)$, which learns the Gaussian-perturbed data distribution $p_{\sigma_i}(x) = \mathbb{E}\_{x' \sim p(x')}\left[p_{\sigma_i}(x\|x')\right] = \int p(x') \mathcal{N}(x; x', \sigma_i^2 I) \mathrm{d} x' $ with various levels of noise $\sigma_i$. $\\{\sigma_i\\}^T_{i=1}$ is a positive geometric sequence that satisfies $\frac{\sigma_1}{\sigma_2}=\frac{\sigma_i}{\sigma_{i+1}}=\frac{\sigma_{T-1}}{\sigma_T}>1$. Since the distributions $\\{p_{\sigma_i}\\}^T_{i=1}$ are all perturbed by Gaussian noise, _their supports span the whole
 space and their scores are well-defined, avoiding difficulties from the manifold hypothesis_. To generate samples with annealed Langevin dynamics, we start with the largest noise level $\sigma_0$ and anneal the noise level to $\sigma_T\approx 0$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
@@ -262,7 +262,7 @@ $$
 </div>
 where $U_t\propto -\log p_t$ now also depends on time $t$ comparing to $U\propto -\log p_\infty$ in eq(\ref{LD})<a href="#ULAft"><sup>13</sup></a>.
 
-In another wonderful work by Yang Song _et al_<a href="#PFODE"><sup>14</sup></a>, the authors construct forward diffusion process, which maps the target distribution to a (usually) simple distribution, in a more general form of SDEs:
+In another wonderful work by Yang Song _et al._<a href="#PFODE"><sup>14</sup></a>, the authors construct forward diffusion process, which maps the target distribution to a (usually) simple distribution, in a more general form of SDEs:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$ 
     \begin{align*}
@@ -291,7 +291,7 @@ Now we can sample from the target distribution use this reverse SDE as long as w
 <!-- Could we find $f_t$ and $g_t$ such that eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) -->
 Note that eq(\ref{ALD2}) and eq(\ref{reverseSDE}) are two different sampling strategies, and we can apply both for sampling<a href="#PFODE"><sup>14</sup></a> (aka. corrector and predictor): we use the corrector to ensure $x_t \sim p_t$ and use the predictor to jump to $p_{t-1}$.
 
-Still, for $f_t=\nabla_{x} \log p_t({x})$ and $g_t=\sqrt{2}$, we get eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) (note that eq(\ref{reverseSDE}) is reversed in time), but now the forward diffusion does not lead to the simple Gaussian distribution that we can sample from easily.
+Still, for $f_t=\nabla_{x} \log p_t({x})$ and $g_t=\sqrt{2}$, we get eq(\ref{ALD2}) as a special case of eq(\ref{reverseSDE}) representing backward sampling (note that eq(\ref{reverseSDE}) is reversed in time). But now the forward diffusion does not lead to the simple Gaussian distribution that we can sample from easily. In other words, we can't enjoy the _fast sampling trajectory_ from Gaussian to target distribution anymore in this scenario.
 
 For score-based models (or diffusion models) with forward SDE in the form of eq(\ref{SDE}), we can write the corresponding FP equation in the form of the _continuity equation_<a href="#FM"><sup>15</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
