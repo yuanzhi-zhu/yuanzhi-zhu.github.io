@@ -230,7 +230,7 @@ $$
 $$
 </div>
 
-By matching the score, we are actually minimize the KL divergence between the parameterized and the target (data) probability distribution: $D_\mathrm{KL}(p_{\theta}(x)\|\|p_{data}(x))$.
+By matching the score, we are actually minimize the KL divergence between the parameterized and the target (data) probability distribution: $D_\mathrm{KL}(p_{data}(x)\|\|p_{\theta}(x))$.
 
 With the learnt scores $s_\theta(x,\sigma_i) \approx \nabla_x \log p_{\sigma_i}(x)$, we can generate samples according to eq(\ref{ALD}). When $\sigma_i$ is large, modes in $p(x)$ are smoothed out by the Gaussian kernel and $s_\theta(x,\sigma_i)$ points to the _mean_ of the modes; as $\sigma_i$ annealed down, the dynamic will be attracted to the _actual modes_ of the target distribution<a href="#stlmc"><sup>12</sup></a>. 
 

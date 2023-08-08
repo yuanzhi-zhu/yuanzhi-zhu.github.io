@@ -28,19 +28,11 @@ location: Zürich, Switzerland
 navs:
   -
     href: /
-    label: Home
-
-#  -
-#    href: /categories/
-#    label: Category
+    label: Blog
 
 #   -
 #     href: /archives/
 #     label: Archives
-
-#  -
-#    href: /links/
-#    label: Links
 
   -
     href: /about/

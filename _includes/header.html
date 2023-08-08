@@ -76,7 +76,7 @@
             <h1>
               <a href="{{ site.url }}/" title="{{ site.title }}">
                 <span class="octicon octicon-mark-github"></span>
-                <span class="title-text"><font color="black">{{ site.title }}</font></span>
+                <span class="title-text" style="color: black; font-family: 'Courier';">{{ site.title }}</span>
               </a>
             </h1>
             <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
@@ -86,7 +86,7 @@
             </button>
             <nav class="site-header-nav" role="navigation">
                 {% for nav in site.navs %}
-                <a href="{{ site.url }}{{ nav.href }}" class="{% if page.menu == nav.label %} selected {% endif %} site-header-nav-item" target="{{ nav.target | default: _self }}" title="{{ nav.label }}"><font color="black">{{ nav.label }}</font></a>
+                <a href="{{ site.url }}{{ nav.href }}" class="{% if page.menu == nav.label %} selected {% endif %} site-header-nav-item" target="{{ nav.target | default: _self }}" title="{{ nav.label }}"><span class="title-text" style="color: black;">{{ nav.label }}</span></a>
                 {% endfor %}
             </nav>
         </div>
