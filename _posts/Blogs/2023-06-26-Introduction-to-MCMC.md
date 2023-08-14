@@ -157,9 +157,9 @@ When the proposal $g(x'\|x)$ is independent of previous state $x_t$ — in other
 <div class="sidebar">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 5px;' id="RWMH">
-            <sup>5</sup>This should be indeed called Random Walk Metropolis, as the <i>Hastings correction</i> will be introduced when the proposal $g(x'|x)$ is asymmetric.</p>
+            <sup>5</sup>This should be indeed called Random Walk Metropolis, as the <i>Hastings correction</i> will be introduced when the $g(x'|x)$ is asymmetric.</p>
         <p style='margin-bottom: 5px;' id="HD">
-            <sup>6</sup>You can test your intuition of high-dimension in lecture note 1, and check the argument why HM is inefficient in high dimension in note 4 from <a href="https://canvas.stanford.edu/courses/66218">this course</a>.</p>
+            <sup>6</sup>You can test your intuition of high-dimension in lecture note 1, and check the argument why HM is inefficient in high dimension in note 4 from <a href="https://canvas.stanford.edu/courses/66218">this course</a>. Also have a look at <a href="https://stanislavfort.github.io/blog/sphere-spilling-out/">this blog</a> by Stanislav Fort to get some intuition about cubes and balls.</p>
         <p style='margin-bottom: 5px;' id="HD2">
             <sup>7</sup><a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/">This blog</a> by Richard McElreath present a demo on why MH fails in high dimension and motivate the usage of Hamiltonian Monte Carlo: where a vector field aligned with the typical set counteract the attraction of the mode.</p>
         <p style='margin-bottom: 5px;' id="HD3">

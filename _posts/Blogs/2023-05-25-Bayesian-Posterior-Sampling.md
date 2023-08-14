@@ -37,14 +37,15 @@ Hence I will write a series of posts to record this learning process and to impr
 > ------ [_Probabilistic Machine Learning: Advanced Topics_](https://probml.github.io/pml-book/book2.html) by Kevin Patrick Murphy. MIT Press, 2023.
 
 To be specific, we assume the dependence between unknown random latent variable $z$ and the available data $x$ is <span style="color:#FFA000">probabilistic</span> and what we want to do is to estimate $z$ given $x$ with $p(z\| x)$, which we call posterior. 
-Most of the time we only have some prior knowledge about $z$ as $p(z)$ and the likelihood model $p(x\|z)$, or equivalently the deep latent variable model $p_\theta(x, z)=p_\theta(z)p_\theta(x\|z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf), where $\theta$ can be estimated with maximizing likelihood (Maximizing likelihood is equivalent to minimizing the Kullback-Leibler (KL) divergence between $p_{\mathrm{data}}(\mathbf{x})$ and $p_{\theta}(\mathbf{x})$, which is usually intractable to compute directly in bayesian modeling):
+Most of the time we only have some prior knowledge about $z$ as $p(z)$ and the likelihood model $p(x\|z)$, or equivalently the deep latent variable model $p_\theta(x, z)=p_\theta(z)p_\theta(x\|z)$ through [Bayesian Modeling](https://changliu00.github.io/static/Bayesian%20Learning%20-%20Basics%20and%20Advances.pdf), where $\theta$ can be estimated with maximizing likelihood (**Maximizing the expected log-likelihood is equivalent to minimizing the Kullback-Leibler (KL) divergence between $p_{\mathrm{data}}(\mathbf{x})$ and $p_{\theta}(\mathbf{x})$**):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align}
-    -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\left[\log p_\theta(\mathbf{x})\right] &= D_{K L}(p_{\mathrm{data}}(\mathbf{x})\lVert p_{\theta}(\mathbf{x}))-\underbrace{\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})} \left[ \log p_{\mathrm{data}}(\mathbf{x})\right]}_{\text{constant}} \\ &\approx \prod_{n=1}^{N}\log p_\theta(x_{n}) = \prod_{n=1}^{N}\log [\int p_\theta(z_{n})p_\theta(x_{n}|z_{n})dz_{n}] \label{likelihood}\tag{1} \\
+    -\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})}\left[\log p_\theta(\mathbf{x})\right] &= D_{K L}(p_{\mathrm{data}}(\mathbf{x})\lVert p_{\theta}(\mathbf{x}))\underbrace{-\mathbb{E}_{\mathbf{x}\sim p_{\mathrm{data}}(\mathbf{x})} \left[ \log p_{\mathrm{data}}(\mathbf{x})\right]}_{\text{constant}} \\ &\approx \prod_{n=1}^{N}\log p_\theta(x_{n}) = \prod_{n=1}^{N}\log [\int p_\theta(z_{n})p_\theta(x_{n}|z_{n})dz_{n}] \label{likelihood}\tag{1} \\
     \end{align}
     $$
 </div>
+where the constant term is the entropy of the data distribution. While the entropy of the empirical data distribution goes to infinity, it is independent of $\theta$ and can be ignored in optimization.
 
 We can compute the posterior $p_{\theta}(z\| x)$ using Bayes's rule (see _Figure 1_ for visual illustration):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
