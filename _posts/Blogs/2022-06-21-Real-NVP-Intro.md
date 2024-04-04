@@ -161,3 +161,7 @@ x = torch.cat((x, x_split), dim=1)
 x = squeeze(x, reverse=True)
 ```
 Every time after the squeeze, $x$ is split into $x$ and $x_{split}$, where $x$ will be processed in the following scale blocks and $x_{split}$ will remain unchanged. After $x$ is processed, it's concatenated with $x_{split}$ to form the output with same size.
+
+
+# References
+https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial11/NF_image_modeling.html
