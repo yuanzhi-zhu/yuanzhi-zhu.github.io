@@ -106,7 +106,8 @@ The **goal of VI** is to approximate an intractable probability distribution, so
     $$
 </div>
 
-It's easy to get<a href="#joint_KL"><sup>2</sup></a>:
+The challenge here is that we still don't know the true posterior $p_{\theta}({z}\|{x})$, and the KL divergence is intractable to compute. 
+Luckily, we can rewrite the KL divergence in a way that makes it easier to optimize:<a href="#joint_KL"><sup>2</sup></a>:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
@@ -117,6 +118,7 @@ It's easy to get<a href="#joint_KL"><sup>2</sup></a>:
     \end{align*}
     $$
 </div>
+where the log evidence $\log p_\theta({x})$ does not change with the choice of $\phi$ during variational inference. 
 
 For convention, we can rewrite this as: 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
@@ -126,8 +128,7 @@ For convention, we can rewrite this as:
     \end{align*}
     $$
 </div>
-
-where the log evidence $\log p_\theta({x})$ does not change with the choice of $\phi$. Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of eq(\ref{evidence2}) is a lower bound of the log evidence term, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
+Since the KL divergence between $q_{\phi}({z}\|{x})$ and $p_{\theta}({z}\|{x})$ is non-negative, the first term in the RHS of eq(\ref{evidence2}) is a lower bound of the log evidence term $\log p_\theta({x})$, which is named _variational lower bound_, also called the _Evidence Lower BOund_ (ELBO):
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
     $$
     \begin{align*}
@@ -137,6 +138,8 @@ where the log evidence $\log p_\theta({x})$ does not change with the choice of $
 </div>
 
 Therefore, the common mission to find the optimal $q_{\phi}({z}\|{x})$ that minimizes the KL divergence (approximates $p_{\theta}({z}\|{x})$) is equivalent to **maximize the ELBO** (without worrying about the evidence term in $p_{\theta}({z}\|{x})$), and we can optimize it w.r.t. both ${\phi}$ and ${\theta}$ (when $\theta$ is unknown) in algorithms such as variational EM.
+
+As $\theta$ is the model parameters, optimizing $\theta$ is essential for learning the underlying model that generates the data. When $\theta$ is tunable, we can jointly optimize $\phi$ and $\theta$ to maximize the ELBO. This joint optimization can help in finding a more accurate posterior approximation ($\phi$) and model parameters that better explain the data ($\theta$ that gives tighter ELBO of likelihood).
 
 <div class="sidebar">
     <div style="font-size: 12px;">
