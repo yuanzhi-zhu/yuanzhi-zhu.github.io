@@ -11,11 +11,59 @@
   url: https://blog.alexalemi.com/
   src: www
 
-# - name: Ermon Group Blog
-#   url: https://ermongroup.github.io/blog/
-#   src: www
+- name: Ermon Group Blog
+  url: https://ermongroup.github.io/blog/
+  src: www
+# https://ermongroup.github.io/cs228-notes/
 
-# - name: Sander Dieleman's Blog
-#   url: https://sander.ai/
-#   src: www
-  
+- name: Sander Dieleman's Blog
+  url: https://sander.ai/
+  src: www
+
+- name: Yang Song's Blog
+  url: https://yang-song.net/blog/
+  src: www
+
+- name: Lilian Weng's Blog
+  url: https://lilianweng.github.io/
+  src: www
+
+- name: Sunwoo Kim's Blog
+  url: https://sunwoo-kim.github.io/en/activities/talks/240409-imperial/
+  src: www
+
+- name: ICLR Blog Posts
+  url: https://iclr-blogposts.github.io/
+  src: www
+
+- name: Rui Shu's Blog
+  url: https://ruishu.io/blog/
+  src: www
+
+- name: Francis Bach's ML Blog
+  url: https://francisbach.com/
+  src: www
+
+- name: Jascha Sohl-Dickstein's Blog
+  url: https://sohl-dickstein.github.io/
+  src: www
+
+- name: off the convex path
+  url: https://www.offconvex.org/
+  src: www
+
+- name: John Schulman's Blog
+  url: http://joschu.net/blog.html
+  src: www
+
+- name: Anna Korba's Talks
+  url: https://akorba.github.io/Talks.html
+  src: www
+
+- name: Jakub M. Tomczak's Blog
+  url: https://jmtomczak.github.io/
+  src: www
+
+- name: James Betker's Blog
+  url: https://nonint.com/author/jbetker/
+  src: www
