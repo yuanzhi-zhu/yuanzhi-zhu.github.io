@@ -7,10 +7,21 @@ menu: ReadingList
 permalink: /readinglist/
 ---
 
-## Research Blogs (ML, AI, etc.)
+## Research
+
+#### Blogs
 <ul>
     {% for link in site.data.blogs %}
-        {% if link.type == 'research' %}
+        {% if link.type == 'research_blog' %}
+            <li><a href="{{ link.url }}">{{ link.name }}</a> ({{ link.url }})</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+#### Slides
+<ul>
+    {% for link in site.data.slides %}
+        {% if link.type == 'research_slide' %}
             <li><a href="{{ link.url }}">{{ link.name }}</a> ({{ link.url }})</li>
         {% endif %}
     {% endfor %}
