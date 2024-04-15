@@ -92,7 +92,7 @@ permalink: /about/
     <ul>
       <!-- only display the first three links -->
       {% for link in site.data.blogs limit:3 %}
-        {% if link.src == 'www' %}
+        {% if link.type == 'research' %}
           <li><a href="{{ link.url }}">{{ link.name }}</a></li>
         {% endif %}
       {% endfor %}
