@@ -21,7 +21,7 @@ permalink: /readinglist/
 #### Slides
 <ul>
     {% for link in site.data.slides %}
-        {% if link.type == 'research_slide' %}
+        {% if link.type == 'research_slides' %}
             <li><a href="{{ link.url }}">{{ link.name }}</a> ({{ link.url }})</li>
         {% endif %}
     {% endfor %}
