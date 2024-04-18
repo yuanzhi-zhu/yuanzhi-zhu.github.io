@@ -64,10 +64,12 @@ permalink: /about/
 
 <div class="my_container" style="display: flex; justify-content: space-between;">
   <div class="my_column" style="flex: 1; margin-right: 75px;">
-    <h2>Useful Links</h2>
+    <h2><a href="https://yuanzhi-zhu.github.io/readinglist/" style="text-decoration: none; color: inherit;">Recommended Sites</a></h2>
     <ul>
-      {% for link in site.data.links %}
-        {% if link.src == 'www' %}
+      <!-- only display the first three links -->
+      {% for link in site.data.blogs limit:3 %}
+      <!-- if link.type contains 'research' -->
+        {% if link.type contains 'research' %}
           <li><a href="{{ link.url }}">{{ link.name }}</a></li>
         {% endif %}
       {% endfor %}
@@ -86,14 +88,12 @@ permalink: /about/
 </div>
 
 
-<div class="my_container" style="display: flex; justify-content: space-between;">
+<!-- <div class="my_container" style="display: flex; justify-content: space-between;">
   <div class="my_column" style="flex: 1; margin-right: 75px;">
-    <h2><a href="https://yuanzhi-zhu.github.io/readinglist/" style="text-decoration: none; color: inherit;">Recommended Sites</a></h2>
+    <h2>Useful Links</h2>
     <ul>
-      <!-- only display the first three links -->
-      {% for link in site.data.blogs limit:3 %}
-      <!-- if link.type contains 'research' -->
-        {% if link.type contains 'research' %}
+      {% for link in site.data.links limit:3 %}
+        {% if link.src == 'www' %}
           <li><a href="{{ link.url }}">{{ link.name }}</a></li>
         {% endif %}
       {% endfor %}
@@ -109,7 +109,7 @@ permalink: /about/
       {% endfor %}
     </ul> -->
   </div>
-</div>
+</div> -->
 
 
 <script>

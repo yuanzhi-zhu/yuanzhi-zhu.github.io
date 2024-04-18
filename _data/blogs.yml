@@ -30,7 +30,7 @@
 
 - name: Andrej Karpathy's Blog
   url: https://karpathy.github.io/
-  type: research_blog'
+  type: research_blog
 
 - name: Sunwoo Kim's Blog
   url: https://sunwoo-kim.github.io/en/activities/talks/240409-imperial/
@@ -84,10 +84,22 @@
   url: https://fa.bianp.net/
   type: research_blog
 
-- name: Code Visualization
-  url: https://pythontutor.com/visualize.html
-  type: coding_tool
+- name: Jay Alammar's Blog
+  url: https://jalammar.github.io/
+  type: research_blog
 
-- name: blueprints-for-intelligence
-  url: https://philippschmitt.com/blueprints-for-intelligence/
-  type: inspiration
+- name: Distill.pub
+  url: https://distill.pub/
+  type: research_blog
+
+- name: The Gradient Pub
+  url: https://thegradient.pub/
+  type: research_blog
+
+- name: OpenAI Blog
+  url: https://www.openai.com/blog/
+  type: research_blog
+
+- name: Christopher Olah's Blog
+  url: https://colah.github.io/
+  type: research_blog

@@ -26,3 +26,15 @@ permalink: /readinglist/
         {% endif %}
     {% endfor %}
 </ul>
+
+## Useful Links
+
+<ul>
+    {% for link in site.data.links %}
+        {% if link.src == 'www' %}
+            <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+

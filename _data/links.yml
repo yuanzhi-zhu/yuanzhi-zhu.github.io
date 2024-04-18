@@ -17,4 +17,15 @@
 - name: Mind Map for PAI
   url: https://yuanzhi-zhu.github.io/documents/PAI_mindmap.html
   src: www
-  
+
+- name: KIMI Powered Arxiv Paper
+  url: https://papers.cool/
+  src: www
+
+- name: Code Visualization
+  url: https://pythontutor.com/visualize.html
+  type: www
+
+- name: blueprints-for-intelligence
+  url: https://philippschmitt.com/blueprints-for-intelligence/
+  type: www
