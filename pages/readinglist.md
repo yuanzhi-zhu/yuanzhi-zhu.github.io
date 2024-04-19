@@ -32,7 +32,7 @@ permalink: /readinglist/
 <ul>
     {% for link in site.data.links %}
         {% if link.src == 'www' %}
-            <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+            <li><a href="{{ link.url }}">{{ link.name }}</a> ({{ link.url }})</li>
         {% endif %}
     {% endfor %}
 </ul>

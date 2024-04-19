@@ -24,8 +24,8 @@
 
 - name: Code Visualization
   url: https://pythontutor.com/visualize.html
-  type: www
+  src: www
 
 - name: blueprints-for-intelligence
   url: https://philippschmitt.com/blueprints-for-intelligence/
-  type: www
+  src: www

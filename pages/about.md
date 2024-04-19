@@ -100,14 +100,14 @@ permalink: /about/
     </ul>
   </div>
   <div class="my_column" style="flex: 1;">
-    <!-- <h2>Collaborators</h2>
+    <h2>Collaborators</h2>
     <ul>
       {% for link in site.data.collaborators %}
         {% if link.src == 'www' %}
           <li><a href="{{ link.url }}">{{ link.name }}</a></li>
         {% endif %}
       {% endfor %}
-    </ul> -->
+    </ul>
   </div>
 </div> -->
 
