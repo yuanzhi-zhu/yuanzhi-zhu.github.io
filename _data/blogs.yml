@@ -103,3 +103,7 @@
 - name: Christopher Olah's Blog
   url: https://colah.github.io/
   type: research_blog
+
+- name: Shengjia Zhao's Blog
+  url: https://szhao.me/blogs/
+  type: research_blog
