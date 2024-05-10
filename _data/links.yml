@@ -29,3 +29,11 @@
 - name: blueprints-for-intelligence
   url: https://philippschmitt.com/blueprints-for-intelligence/
   src: www
+
+- name: Deep Learning Tuning Playbook
+  url: https://github.com/google-research/tuning_playbook
+  src: www
+
+- name: Self Organising Systems
+  url: https://google-research.github.io/self-organising-systems/
+  src: www

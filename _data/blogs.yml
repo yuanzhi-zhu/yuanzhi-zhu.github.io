@@ -107,3 +107,11 @@
 - name: Shengjia Zhao's Blog
   url: https://szhao.me/blogs/
   type: research_blog
+
+- name: Ilya Sutskever's Recommendations
+  url: https://arc.net/folder/D0472A20-9C20-4D3F-B145-D2865C0A9FEE
+  type: research_blog
+
+- name: Soon Hoe Lim's Recommendations
+  url: https://shoelim.github.io/DSxML/
+  type: research_blog
