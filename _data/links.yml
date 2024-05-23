@@ -6,6 +6,10 @@
 #  url: http://gen.lib.rus.ec/
 #  src: www
 
+- name: Deep Learning
+  url: https://www.deeplearningbook.org/
+  src: www
+
 - name: "Probabilistic Machine Learning: Advanced Topics"
   url: https://probml.github.io/pml-book/book2.html
   src: www
@@ -36,4 +40,16 @@
 
 - name: Self Organising Systems
   url: https://google-research.github.io/self-organising-systems/
+  src: www
+
+- name: The Proximity Operator Repository
+  url: https://proximity-operator.net/index.html
+  src: www
+
+- name: The Annotated Transformer
+  url: https://nlp.seas.harvard.edu/2018/04/03/attention.html
+  src: www
+
+- name: The Bitter Lesson
+  url: http://www.incompleteideas.net/IncIdeas/BitterLesson.html
   src: www

@@ -115,3 +115,7 @@
 - name: Soon Hoe Lim's Recommendations
   url: https://shoelim.github.io/DSxML/
   type: research_blog
+
+- name: Brian Keng's Blog
+  url: https://bjlkeng.io/
+  type: research_blog
