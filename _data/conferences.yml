@@ -1,3 +1,11 @@
+- authors: "[MY_NAME], Xingchao Liu, Qiang Liu."
+  name: "SlimFlow: Training Smaller One-Step Diffusion Models with Rectified Flow,"
+  publication: '_ECCV_ (2024).'
+  arxiv_num: 2407.12718
+  paper_url: /documents/paper/ECCV_2024_SlimFlow.pdf
+  arxiv_url: https://arxiv.org/abs/2407.12718
+  code_url: https://github.com/yuanzhi-zhu/SlimFlow
+
 - authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
   name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
   website: https://yuanzhi-zhu.github.io/DiffPIR/
