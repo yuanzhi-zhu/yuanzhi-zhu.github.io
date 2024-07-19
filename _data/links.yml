@@ -53,3 +53,7 @@
 - name: The Bitter Lesson
   url: http://www.incompleteideas.net/IncIdeas/BitterLesson.html
   src: www
+
+- name: The manuscripts of Edsger W. Dijkstra
+  url: https://www.cs.utexas.edu/~EWD/
+  src: www

@@ -119,3 +119,7 @@
 - name: Brian Keng's Blog
   url: https://bjlkeng.io/
   type: research_blog
+
+- name: Cambridge MLG Blog
+  url: https://mlg.eng.cam.ac.uk/blog/
+  type: research_blog
