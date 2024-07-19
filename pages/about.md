@@ -31,8 +31,8 @@ permalink: /about/
         <p style="color:gray; font-size:0.7em">The person *NOT* wearing a blue cravat is me</p>
     </div>
     <div class="bio-text" style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px; text-align: justify;">
-        <p style='margin-bottom: 5px;'>I’m Yuanzhi Zhu and I’m currently a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Prof. Kai Zhang</a> and <a href="https://apchenstu.github.io/">Dr. Anpei Chen</a>. I also have the privilege of working as a RA with <a href="https://www.cs.utexas.edu/~lqiang/"> Prof. Qiang Liu.</p>
-        <p style='margin-bottom: 5px;'>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Restoration and Novel View Synthesis.</p>
+        <p style='margin-bottom: 5px;'>I’m Yuanzhi Zhu and I’m currently a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Prof. Kai Zhang</a> and <a href="https://apchenstu.github.io/">Dr. Anpei Chen</a>. I also have the privilege of working as a RA with <a href="https://www.cs.utexas.edu/~lqiang/">Prof. Qiang Liu</a>.</p>
+        <p style='margin-bottom: 5px;'>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Image Generation, Image Restoration and Novel View Synthesis.</p>
         <div id="extra-bio" style="display: none; margin-bottom: 5px;">
             <p style='margin-bottom: 5px;'>Previously I was a bachelor student in Beihang University, where I had the fortune of being mentored by both Dr. Zhizhong Zhang and Prof. Yue Zhang. Additionally, I had the opportunity to embark on a summer internship in <a href="https://otaniqnm.com/home/">Prof. Otani's lab</a>. I am from Quanjiao Middle School.</p>
         </div>
