@@ -5,6 +5,7 @@
   paper_url: /documents/paper/ECCV_2024_SlimFlow.pdf
   arxiv_url: https://arxiv.org/abs/2407.12718
   code_url: https://github.com/yuanzhi-zhu/SlimFlow
+  poster_url: /documents/poster/poster_SlimFlow.pdf
 
 - authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
   name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
@@ -15,6 +16,7 @@
   arxiv_url: https://arxiv.org/abs/2305.08995
   code_url: https://github.com/yuanzhi-zhu/DiffPIR
   slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
+  poster_url: /documents/poster/poster_DiffPIR.pdf
 
 - authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
   name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
