@@ -123,3 +123,7 @@
 - name: Cambridge MLG Blog
   url: https://mlg.eng.cam.ac.uk/blog/
   type: research_blog
+
+- name: Christian S. Perone's Blog
+  url: https://blog.christianperone.com/2024/11/the-geometry-of-data-part-ii/
+  type: research_blog
