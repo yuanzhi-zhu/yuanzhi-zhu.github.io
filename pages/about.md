@@ -44,8 +44,8 @@ permalink: /about/
                 </a>
             {% endfor %}
         </div>
-        <p><a href="/documents/Yuanzhi-Zhu-CV.pdf">Curriculum Vitae</a></p>
-        <p>firstname.lastname@polytechnique.edu</a></p>
+        <p style='margin-bottom: 5px;'><a href="/documents/Yuanzhi-Zhu-CV.pdf">Curriculum Vitae</a></p>
+        <p>firstname.lastname@polytechnique.edu</p>
     </div>
 </div>
 
