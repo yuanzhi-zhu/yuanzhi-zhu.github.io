@@ -127,3 +127,11 @@
 - name: Christian S. Perone's Blog
   url: https://blog.christianperone.com/2024/11/the-geometry-of-data-part-ii/
   type: research_blog
+
+- name: Yuge Shi's Blog
+  url: https://yugeten.github.io/year-archive/
+  type: research_blog
+
+- name: Official Site of Rectified Flow
+  url: https://rectifiedflow.github.io/
+  type: research_blog
