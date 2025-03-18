@@ -1,3 +1,11 @@
+- authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang"
+  name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
+  publication: 'ArXiv.'
+  arxiv_num: 2412.09465
+  paper_url: https://arxiv.org/pdf/2412.09465
+  arxiv_url: https://arxiv.org/abs/2412.09465
+  code_url: https://github.com/yuanzhi-zhu/OFTSR/tree/main
+
 - authors: "[MY_NAME], Xingchao Liu, Qiang Liu."
   name: "SlimFlow: Training Smaller One-Step Diffusion Models with Rectified Flow,"
   publication: '_ECCV_ (2024).'
@@ -17,10 +25,3 @@
   code_url: https://github.com/yuanzhi-zhu/DiffPIR
   slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
   poster_url: /documents/poster/poster_DiffPIR.pdf
-
-- authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
-  name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
-  publication: '_ICCV oral_ (2023).'
-  arxiv_num: 2303.06840
-  arxiv_url: https://arxiv.org/abs/2303.06840
-  code_url: 
