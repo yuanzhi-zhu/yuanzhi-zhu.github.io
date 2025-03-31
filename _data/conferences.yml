@@ -1,4 +1,4 @@
-- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton"
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Di[M]O: Distilling Masked Diffusion Models into One-step Generator"
   website: https://yuanzhi-zhu.github.io/DiMO/
   publication: 'ArXiv.'
@@ -6,8 +6,9 @@
   paper_url: https://arxiv.org/pdf/2503.15457
   arxiv_url: https://arxiv.org/abs/2503.15457
   code_url: https://github.com/yuanzhi-zhu/DiMO
+  slides_url: /documents/slides/DiMO.pdf
 
-- authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang"
+- authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
   name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
   publication: 'ArXiv.'
   arxiv_num: 2412.09465
