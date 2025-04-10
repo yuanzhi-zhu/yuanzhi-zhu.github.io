@@ -57,3 +57,7 @@
 - name: The manuscripts of Edsger W. Dijkstra
   url: https://www.cs.utexas.edu/~EWD/
   src: www
+
+- name: stone-soup-ai
+  url: https://simons.berkeley.edu/news/stone-soup-ai
+  src: www
