@@ -37,18 +37,19 @@ permalink: /about/
             <p style='margin-bottom: 5px;'>Previously I was a bachelor student in Beihang University, where I had the fortune of being mentored by both Dr. Zhizhong Zhang and Prof. Yue Zhang. Additionally, I had the opportunity to embark on a summer internship in <a href="https://otaniqnm.com/home/">Prof. Otani's lab</a>. I am from Quanjiao Middle School.</p>
         </div>
         <button id="show-more-button" style='margin-bottom: 10px;'>Show more</button>
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
             {% for website in site.data.social %}
                 <a href="{{ website.url }}" style="margin-right: 13.5px; background-color: white; display: inline-block;">
                     <img src="/assets/logos/{{ website.sitename }}.png" alt="{{ website.sitename }} logo" width="30" height="30" style="vertical-align: middle;"/>
                 </a>
             {% endfor %}
         </div>
-        <p style='margin-bottom: 5px;'><a href="/documents/Yuanzhi-Zhu-CV.pdf">Curriculum Vitae</a></p>
+        <p style='margin-bottom: 5px;'><a href="/documents/Yuanzhi-Zhu-CV.pdf">CV</a></p>
         <p>firstname.lastname@polytechnique.edu</p>
     </div>
 </div>
 
+<p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p>
 
 ## Selected Publications
 {% for artical in site.data.conferences %}
