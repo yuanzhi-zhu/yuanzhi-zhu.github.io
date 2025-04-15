@@ -135,3 +135,7 @@
 - name: Official Site of Rectified Flow
   url: https://rectifiedflow.github.io/
   type: research_blog
+
+- name: Shunyu Yao's Blog
+  url: https://ysymyth.github.io/The-Second-Half/
+  type: research_blog
