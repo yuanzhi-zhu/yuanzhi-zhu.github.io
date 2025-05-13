@@ -90,6 +90,9 @@ permalink: /about/
 </div>
 
 
+## Honors and Awards
+- CVPR 2024 outstanding reviewer
+
 <!-- <div class="my_container" style="display: flex; justify-content: space-between;">
   <div class="my_column" style="flex: 1; margin-right: 75px;">
     <h2>Useful Links</h2>
