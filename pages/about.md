@@ -91,7 +91,7 @@ permalink: /about/
 
 
 ## Honors and Awards
-- CVPR 2024 outstanding reviewer
+- CVPR 2025 outstanding reviewer
 
 <!-- <div class="my_container" style="display: flex; justify-content: space-between;">
   <div class="my_column" style="flex: 1; margin-right: 75px;">
