@@ -32,7 +32,7 @@ permalink: /about/
     </div>
     <div class="bio-text" style="margin-left: 50px; margin-right: 50px; padding: 20px 20px 20px 20px; text-align: justify;">
         <p style='margin-bottom: 5px;'>I’m Yuanzhi Zhu and I’m a PhD student at École Polytechnique, supervised by <a href="https://vicky.kalogeiton.info/">Prof. Vicky Kalogeiton</a> and <a href="https://stelat.eu/">Prof. Stéphane Lathuilière</a>. Previously I was a Master's student at ETH Zürich, where I have the privilege of being supervised by <a href="https://cszn.github.io/">Prof. Kai Zhang</a>. I also have the privilege of working as a RA with <a href="https://www.cs.utexas.edu/~lqiang/">Prof. Qiang Liu</a> and interned with <a href="https://hanshuyan.github.io/">Hanshu Yan</a> during my master's.</p>
-        <p style='margin-bottom: 5px;'>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Efficient Generative Models and Visual Enhancement.</p>
+        <!-- <p style='margin-bottom: 5px;'>My interests lie in Deep Learning and Computer Vision. Currently, my main areas of focus are Efficient Generative Models and Visual Enhancement.</p> -->
         <div id="extra-bio" style="display: none; margin-bottom: 5px;">
             <p style='margin-bottom: 5px;'>Previously I was a bachelor student in Beihang University, where I had the fortune of being mentored by both Dr. Zhizhong Zhang and Prof. Yue Zhang. Additionally, I had the opportunity to embark on a summer internship in <a href="https://otaniqnm.com/home/">Prof. Otani's lab</a>. I am from Quanjiao Middle School.</p>
         </div>
@@ -47,6 +47,11 @@ permalink: /about/
         <p style='margin-bottom: 5px;'><a href="/documents/Yuanzhi-Zhu-CV.pdf">CV</a></p>
         <p>firstname.lastname@polytechnique.edu</p>
     </div>
+</div>
+
+<div style="background:#f0f4ff; border-left:4px solid #3b82f6; padding:1rem; border-radius:0.5rem; margin:1rem 0;">
+  Scalable generative models (AR, diffusion, etc.) aim to capture data distributions by decomposing likelihoods, inherently requiring multi-step inference. 
+  The goal of efficient generative modeling is to uncover principles that enable high-quality generation with minimal steps.
 </div>
 
 <p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p>
