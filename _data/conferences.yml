@@ -1,7 +1,7 @@
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Di[M]O: Distilling Masked Diffusion Models into One-step Generator"
   website: https://yuanzhi-zhu.github.io/DiMO/
-  publication: 'ArXiv.'
+  publication: '_ICCV_ (2025).'
   arxiv_num: 2503.15457
   paper_url: https://arxiv.org/pdf/2503.15457
   arxiv_url: https://arxiv.org/abs/2503.15457
