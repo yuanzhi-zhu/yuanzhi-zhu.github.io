@@ -11,6 +11,10 @@
   url: https://blog.alexalemi.com/
   type: research_blog
 
+- name: Chen Wang's Blog on PhD Life
+  url: https://cwchenwang.github.io/posts.html
+  type: research_blog
+
 - name: Ermon Group Blog
   url: https://ermongroup.github.io/blog/
   type: research_blog

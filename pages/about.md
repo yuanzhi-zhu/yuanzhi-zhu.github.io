@@ -74,7 +74,7 @@ permalink: /about/
     <h2><a href="https://yuanzhi-zhu.github.io/readinglist/" style="text-decoration: none; color: inherit;">Recommended Sites</a></h2>
     <ul>
       <!-- only display the first three links -->
-      {% for link in site.data.blogs limit:3 %}
+      {% for link in site.data.blogs limit:4 %}
       <!-- if link.type contains 'research' -->
         {% if link.type contains 'research' %}
           <li><a href="{{ link.url }}">{{ link.name }}</a></li>
