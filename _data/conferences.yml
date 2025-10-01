@@ -1,4 +1,11 @@
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
+  name: "Soft-Di[M]O: Improving One-Step Discrete Image Generation with Soft Embeddings"
+  publication: 'Arxiv.'
+  arxiv_num: 2509.22925
+  paper_url: https://arxiv.org/pdf/2509.22925
+  arxiv_url: https://arxiv.org/abs/2509.22925
+
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Di[M]O: Distilling Masked Diffusion Models into One-step Generator"
   website: https://yuanzhi-zhu.github.io/DiMO/
   publication: '_ICCV_ (2025).'
