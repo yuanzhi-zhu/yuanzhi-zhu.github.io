@@ -14,6 +14,7 @@
   arxiv_url: https://arxiv.org/abs/2503.15457
   code_url: https://github.com/yuanzhi-zhu/DiMO
   slides_url: /documents/slides/DiMO.pdf
+  poster_url: /documents/poster/poster_DiMO.pdf
 
 - authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
   name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
