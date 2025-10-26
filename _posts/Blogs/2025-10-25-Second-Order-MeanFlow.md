@@ -67,9 +67,7 @@ Start from tri-consistency and replace the second segment ($s_1$ to $s_2$) with 
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-x_t + (s_1-t)\,v(x_t,t,s_1) + \mathrm{ODE}\bigl[v_\phi,x_{s_1},s_1,s_2\bigr]
-=
-x_t + (s_2-t)\,v(x_t,t,s_2).
+(s_1-t)\,v(x_t,t,s_1) + \mathrm{ODE}\bigl[v_\phi,x_{s_1},s_1,s_2\bigr] = (s_2-t)\,v(x_t,t,s_2).
 $$
 </div>
 
