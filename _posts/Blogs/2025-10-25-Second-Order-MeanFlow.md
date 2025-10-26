@@ -109,10 +109,10 @@ $$
 
 ## References
 
-<div style="color:gray; font-size:0.95em; line-height:1.6;">
+<div style="color:gray; font-size:0.85em; line-height:1.6;">
 <p>
   <b>[1]</b> <i>Mean Flows for One-Step Generative Modeling.</i><br>
-  Zhengyang Geng, Mingyang Deng, Xingjian Bai, J. Zico Kolter, and Kaiming He. arXiv preprint <b>arXiv:2505.13447</b>, 2025.
+  Zhengyang Geng, Mingyang Deng, Xingjian Bai, J. Zico Kolter, and Kaiming He. arXiv preprint, arXiv:2505.13447, 2025.
 </p>
 
 <p>
