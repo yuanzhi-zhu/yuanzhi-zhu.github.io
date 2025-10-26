@@ -109,11 +109,10 @@ $$
 
 ## References
 
-<span style="color:gray; font-size:0.95em;">
+<div style="color:gray; font-size:0.95em;">
 
-**[1]** Zhengyang Geng, Mingyang Deng, Xingjian Bai, J. Zico Kolter, and Kaiming He. *Mean Flows for One-Step Generative Modeling.* arXiv preprint **arXiv:2505.13447**, 2025.  
+**[1]** Zhengyang Geng, Mingyang Deng, Xingjian Bai, J. Zico Kolter, and Kaiming He. *Mean Flows for One-Step Generative Modeling.* arXiv preprint **arXiv:2505.13447**, 2025.
 
-**[2]** Qiang Liu. *ICML Tutorial on the Blessing of Flow.* International Conference on Machine Learning (ICML), 2025.  
+**[2]** Qiang Liu. *ICML Tutorial on the Blessing of Flow.* International Conference on Machine Learning (ICML), 2025.
 
-</span>
-
+</div>
