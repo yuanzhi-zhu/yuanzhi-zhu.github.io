@@ -104,3 +104,16 @@ $$
 - (Quick validation) Similar to MeanFlow, when $t=s$, Equation (★) degrades to flow matching loss.
 - Unlike forward and backward distillation loss, Equation (★) can not be simply interpreted as a special case of tri-consistency.
 - In practive, we expect to use this loss along with the first-order MeanFlow loss to improve the few-step performance (requires more computation).
+
+---
+
+## References
+
+<span style="color:gray; font-size:0.95em;">
+
+**[1]** Zhengyang Geng, Mingyang Deng, Xingjian Bai, J. Zico Kolter, and Kaiming He. *Mean Flows for One-Step Generative Modeling.* arXiv preprint **arXiv:2505.13447**, 2025.  
+
+**[2]** Qiang Liu. *ICML Tutorial on the Blessing of Flow.* International Conference on Machine Learning (ICML), 2025.  
+
+</span>
+
