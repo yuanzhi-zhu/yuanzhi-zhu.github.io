@@ -29,6 +29,28 @@ layout: default
             <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
           </span>
           {% endfor %} -->
+
+          <!-- AUTHORS -->
+          {% assign authors_list = page.authors | default: page.author %}
+          {% if authors_list %}
+            <div class="post-authors" style="margin-top: 12px;">
+              <span class="meta-info" style="margin-right: 8px;">
+                <span class="octicon octicon-person"></span> 
+                {% if authors_list == page.author %}
+                  <!-- single author string -->
+                  {% assign single_name = authors_list %}
+                  <a href="#author-{{ single_name | slugify }}" class="author-link">{{ single_name }}</a>
+                {% else %}
+                  <!-- authors_list is likely an array -->
+                  {% for name in authors_list %}
+                    {% if forloop.first == false %}, {% endif %}
+                    <a href="#author-{{ name | slugify }}" class="author-link">{{ name }}</a>
+                  {% endfor %}
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+          <!-- /AUTHORS -->
         </div>
       </div>
     </div>
