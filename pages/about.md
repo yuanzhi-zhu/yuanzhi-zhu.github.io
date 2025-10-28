@@ -96,7 +96,6 @@ permalink: /about/
 
 
 ## Honors and Awards
-- ICCV 2025 outstanding reviewer
 - CVPR 2025 outstanding reviewer
 
 <!-- <div class="my_container" style="display: flex; justify-content: space-between;">
