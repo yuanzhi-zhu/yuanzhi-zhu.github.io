@@ -107,6 +107,30 @@ $$
 
 ---
 
+## 2. Generalized 2-order Loss
+
+Given the backward and forward distillation losses:
+   <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+   $$
+   v(x_t,t,s) = v_\phi(x_t,t) + (s-t)\frac{d}{dt}\bigl[v(x_t,t,s)\bigr],\\
+   v(x_t,t,s) = v_\phi(x_s,s) - (s-t)\frac{d}{ds}\bigl[v(x_t,t,s)\bigr],
+   $$
+   </div>
+we can combine them with our second-order MeanFlow loss using weights $\alpha$ and $\beta$ to get a generalized loss:
+   <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+   $$
+    \begin{aligned}
+    v(x_t,t,s) \;=\;& \; {\alpha v_\phi(x_t,t) + (1-\alpha) v_\phi(x_s,s)} \\
+    &+ (s-t)\left[(\alpha - \frac{1}{2}\beta)\frac{d}{dt}v(x_t,t,s) - (1 - \alpha - \frac{1}{2}\beta)\frac{d}{ds}v(x_t,t,s)\right] \\
+    &- \frac{\beta}{2}(s-t)^2\frac{d^2}{dt\,ds}v(x_t,t,s).
+    \end{aligned}
+   $$
+   </div>
+
+For $\beta = 0$, $\alpha = 1$ or $0$, we recover backward or forward distillation loss; for $\beta = 1$, $\alpha = \frac{1}{2}$, we recover the second-order MeanFlow loss (★).
+
+---
+
 ## References
 
 <div style="color:gray; font-size:0.85em; line-height:1.6;">
