@@ -3,7 +3,7 @@ layout: post
 title: A Second-order MeanFlow
 categories: Research
 description: none
-keywords: Resolution, Research
+keywords: Diffusion Models, MeanFlow
 mathjax: true
 authors:
   - "Yuanzhi Zhu"
