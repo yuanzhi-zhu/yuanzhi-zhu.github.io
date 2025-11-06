@@ -28,11 +28,11 @@ The final conclusion is not bonded to Di-Bregman, I just want to use Di-Bregman 
 
 ## Preliminaries
 
-In Di-Bregman, we derived a new distillation loss, whose loss gradient extend the DMD loss with an extra coefficient $h''(r_t(x_t))\,r_t(x_t)$:
+In Di-Bregman, we derived a new distillation loss, whose loss gradient extend the DMD loss with an extra coefficient $h^{\prime\prime}(r_t(x_t))\,r_t(x_t)$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h''(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_x\log q_{\theta,t}({x_t})\big)\,
+= -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h^{\prime\prime}(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_x\log q_{\theta,t}({x_t})\big)\,
 \nabla_\theta G_\theta(\epsilon)\Big],
 $$
 </div>
@@ -52,7 +52,7 @@ The DMD loss gradient derived from reverse KL divergence can be seen as a specia
 
 ## From Scores to a Discriminator
 
-One difference between Di-Bregman and DMD is that we need to estimate the density ratio $r_t(x_t)$ in the extra coefficiency $h''(r_t(x_t))\,r_t(x_t)$, usually achieved by training a discriminator $D(x_t,t)$ to distinguish samples from $p_t$ and $q_{\theta,t}$.
+One difference between Di-Bregman and DMD is that we need to estimate the density ratio $r_t(x_t)$ in the extra coefficiency $h^{\prime\prime}(r_t(x_t))\,r_t(x_t)$, usually achieved by training a discriminator $D(x_t,t)$ to distinguish samples from $p_t$ and $q_{\theta,t}$.
 
 With the usual logistic convention (where $D_t(x_t)$ outputs the probability that $x_t$ comes from $p_t$), we have the following optimal discriminator $D_t^*(x_t)=\frac{p_t(x_t)}{p_t(x_t)+q_{\theta,t}(x_t)}$.
 
@@ -73,8 +73,8 @@ Substituting into the Di-Bregman gradient gives
 $$
 \begin{aligned}
 \nabla_\theta \mathbb{D}_h(r_t\|1)
-&= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,h''(r_t)\,r_t\Big(-\frac{\nabla_{x_t} r_t}{r_t}\Big)\,\nabla_\theta G_\theta(\epsilon)\Big] \\
-&= \mathbb{E}_{\epsilon,t}\Big[w(t)\,h''(r_t)\,\nabla_{x_t} r_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
+&= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,r_t\Big(-\frac{\nabla_{x_t} r_t}{r_t}\Big)\,\nabla_\theta G_\theta(\epsilon)\Big] \\
+&= \mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,\nabla_{x_t} r_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
 \end{aligned}
 $$
 </div>
@@ -92,7 +92,7 @@ Substitute this back:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,\frac{h''(\frac{1-D_t}{D_t})}{D_t^2}\,\nabla_{x_t} D_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
+= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,\nabla_{x_t} D_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
 $$
 </div>
 
@@ -103,7 +103,7 @@ $$
 \boxed{
 \nabla_\theta \mathbb{D}_h(r_t\|1)
 = -\mathbb{E}_{\epsilon,t}\Big[
-w'(t)\,\frac{h''(\frac{1-D_t}{D_t})}{D_t^2}\,
+w'(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,
 \nabla_\theta D_t(x_t,t)
 \Big]
 }
@@ -121,7 +121,7 @@ This suggests that **Di-Bregman / VSD and Diffusion-GAN are closely connected**.
 
 ## Verify with Special Case: reverse KL Divergence (DMD)
 
-When $h(r)=r\log r$, we have $h^{\prime\prime}(r)=\frac{1}{r}$, hence the coefficiency in the boxed equation becomes $\frac{h''(\frac{1-D_t}{D_t})}{D_t^2} = \frac{1}{D_t(1-D_t)}$, and the loss gradient becomes
+When $h(r)=r\log r$, we have $h^{\prime\prime}(r)=\frac{1}{r}$, hence the coefficiency in the boxed equation becomes $\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2} = \frac{1}{D_t(1-D_t)}$, and the loss gradient becomes
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \nabla_\theta \mathbb{D}_{\mathrm{KL}}(q_{\theta,t}\|p_t)
