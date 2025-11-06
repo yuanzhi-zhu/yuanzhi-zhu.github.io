@@ -109,6 +109,8 @@ $$
 The boxed equation shows that the Di-Bregman loss gradient can be computed by backpropagating through the discriminator $D_t$ only, without explicitly estimating the score functions. 
 This suggests that **Di-Bregman / VSD and Diffusion-GAN are closely connected**.
 
+<!-- In experiments, we can show that score difference term is more stable than the direct discriminator gradient. -->
+
 ---
 
 ## References
