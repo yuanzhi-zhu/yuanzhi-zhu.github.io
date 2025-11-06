@@ -44,6 +44,10 @@ where
 - $w(t)$ is a time-dependent weight function;
 - $\epsilon \sim \mathcal{N}(0,I)$, $t \sim \mathcal{U}(0,1)$, and $x_t = \alpha_t G_\theta(\epsilon) + \sigma_t z_t$ with $z_t \sim \mathcal{N}(0,I)$.
 
+<div style="color:gray; font-size:0.85em; line-height:1.6;">
+The DMD loss gradient derived from reverse KL divergence can be seen as a special case of the Di-Bregman when choosing $h(r)=r\log r$.
+</div>
+
 ## From Scores to a Discriminator
 
 One difference between Di-Bregman and DMD is that we need to estimate the density ratio $r_t(x_t)$ in the extra coefficiency $h''(r_t(x_t))\,r_t(x_t)$, usually achieved by training a discriminator $D(x_t,t)$ to distinguish samples from $p_t$ and $q_{\theta,t}$.
