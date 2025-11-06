@@ -48,6 +48,8 @@ where
 The DMD loss gradient derived from reverse KL divergence can be seen as a special case of the Di-Bregman when choosing $h(r)=r\log r$.
 </div>
 
+---
+
 ## From Scores to a Discriminator
 
 One difference between Di-Bregman and DMD is that we need to estimate the density ratio $r_t(x_t)$ in the extra coefficiency $h''(r_t(x_t))\,r_t(x_t)$, usually achieved by training a discriminator $D(x_t,t)$ to distinguish samples from $p_t$ and $q_{\theta,t}$.
@@ -114,6 +116,25 @@ The boxed equation shows that the Di-Bregman loss gradient can be computed by ba
 This suggests that **Di-Bregman / VSD and Diffusion-GAN are closely connected**.
 
 <!-- In experiments, we can show that score difference term is more stable than the direct discriminator gradient. -->
+
+---
+
+## Verify with Special Case: reverse KL Divergence (DMD)
+
+When $h(r)=r\log r$, we have $h^{\prime\prime}(r)=\frac{1}{r}$, hence the coefficiency in the boxed equation becomes $\frac{h''(\frac{1-D_t}{D_t})}{D_t^2} = \frac{1}{D_t(1-D_t)}$, and the loss gradient becomes
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$
+\nabla_\theta \mathbb{D}_{\mathrm{KL}}(q_{\theta,t}\|p_t)
+= -\mathbb{E}_{\epsilon,t}\Big[ w'(t)\,\frac{1}{D_t(1-D_t)}\,\nabla_\theta D_t(x_t,t) \Big].
+$$
+</div>
+
+This resonates with the GAN generate loss for KL divergence $\mathrm{KL}(q_\theta||p)$:
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$
+\mathcal{L}_G = -\mathbb{E}_{\epsilon}\Big[\log \frac{D(G_\theta(\epsilon))}{1-D(G_\theta(\epsilon))}\Big].
+$$
+</div>
 
 ---
 
