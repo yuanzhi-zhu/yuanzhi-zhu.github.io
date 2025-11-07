@@ -136,6 +136,10 @@ $$
 $$
 </div>
 
+<div style="color:gray; font-size:0.85em; line-height:1.6;">
+This special case was also noticed in Diff-instruct [3] Corollary 3.5 (From KL perspective to derive both losses).
+</div>
+
 ---
 
 ## References
