@@ -142,6 +142,9 @@ This special case was also noticed in Diff-instruct [3] Corollary 3.5 (From KL p
 
 ---
 
+> Given that both DMD and Di-Bregman are equivalent to diffusion-GAN training, and with the belief that scalable pre-training requires algorithms that directly optimize the data likelihood or an associated ELBO, I am skeptical that these approaches can serve as general-purpose pre-training methods.
+> For example, it seems unlikely that we could pre-train a next-frame prediction video generative model using methods such as self-forcing.
+
 ## References
 
 <div style="color:gray; font-size:0.85em; line-height:1.6;">
