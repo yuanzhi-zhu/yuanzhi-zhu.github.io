@@ -32,7 +32,7 @@ In Di-Bregman, we derived a new distillation loss, whose loss gradient extend th
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
 \nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h^{\prime\prime}(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_x\log q_{\theta,t}({x_t})\big)\,
+= -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h^{\prime\prime}(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_{x_t}\log q_{\theta,t}({x_t})\big)\,
 \nabla_\theta G_\theta(\epsilon)\Big],
 $$
 </div>
@@ -64,7 +64,7 @@ A natural question is: *can we rewrite the Di-Bregman loss gradient entirely in 
 We have the identity
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_x r_t(x) = r_t(x)\,\big(\nabla_x\log q_{\theta,t}(x) - \nabla_x\log p_t(x)\big)
+\nabla_{x_t} r_t({x_t}) = r_t({x_t})\,\big(\nabla_{x_t}\log q_{\theta,t}({x_t}) - \nabla_{x_t}\log p_t({x_t})\big)
 $$
 </div>
 
