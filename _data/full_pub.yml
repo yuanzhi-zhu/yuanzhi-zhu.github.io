@@ -1,0 +1,129 @@
+- authors: "Minh-Quan Le, [MY_NAME], Vicky Kalogeiton, Dimitris Samaras."
+  name: "What about gravity in video generation? Post-Training Newton's Laws with Verifiable Rewards,"
+  publication: "Arxiv."
+  arxiv_num: 2512.00425
+  paper_url: https://arxiv.org/pdf/2512.00425
+  arxiv_url: https://arxiv.org/abs/2512.00425
+  type: pre-print
+  
+- authors: "[MY_NAME], Eleftherios Tsonis, Lucas Degeorge, Vicky Kalogeiton."
+  name: "One-step Diffusion Models with Bregman Density Ratio Matching,"
+  publication: "Arxiv."
+  arxiv_num: 2510.16983
+  paper_url: /documents/paper/bregman_distil.pdf
+  arxiv_url: https://arxiv.org/abs/2510.16983
+  type: pre-print
+
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
+  name: "Soft-Di[M]O: Improving One-Step Discrete Image Generation with Soft Embeddings,"
+  publication: 'Arxiv.'
+  arxiv_num: 2509.22925
+  paper_url: https://arxiv.org/pdf/2509.22925
+  arxiv_url: https://arxiv.org/abs/2509.22925
+  type: pre-print
+
+- authors: "[MY_NAME], Hanshu Yan, Huan Yang, Kai Zhang, Junnan Li."
+  name: "Accelerating Video Diffusion Models via Distribution Matching,"
+  publication: "Arxiv."
+  arxiv_num: 2412.05899
+  paper_url: https://arxiv.org/pdf/2412.05899
+  arxiv_url: https://arxiv.org/abs/2412.05899
+  type: pre-print
+
+- authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
+  name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
+  publication: 'ArXiv.'
+  arxiv_num: 2412.09465
+  paper_url: https://arxiv.org/pdf/2412.09465
+  arxiv_url: https://arxiv.org/abs/2412.09465
+  code_url: https://github.com/yuanzhi-zhu/OFTSR
+  type: pre-print
+
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
+  name: "Di[M]O: Distilling Masked Diffusion Models into One-Step Generator,"
+  website: https://yuanzhi-zhu.github.io/DiMO/
+  publication: '_ICCV_ (2025).'
+  arxiv_num: 2503.15457
+  paper_url: https://arxiv.org/pdf/2503.15457
+  arxiv_url: https://arxiv.org/abs/2503.15457
+  code_url: https://github.com/yuanzhi-zhu/DiMO
+  slides_url: /documents/slides/DiMO.pdf
+  poster_url: /documents/poster/poster_DiMO.pdf
+  type: conference
+
+- authors: "Yuqing Wang, Zhijie Lin, Yao Teng, [MY_NAME], Shuhuai Ren, Jiashi Feng, Xihui Liu."
+  name: "Bridging Continuous and Discrete Tokens for Autoregressive Visual Generation,"
+  publication: "_ICCV_ (2025)"
+  arxiv_num: 2503.16430
+  paper_url: https://arxiv.org/pdf/2503.16430
+  arxiv_url: https://arxiv.org/abs/2503.16430
+  type: conference
+
+- authors: "Shilin Lu, Zihan Zhou, Jiayou Lu, [MY_NAME], Adams Wai-Kin Kong."
+  name: "Robust Watermarking Using Generative Priors Against Image Editing: From Benchmarking to Advances,"
+  publication: "_ICLR_ (2025)"
+  arxiv_num: 2410.18775
+  paper_url: https://arxiv.org/pdf/2410.18775
+  arxiv_url: https://arxiv.org/abs/2410.18775
+  type: conference
+
+- authors: "Boqi Chen, [MY_NAME], Yunke Ao, Sebastiano Caprara, Reto Sutter, Gunnar Rätsch, Ender Konukoglu, Anna Susmelj."
+  name: "Generalizable Single-Source Cross-modality Medical Image Segmentation via Invariant Causal Mechanisms,"
+  publication: "_WACV_ (2025)."
+  arxiv_num: 2411.05223
+  paper_url: https://arxiv.org/pdf/2411.05223
+  arxiv_url: https://arxiv.org/abs/2411.05223
+  type: conference
+
+- authors: "[MY_NAME], Xingchao Liu, Qiang Liu."
+  name: "SlimFlow: Training Smaller One-Step Diffusion Models with Rectified Flow,"
+  publication: '_ECCV_ (2024).'
+  arxiv_num: 2407.12718
+  paper_url: /documents/paper/ECCV_2024_SlimFlow.pdf
+  arxiv_url: https://arxiv.org/abs/2407.12718
+  code_url: https://github.com/yuanzhi-zhu/SlimFlow
+  poster_url: /documents/poster/poster_SlimFlow.pdf
+  type: conference
+
+- authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
+  name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
+  publication: "_ICCV_ (2023), Oral"
+  arxiv_num: 2303.06840
+  paper_url: https://arxiv.org/pdf/2303.06840
+  arxiv_url: https://arxiv.org/abs/2303.06840
+  type: conference
+
+- authors: "Jun Ma, [MY_NAME], Chenyu You, Bo Wang."
+  name: "Pre-trained Diffusion Models for Plug-and-Play Medical Image Enhancement,"
+  publication: "_MICCAI_ (2023)"
+  doi: "10.1007/978-3-031-43898-1_1"
+  paper_url: https://conferences.miccai.org/2023/papers/513-Paper0246.html
+  type: conference
+
+- authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
+  name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
+  website: https://yuanzhi-zhu.github.io/DiffPIR/
+  publication: '_CVPRW_ (2023).'
+  arxiv_num: 2305.08995
+  paper_url: /documents/paper/diffusion_models_for_pnp_IR.pdf
+  arxiv_url: https://arxiv.org/abs/2305.08995
+  code_url: https://github.com/yuanzhi-zhu/DiffPIR
+  slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
+  poster_url: /documents/poster/poster_DiffPIR.pdf
+  type: conference
+
+- authors: Hayato Mizuno, Hironari Isshiki, Kouta Kondou, [MY_NAME], and  Yoshichika Otani.
+  name: Influence of Planar Hall Effect on the Output Signal in a T-shaped Spin Conversion Device
+  info: in *Appl. Phys. Lett.* 119, 092401 (2021)
+  availablity: available
+  available: https://doi.org/10.1063/5.0061147
+  url: https://aip.scitation.org/doi/abs/10.1063/5.0061147
+  type: journal
+
+- authors: Zhizhong Zhang[EQUAL], [MY_NAME][EQUAL], Yue Zhang, Weisheng Zhao, _et al_.
+  name: Skyrmion-Based Ultra-Low Power Electric-Field-Controlled Reconfigurable (SUPER) Logic Gate
+  info: in *IEEE Electron Device Letters*, vol. 40, no. 12, pp. 1984-1987 (2019)
+  availablity: available
+  available: 10.1109/LED.2019.2946863
+  url: https://ieeexplore.ieee.org/document/8864055
+  type: journal

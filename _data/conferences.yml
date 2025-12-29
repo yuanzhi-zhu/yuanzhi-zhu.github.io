@@ -4,6 +4,7 @@
   arxiv_num: 2509.22925
   paper_url: https://arxiv.org/pdf/2509.22925
   arxiv_url: https://arxiv.org/abs/2509.22925
+  type: pre-print
 
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Di[M]O: Distilling Masked Diffusion Models into One-Step Generator,"
@@ -15,6 +16,7 @@
   code_url: https://github.com/yuanzhi-zhu/DiMO
   slides_url: /documents/slides/DiMO.pdf
   poster_url: /documents/poster/poster_DiMO.pdf
+  type: conference
 
 - authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
   name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
@@ -23,6 +25,7 @@
   paper_url: https://arxiv.org/pdf/2412.09465
   arxiv_url: https://arxiv.org/abs/2412.09465
   code_url: https://github.com/yuanzhi-zhu/OFTSR
+  type: pre-print
 
 - authors: "[MY_NAME], Xingchao Liu, Qiang Liu."
   name: "SlimFlow: Training Smaller One-Step Diffusion Models with Rectified Flow,"
@@ -32,6 +35,7 @@
   arxiv_url: https://arxiv.org/abs/2407.12718
   code_url: https://github.com/yuanzhi-zhu/SlimFlow
   poster_url: /documents/poster/poster_SlimFlow.pdf
+  type: conference
 
 - authors: "[MY_NAME], Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool."
   name: "Denoising Diffusion Models for Plug-and-Play Image Restoration,"
@@ -43,3 +47,4 @@
   code_url: https://github.com/yuanzhi-zhu/DiffPIR
   slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
   poster_url: /documents/poster/poster_DiffPIR.pdf
+  type: conference

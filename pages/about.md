@@ -56,7 +56,7 @@ permalink: /about/
 
 <p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p>
 
-## Selected Publications
+<h2><a href="https://yuanzhi-zhu.github.io/publications/" style="text-decoration: none; color: inherit;">Selected Publications</a></h2>
 {% for artical in site.data.conferences %}
 * {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
   {% if artical.website != null %} [**{{ artical.name }}**]({{ artical.website }}) {% else %} **{{ artical.name }}** {% endif %}
