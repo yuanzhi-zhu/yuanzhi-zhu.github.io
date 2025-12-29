@@ -113,7 +113,7 @@
   type: conference
 
 - authors: Hayato Mizuno, Hironari Isshiki, Kouta Kondou, [MY_NAME], and  Yoshichika Otani.
-  name: Influence of Planar Hall Effect on the Output Signal in a T-shaped Spin Conversion Device
+  name: "Influence of Planar Hall Effect on the Output Signal in a T-shaped Spin Conversion Device,"
   info: in *Appl. Phys. Lett.* 119, 092401 (2021)
   availablity: available
   available: https://doi.org/10.1063/5.0061147
@@ -121,7 +121,7 @@
   type: journal
 
 - authors: Zhizhong Zhang[EQUAL], [MY_NAME][EQUAL], Yue Zhang, Weisheng Zhao, _et al_.
-  name: Skyrmion-Based Ultra-Low Power Electric-Field-Controlled Reconfigurable (SUPER) Logic Gate
+  name: "Skyrmion-Based Ultra-Low Power Electric-Field-Controlled Reconfigurable (SUPER) Logic Gate,"
   info: in *IEEE Electron Device Letters*, vol. 40, no. 12, pp. 1984-1987 (2019)
   availablity: available
   available: 10.1109/LED.2019.2946863
