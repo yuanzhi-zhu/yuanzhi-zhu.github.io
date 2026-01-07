@@ -54,7 +54,7 @@ permalink: /about/
   The goal of efficient generative modeling is to uncover principles that enable high-quality generation with minimal steps.
 </div>
 
-<p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p>
+<!-- <p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p> -->
 
 <h2><a href="https://yuanzhi-zhu.github.io/publications/" style="text-decoration: none; color: inherit;">Selected Publications</a></h2>
 {% for artical in site.data.conferences %}
