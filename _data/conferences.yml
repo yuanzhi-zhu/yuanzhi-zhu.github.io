@@ -1,6 +1,6 @@
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Soft-Di[M]O: Improving One-Step Discrete Image Generation with Soft Embeddings,"
-  publication: '_ICLR_ (2025).'
+  publication: '_ICLR_ (2026).'
   arxiv_num: 2509.22925
   paper_url: https://arxiv.org/pdf/2509.22925
   arxiv_url: https://arxiv.org/abs/2509.22925
@@ -20,7 +20,7 @@
 
 - authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
   name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
-  publication: '_ICLR_ (2025).'
+  publication: '_ICLR_ (2026).'
   arxiv_num: 2412.09465
   paper_url: https://arxiv.org/pdf/2412.09465
   arxiv_url: https://arxiv.org/abs/2412.09465
