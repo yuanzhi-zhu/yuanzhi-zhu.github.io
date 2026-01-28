@@ -323,6 +323,11 @@ Adding $\mathrm{KL}(p_t\|p^{(0)}_t)$ transforms online DiffusionNFT from an accu
 
 <!-- --- -->
 
+---
+
+> In practice, the finetuned model in DiffusionNFT is initialized from a pre-trained diffusion model without CFG. Moreover, the initial reference model is also the pre-trained diffusion model without CFG. 
+> Thus, with large inital KL strength, the online DiffusionNFT procedure effectively regularizes the finetuned model toward the pre-trained diffusion model without CFG and the learned model can only generate blurry samples; with small initial KL strength used in the experiments in the paper, the finetuned model generates samples with high reward but low diversity and pure color background, which suggests severe reward hacking.
+> Based on the analysis above, we suggest adding an medium-strength initial KL regularization and inference the pre-trained model with CFG as the initial reference to mitigate reward hacking in online DiffusionNFT.
 
 ## References
 
