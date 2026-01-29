@@ -30,65 +30,97 @@ authors:
 Introduce a binary optimality variable $o\in\{0,1\}$ and a prompt/context $c$.
 DiffusionNFT defines the reward as an optimality probability
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$ 
+    \begin{align*}
+    r(x_0,c)\;:=\;p(o=1\mid x_0,c)\in[0,1]. \tag{1}
+    \end{align*}
 $$
-r(x_0,c)\;:=\;p(o=1\mid x_0,c)\in[0,1].
-$$
+</div>
 
 Given a reference (old) model $\pi_{\mathrm{old}}(x_0\mid c)$, define the positive (optimality-conditioned) distribution
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$ 
+    \begin{align*}
+    \pi_{+}(x_0\mid c)
+    :=\pi_{\mathrm{old}}(x_0\mid o=1,c)
+    =\frac{p(o=1\mid x_0,c)}{p_{\mathrm{old}}(o=1\mid c)}\,\pi_{\mathrm{old}}(x_0\mid c)=
+    \frac{r(x_0,c)}{\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)]}\;
+    \pi_{\mathrm{old}}(x_0\mid c), \label{pi_plus}\tag{2}
+    \end{align*}
 $$
-\pi_{+}(x_0\mid c)
-:=\pi_{\mathrm{old}}(x_0\mid o=1,c)
-=\frac{p(o=1\mid x_0,c)}{p_{\mathrm{old}}(o=1\mid c)}\,\pi_{\mathrm{old}}(x_0\mid c)=
-\frac{r(x_0,c)}{\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)]}\;
-\pi_{\mathrm{old}}(x_0\mid c),
-$$
+</div>
 
 and the corresponding forward-noised marginals at diffusion time $t$ under a fixed kernel $\pi_{t\mid 0}(x_t\mid x_0)$:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{\mathrm{old}}_t(x_t\mid c)=\int \pi_{t\mid 0}(x_t\mid x_0)\,\pi_{\mathrm{old}}(x_0\mid c)\,dx_0,
-\qquad
-p^{+}_t(x_t\mid c)=\int \pi_{t\mid 0}(x_t\mid x_0)\,\pi_{+}(x_0\mid c)\,dx_0.
+    \begin{align*}
+    p^{\mathrm{old}}_t(x_t\mid c)=\int \pi_{t\mid 0}(x_t\mid x_0)\,\pi_{\mathrm{old}}(x_0\mid c)\,dx_0,
+    \qquad
+    p^{+}_t(x_t\mid c)=\int \pi_{t\mid 0}(x_t\mid x_0)\,\pi_{+}(x_0\mid c)\,dx_0. \tag{3}
+    \end{align*}
 $$
+</div>
 
 DiffusionNFT's training objective yields an optimal velocity field of the form
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-v^*(x_t,c,t)=v^{\mathrm{old}}(x_t,c,t)+\frac{2}{\beta}\,\Delta(x_t,c,t),
+    \begin{align*}
+    v^*(x_t,c,t)=v^{\mathrm{old}}(x_t,c,t)+\frac{2}{\beta}\,\Delta(x_t,c,t), \label{optimal_v} \tag{4}
+    \end{align*}
 $$
+</div>
 
 with guidance direction $\Delta(x_t,c,t)=\alpha(x_t,c)\bigl(v^{+}(x_t,c,t)-v^{\mathrm{old}}(x_t,c,t)\bigr)$.
 
 And the mixture coefficient is defined as
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\alpha(x_t,c):=\frac{p^{+}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}\;\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)].
+    \begin{align*}
+    \alpha(x_t,c):=\frac{p^{+}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}\;\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)]. \tag{5}
+    \end{align*}
 $$
+</div>
 
 #### Derivation of $\alpha(x_t,c)=p(o=1\mid x_t,c)$
 
 Apply the forward diffusion to the positive distribution:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\frac{p^{+}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
-=
-\frac{p_{\mathrm{old}}(o=1\mid x_t,c)}{p_{\mathrm{old}}(o=1\mid c)}.
+    \begin{align*}
+    \frac{p^{+}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
+    =
+    \frac{p_{\mathrm{old}}(o=1\mid x_t,c)}{p_{\mathrm{old}}(o=1\mid c)}. \tag{6}
+    \end{align*}
 $$
+</div>
 
 where we use the identity
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p_{\mathrm{old}}(o=1\mid c)=\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)],
+    \begin{align*}
+    p_{\mathrm{old}}(o=1\mid c)=\mathbb{E}_{x_0\sim \pi_{\mathrm{old}}(\cdot\mid c)}[r(x_0,c)], \tag{7}
+    \end{align*}
 $$
+</div>
 
 we obtain
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\boxed{
-\alpha(x_t,c)=p_{\mathrm{old}}(o=1\mid x_t,c).
-}
+    \begin{align*}
+    \boxed{
+    \alpha(x_t,c)=p_{\mathrm{old}}(o=1\mid x_t,c).
+    } \tag{8}
+    \end{align*}
 $$
+</div>
 
 Note that $\alpha(x_t,c)=\mathbb{E}_{x_0\sim \pi _{\mathrm{old}}(\cdot \mid c)}[r(x_0,c)\mid x_t]$. This shows that the mixture coefficient equals the optimality posterior distribution at the noisy state $x_t$ under the old model.
 
@@ -112,15 +144,23 @@ $$ -->
 
 Using the Bayes relation for the positive marginal
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{+}_t(x_t\mid c)=p^{\mathrm{old}}_t(x_t\mid c)\,\frac{p(o=1\mid x_t,c)}{p(o=1\mid c)},
+    \begin{align*}
+    p^{+}_t(x_t\mid c)=p^{\mathrm{old}}_t(x_t\mid c)\,\frac{p(o=1\mid x_t,c)}{p(o=1\mid c)}, \tag{9}
+    \end{align*}
 $$
+</div>
 
 and i) utilizing the relation between velocity fields and score functions under fixed Gaussian noising, and ii) applying log and gradient, one has
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\Delta(x_t,c,t) \propto \frac{2}{\beta}\,p(o=1\mid x_t,c)\,\nabla_{x_t}\log p(o=1\mid x_t,c).
+    \begin{align*}
+    \Delta(x_t,c,t) \propto \frac{2}{\beta}\,p(o=1\mid x_t,c)\,\nabla_{x_t}\log p(o=1\mid x_t,c). \tag{10}
+    \end{align*}
 $$
+</div>
 
 <!-- $$
 \nabla_{x_t}\log p^{*}_t(x_t\mid c)
@@ -133,23 +173,31 @@ $$ -->
 
 #### Closed-form optimal distribution (density-level)
 
-Since $\alpha(x_t,c)=p(o=1\mid x_t,c)$ and $\alpha\nabla\log\alpha=\nabla\alpha$, we have:
+Since $\alpha(x_t,c)=p(o=1\mid x_t,c)$ and $\alpha\nabla\log\alpha=\nabla\alpha$, we can rewrite eq(\ref{optimal_v}) in the form of score and have:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_{x_t}\log\frac{p^{*}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
-=\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c).
+    \begin{align*}
+    \nabla_{x_t}\log\frac{p^{*}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
+    =\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c). \tag{11}
+    \end{align*}
 $$
+</div>
 
 This implies the explicit density:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{*}_t(x_t\mid c)
-=
-\frac{1}{Z_t(c)}\;p^{\mathrm{old}}_t(x_t\mid c)\;
-\exp\!\Big(\frac{2}{\beta}\,p(o=1\mid x_t,c)\Big),
-\qquad
-Z_t(c)=\int p^{\mathrm{old}}_t(x_t\mid c)\exp\!\Big(\frac{2}{\beta}p(o=1\mid x_t,c)\Big)\,dx_t.
+    \begin{align*}
+    p^{*}_t(x_t\mid c)
+    =
+    \frac{1}{Z_t(c)}\;p^{\mathrm{old}}_t(x_t\mid c)\;
+    \exp\!\Big(\frac{2}{\beta}\,p(o=1\mid x_t,c)\Big),
+    \qquad
+    Z_t(c)=\int p^{\mathrm{old}}_t(x_t\mid c)\exp\!\Big(\frac{2}{\beta}p(o=1\mid x_t,c)\Big)\,dx_t. \tag{12}
+    \end{align*}
 $$
+</div>
 
 At $t=0$ this reduces to $p^{*}(x_0\mid c)\propto p^{\mathrm{old}}(x_0\mid c)\exp(\frac{2}{\beta}r(x_0,c))$.
 
@@ -203,23 +251,31 @@ Let $p^{(k)}_t(x_t\mid c)$ denote the old marginal at epoch $k$ (the distributio
 
 From the closed-form optimum, the population-optimal update at epoch $k$ is
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{(k+1)}_t(x_t\mid c)
-=
-\frac{1}{Z^{(k)}_t(c)}\;p^{(k)}_t(x_t\mid c)\;
-\exp\!\Big(\lambda\,\alpha_t(x_t,c)\Big),
-\qquad
-\lambda=\frac{2}{\beta}.
+    \begin{align*}
+    p^{(k+1)}_t(x_t\mid c)
+    =
+    \frac{1}{Z^{(k)}_t(c)}\;p^{(k)}_t(x_t\mid c)\;
+    \exp\!\Big(\lambda\,\alpha_t(x_t,c)\Big),
+    \qquad
+    \lambda=\frac{2}{\beta}. \tag{13}
+    \end{align*}
 $$
+</div>
 
 Unrolling the recursion yields
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{(K)}_t(x_t\mid c)
-\propto
-p^{(0)}_t(x_t\mid c)\;
-\exp\!\Big(\lambda K\,\alpha_t(x_t,c)\Big).
+    \begin{align*}
+    p^{(K)}_t(x_t\mid c)
+    \propto
+    p^{(0)}_t(x_t\mid c)\;
+    \exp\!\Big(\lambda K\,\alpha_t(x_t,c)\Big). \tag{14}
+    \end{align*}
 $$
+</div>
 
 <!-- Hence, under exact per-stage optimization and a fixed $\alpha_t$, online training compounds the reward tilt: the effective inverse temperature grows linearly with the number of stages. -->
 
@@ -243,36 +299,48 @@ To prevent unbounded drift from the original model, one can augment the per-epoc
 
 At the distribution level, consider the KL-regularized problem at epoch $k$:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{(k+1)}_t
-=
-\arg\max_{p_t}\;
-\mathbb{E}_{x_t\sim p_t}\!\big[\alpha_t(x_t,c)\big]
--\frac{1}{\eta_1}\mathrm{KL}\!\big(p_t\|p^{(k)}_t\big)
--\frac{1}{\eta_0}\mathrm{KL}\!\big(p_t\|p^{(0)}_t\big),
-\qquad \eta_0,\eta_1>0.
+    \begin{align*}
+    p^{(k+1)}_t
+    =
+    \arg\max_{p_t}\;
+    \mathbb{E}_{x_t\sim p_t}\!\big[\alpha_t(x_t,c)\big]
+    -\frac{1}{\eta_1}\mathrm{KL}\!\big(p_t\|p^{(k)}_t\big)
+    -\frac{1}{\eta_0}\mathrm{KL}\!\big(p_t\|p^{(0)}_t\big),
+    \qquad \eta_0,\eta_1>0. \tag{15}
+    \end{align*}
 $$
+</div>
 
 Here $\eta_1$ controls the trust region to the current reference and $\eta_0$ controls anchoring to the initial reference.
 
 The unique optimizer has the closed form
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-p^{(k+1)}_t(x_t\mid c)
-=
-\frac{1}{\widetilde Z^{(k)}_t(c)}\;
-\Big(p^{(k)}_t(x_t\mid c)\Big)^{w}\,
-\Big(p^{(0)}_t(x_t\mid c)\Big)^{1-w}\,
-\exp\!\Big(\lambda_{\mathrm{eff}}\,\alpha_t(x_t,c)\Big),
+    \begin{align*}
+    p^{(k+1)}_t(x_t\mid c)
+    =
+    \frac{1}{\widetilde Z^{(k)}_t(c)}\;
+    \Big(p^{(k)}_t(x_t\mid c)\Big)^{w}\,
+    \Big(p^{(0)}_t(x_t\mid c)\Big)^{1-w}\,
+    \exp\!\Big(\lambda_{\mathrm{eff}}\,\alpha_t(x_t,c)\Big), \tag{16}
+    \end{align*}
 $$
+</div>
 
 with weights and effective tilt coefficient
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-w=\frac{\eta_0}{\eta_0+\eta_1}\in(0,1),
-\qquad
-\lambda_{\mathrm{eff}}=\frac{\eta_0\eta_1}{\eta_0+\eta_1}.
+    \begin{align*}
+    w=\frac{\eta_0}{\eta_0+\eta_1}\in(0,1),
+    \qquad
+    \lambda_{\mathrm{eff}}=\frac{\eta_0\eta_1}{\eta_0+\eta_1}. \tag{17}
+    \end{align*}
 $$
+</div>
 
 Thus, the per-epoch solution is an exponential tilt of a geometric mixture of the current and initial references.
 
@@ -307,13 +375,17 @@ Therefore, the online procedure converges to the finite tilt -->
 
 It is straightforward to see that the iterates converge to a limiting distribution:
 
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\boxed{
-p^{(\infty)}_t(x_t\mid c)
-=
-\frac{1}{Z^{(\infty)}_t(c)}\;p^{(0)}_t(x_t\mid c)\exp\!\big(\eta_0\,\alpha_t(x_t,c)\big).
-}
+    \begin{align*}
+    \boxed{
+    p^{(\infty)}_t(x_t\mid c)
+    =
+    \frac{1}{Z^{(\infty)}_t(c)}\;p^{(0)}_t(x_t\mid c)\exp\!\big(\eta_0\,\alpha_t(x_t,c)\big).
+    } \tag{18}
+    \end{align*}
 $$
+</div>
 
 Notably, the limiting distribution depends only on the anchoring strength $\eta_0$; the trust-region parameter $\eta_1$ affects only the dynamics (convergence rate and stability) through $w$.
 

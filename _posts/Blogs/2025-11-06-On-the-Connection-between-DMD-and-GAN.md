@@ -31,9 +31,11 @@ The final conclusion is not bonded to Di-Bregman, I just want to use Di-Bregman 
 In Di-Bregman, we derived a new distillation loss, whose loss gradient extend the DMD loss with an extra coefficient $h^{\prime\prime}(r_t(x_t))\,r_t(x_t)$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h^{\prime\prime}(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_{x_t}\log q_{\theta,t}({x_t})\big)\,
-\nabla_\theta G_\theta(\epsilon)\Big],
+    \begin{align*}
+    \nabla_\theta \mathbb{D}_h(r_t\|1)
+    = -\mathbb{E}_{\epsilon,t}\Big[\,w(t)h^{\prime\prime}(r_t(x_t))\,r_t(x_t)\,\big(\nabla_{x_t}\log p_t({x_t})-\nabla_{x_t}\log q_{\theta,t}({x_t})\big)\,
+    \nabla_\theta G_\theta(\epsilon)\Big], \tag{1}
+    \end{align*}
 $$
 </div>
 where
@@ -64,18 +66,20 @@ A natural question is: *can we rewrite the Di-Bregman loss gradient entirely in 
 We have the identity
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_{x_t} r_t({x_t}) = r_t({x_t})\,\big(\nabla_{x_t}\log q_{\theta,t}({x_t}) - \nabla_{x_t}\log p_t({x_t})\big)
+    \begin{align*}
+    \nabla_{x_t} r_t({x_t}) = r_t({x_t})\,\big(\nabla_{x_t}\log q_{\theta,t}({x_t}) - \nabla_{x_t}\log p_t({x_t})\big) \tag{2}
+    \end{align*}
 $$
 </div>
 
 Substituting into the Di-Bregman gradient gives
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\begin{aligned}
-\nabla_\theta \mathbb{D}_h(r_t\|1)
-&= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,r_t\Big(-\frac{\nabla_{x_t} r_t}{r_t}\Big)\,\nabla_\theta G_\theta(\epsilon)\Big] \\
-&= \mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,\nabla_{x_t} r_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
-\end{aligned}
+    \begin{align*}
+    \nabla_\theta \mathbb{D}_h(r_t\|1)
+    &= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,r_t\Big(-\frac{\nabla_{x_t} r_t}{r_t}\Big)\,\nabla_\theta G_\theta(\epsilon)\Big] \\
+    &= \mathbb{E}_{\epsilon,t}\Big[w(t)\,h^{\prime\prime}(r_t)\,\nabla_{x_t} r_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big]. \tag{3}
+    \end{align*}
 $$
 </div>
 
@@ -84,15 +88,19 @@ $$
 Since $r_t = \frac{q_{\theta,t}}{p_t} = \frac{1-D_t}{D_t}$, we have $\frac{dr_t}{dD_t} = -\frac{1}{D_t^2}$, hence
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_{x_t} r_t(x_t) = -\frac{1}{D_t(x_t)^2}\,\nabla_{x_t} D_t(x_t).
+    \begin{align*}
+    \nabla_{x_t} r_t(x_t) = -\frac{1}{D_t(x_t)^2}\,\nabla_{x_t} D_t(x_t). \tag{4}
+    \end{align*}
 $$
 </div>
 
 Substitute this back:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[w(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,\nabla_{x_t} D_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big].
+    \begin{align*}
+    \nabla_\theta \mathbb{D}_h(r_t\|1)
+    = -\mathbb{E}_{\epsilon,t}\Big[w(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,\nabla_{x_t} D_t(x_t)\,\nabla_\theta G_\theta(\epsilon)\Big]. \tag{5}
+    \end{align*}
 $$
 </div>
 
@@ -100,13 +108,15 @@ $$
 Using the chain rule, we have:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\boxed{
-\nabla_\theta \mathbb{D}_h(r_t\|1)
-= -\mathbb{E}_{\epsilon,t}\Big[
-w'(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,
-\nabla_\theta D_t(x_t,t)
-\Big]
-}
+    \begin{align*}
+    \boxed{
+    \nabla_\theta \mathbb{D}_h(r_t\|1)
+    = -\mathbb{E}_{\epsilon,t}\Big[
+    w'(t)\,\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2}\,
+    \nabla_\theta D_t(x_t,t)
+    \Big]
+    } \tag{6}
+    \end{align*}
 $$
 </div>
 
@@ -124,15 +134,19 @@ This suggests that **Di-Bregman / VSD and Diffusion-GAN are closely connected**.
 When $h(r)=r\log r$, we have $h^{\prime\prime}(r)=\frac{1}{r}$, hence the coefficiency in the boxed equation becomes $\frac{h^{\prime\prime}(\frac{1-D_t}{D_t})}{D_t^2} = \frac{1}{D_t(1-D_t)}$, and the loss gradient becomes
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\nabla_\theta \mathbb{D}_{\mathrm{KL}}(q_{\theta,t}\|p_t)
-= -\mathbb{E}_{\epsilon,t}\Big[ w'(t)\,\frac{1}{D_t(1-D_t)}\,\nabla_\theta D_t(x_t,t) \Big].
+    \begin{align*}
+    \nabla_\theta \mathbb{D}_{\mathrm{KL}}(q_{\theta,t}\|p_t)
+    = -\mathbb{E}_{\epsilon,t}\Big[ w'(t)\,\frac{1}{D_t(1-D_t)}\,\nabla_\theta D_t(x_t,t) \Big]. \tag{7}
+    \end{align*}
 $$
 </div>
 
 This resonates with the GAN generate loss for KL divergence $\mathrm{KL}(q_\theta||p)$:
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
-\mathcal{L}_G = -\mathbb{E}_{\epsilon}\Big[\log \frac{D(G_\theta(\epsilon))}{1-D(G_\theta(\epsilon))}\Big].
+    \begin{align*}
+    \mathcal{L}_G = -\mathbb{E}_{\epsilon}\Big[\log \frac{D(G_\theta(\epsilon))}{1-D(G_\theta(\epsilon))}\Big]. \tag{8}
+    \end{align*}
 $$
 </div>
 
