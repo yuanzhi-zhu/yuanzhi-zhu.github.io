@@ -22,8 +22,7 @@ authors:
 <!-- This note rewrites the DiffusionNFT objective in distributional form. The key point is that, while the paper is phrased as a velocity-field (or score/flow) update with positive/negative splits, the induced density-level optimum is an explicit KL-regularized exponential tilt of a reference distribution—where the “reward” is an optimality posterior at the noisy state.
 
 --- -->
-
-## Offline DiffusionNFT as KL-Regularized Reward Tilting
+## Offline DiffusionNFT[1] as KL-Regularized Reward Tilting
 
 ### Setup (From DiffusionNFT)
 
@@ -142,22 +141,44 @@ $$ -->
 
 <!-- where $\kappa(t)$ depends only on the noise schedule. -->
 
+<div class="sidebar" id="intractable">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 10px;'>
+        <sup>1</sup> for $x_t = \alpha_t x_1 + \sigma_t x_0$ with $x_0\sim\mathcal{N}(0,I)$, the velocity field relates to the score function as $v(x_t,t) = \kappa(t)\nabla_{x_t}\log p_t(x_t)+\frac{\dot{\alpha}_t}{\alpha_t}x_t$, where $\kappa(t) = \sigma_t^2\left(\frac{\dot{\alpha}_t}{\alpha_t}-\frac{\dot{\sigma}_t}{\sigma_t}\right)$. We only use the $\alpha_t$ in this side note, do not confuse it with the $\alpha(x_t,c)$ defined in eq(5).
+        </p>
+    </div>
+</div>
+
 Using the Bayes relation for the positive marginal
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
     \begin{align*}
-    p^{+}_t(x_t\mid c)=p^{\mathrm{old}}_t(x_t\mid c)\,\frac{p(o=1\mid x_t,c)}{p(o=1\mid c)}, \tag{9}
+    p^{+}_t(x_t\mid c)=p^{\mathrm{old}}_t(x_t\mid c)\,\frac{p(o=1\mid x_t,c)}{p(o=1\mid c)}, \tag{9} \label{bayes_positive}
     \end{align*}
 $$
 </div>
 
-and i) utilizing the relation between velocity fields and score functions under fixed Gaussian noising, and ii) applying log and gradient, one has
+and i) utilizing the relation between velocity fields and score functions under fixed Gaussian noising<a href="#intractable"><sup>1</sup></a>, and ii) applying log and gradient, one has
+
+<div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
+$$
+\begin{align*}
+    v^{+}(x_t,c,t)-v^{\mathrm{old}}(x_t,c,t) 
+    &= \kappa(t)\Big(\nabla_{x_t}\log p^{+}_t(x_t\mid c)-\nabla_{x_t}\log p^{\mathrm{old}}_t(x_t\mid c)\Big) && \color{gray}{\text{// v to score}} \\
+    &= \kappa(t)\,\nabla_{x_t}\log\frac{p^{+}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)} \\
+    &= \kappa(t)\,\nabla_{x_t}\log\frac{p(o=1\mid x_t,c)}{p(o=1\mid c)} && \color{gray}{\text{// substitute eq(\ref{bayes_positive})}} \\
+    &= \kappa(t)\,\nabla_{x_t}\log p(o=1\mid x_t,c) && \color{gray}{\text{// } \nabla_{x_t}\log p(o=1\mid c)=0}. \tag{10}
+\end{align*}
+$$
+</div>
+
+Thus we can rewrite the guidance direction as:
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
     \begin{align*}
-    \Delta(x_t,c,t) \propto \frac{2}{\beta}\,p(o=1\mid x_t,c)\,\nabla_{x_t}\log p(o=1\mid x_t,c). \tag{10}
+    \Delta(x_t,c,t) = \kappa(t)\,\alpha(x_t,c)\,\nabla_{x_t}\log p(o=1\mid x_t,c). \tag{11}
     \end{align*}
 $$
 </div>
@@ -173,13 +194,18 @@ $$ -->
 
 #### Closed-form optimal distribution (density-level)
 
-Since $\alpha(x_t,c)=p(o=1\mid x_t,c)$ and $\alpha\nabla\log\alpha=\nabla\alpha$, we can rewrite eq(\ref{optimal_v}) in the form of score and have:
+Since $\alpha(x_t,c)=p(o=1\mid x_t,c)$ and $\alpha(x_t,c)\nabla\log\alpha(x_t,c)=\nabla\alpha(x_t,c)$, we can rewrite eq(\ref{optimal_v}) in the form of score and have:
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
     \begin{align*}
-    \nabla_{x_t}\log\frac{p^{*}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
-    =\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c). \tag{11}
+    &v^*(x_t,c,t)-v^{\mathrm{old}}(x_t,c,t)
+    =\frac{2}{\beta}\,\Delta(x_t,c,t)=\kappa(t)\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c)\\
+    &\implies 
+    \kappa(t)\Big(\nabla_{x_t}\log p^{*}_t(x_t\mid c)-\nabla_{x_t}\log p^{\mathrm{old}}_t(x_t\mid c)\Big)
+    =\kappa(t)\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c) && \color{gray}{\text{// v to score}} \\
+    &\implies \nabla_{x_t}\log\frac{p^{*}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
+    =\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c). \tag{12}
     \end{align*}
 $$
 </div>
@@ -194,7 +220,7 @@ $$
     \frac{1}{Z_t(c)}\;p^{\mathrm{old}}_t(x_t\mid c)\;
     \exp\!\Big(\frac{2}{\beta}\,p(o=1\mid x_t,c)\Big),
     \qquad
-    Z_t(c)=\int p^{\mathrm{old}}_t(x_t\mid c)\exp\!\Big(\frac{2}{\beta}p(o=1\mid x_t,c)\Big)\,dx_t. \tag{12}
+    Z_t(c)=\int p^{\mathrm{old}}_t(x_t\mid c)\exp\!\Big(\frac{2}{\beta}p(o=1\mid x_t,c)\Big)\,dx_t. \tag{13}
     \end{align*}
 $$
 </div>
@@ -259,7 +285,7 @@ $$
     \frac{1}{Z^{(k)}_t(c)}\;p^{(k)}_t(x_t\mid c)\;
     \exp\!\Big(\lambda\,\alpha_t(x_t,c)\Big),
     \qquad
-    \lambda=\frac{2}{\beta}. \tag{13}
+    \lambda=\frac{2}{\beta}. \tag{14}
     \end{align*}
 $$
 </div>
@@ -272,7 +298,7 @@ $$
     p^{(K)}_t(x_t\mid c)
     \propto
     p^{(0)}_t(x_t\mid c)\;
-    \exp\!\Big(\lambda K\,\alpha_t(x_t,c)\Big). \tag{14}
+    \exp\!\Big(\lambda K\,\alpha_t(x_t,c)\Big). \tag{15}
     \end{align*}
 $$
 </div>
@@ -297,7 +323,7 @@ If the reference is updated via EMA in parameter space, the induced distribution
 
 To prevent unbounded drift from the original model, one can augment the per-epoch objective with an additional regularizer that penalizes deviation from the initial reference distribution $p^{(0)}_t(\cdot\mid c)=p^{\mathrm{ref}}_t(\cdot\mid c)$.
 
-At the distribution level, consider the KL-regularized problem at epoch $k$:
+At the distribution level, consider the KL-regularized problem at epoch $k$ [2,3]:
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
@@ -308,7 +334,7 @@ $$
     \mathbb{E}_{x_t\sim p_t}\!\big[\alpha_t(x_t,c)\big]
     -\frac{1}{\eta_1}\mathrm{KL}\!\big(p_t\|p^{(k)}_t\big)
     -\frac{1}{\eta_0}\mathrm{KL}\!\big(p_t\|p^{(0)}_t\big),
-    \qquad \eta_0,\eta_1>0. \tag{15}
+    \qquad \eta_0,\eta_1>0. \tag{16}
     \end{align*}
 $$
 </div>
@@ -325,7 +351,7 @@ $$
     \frac{1}{\widetilde Z^{(k)}_t(c)}\;
     \Big(p^{(k)}_t(x_t\mid c)\Big)^{w}\,
     \Big(p^{(0)}_t(x_t\mid c)\Big)^{1-w}\,
-    \exp\!\Big(\lambda_{\mathrm{eff}}\,\alpha_t(x_t,c)\Big), \tag{16}
+    \exp\!\Big(\lambda_{\mathrm{eff}}\,\alpha_t(x_t,c)\Big), \tag{17}
     \end{align*}
 $$
 </div>
@@ -337,7 +363,7 @@ $$
     \begin{align*}
     w=\frac{\eta_0}{\eta_0+\eta_1}\in(0,1),
     \qquad
-    \lambda_{\mathrm{eff}}=\frac{\eta_0\eta_1}{\eta_0+\eta_1}. \tag{17}
+    \lambda_{\mathrm{eff}}=\frac{\eta_0\eta_1}{\eta_0+\eta_1}. \tag{18}
     \end{align*}
 $$
 </div>
@@ -382,7 +408,7 @@ $$
     p^{(\infty)}_t(x_t\mid c)
     =
     \frac{1}{Z^{(\infty)}_t(c)}\;p^{(0)}_t(x_t\mid c)\exp\!\big(\eta_0\,\alpha_t(x_t,c)\big).
-    } \tag{18}
+    } \tag{19}
     \end{align*}
 $$
 </div>
