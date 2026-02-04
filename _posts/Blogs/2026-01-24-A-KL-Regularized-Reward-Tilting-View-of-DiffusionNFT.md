@@ -198,12 +198,13 @@ Since $\alpha(x_t,c)=p(o=1\mid x_t,c)$ and $\alpha(x_t,c)\nabla\log\alpha(x_t,c)
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
+    \require{cancel}
     \begin{align*}
     &v^*(x_t,c,t)-v^{\mathrm{old}}(x_t,c,t)
     =\frac{2}{\beta}\,\Delta(x_t,c,t)=\kappa(t)\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c)\\
     &\implies 
-    \kappa(t)\Big(\nabla_{x_t}\log p^{*}_t(x_t\mid c)-\nabla_{x_t}\log p^{\mathrm{old}}_t(x_t\mid c)\Big)
-    =\kappa(t)\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c) && \color{gray}{\text{// v to score}} \\
+    \cancel{\kappa(t)}\Big(\nabla_{x_t}\log p^{*}_t(x_t\mid c)-\nabla_{x_t}\log p^{\mathrm{old}}_t(x_t\mid c)\Big)
+    =\cancel{\kappa(t)}\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c) && \color{gray}{\text{// v to score}} \\
     &\implies \nabla_{x_t}\log\frac{p^{*}_t(x_t\mid c)}{p^{\mathrm{old}}_t(x_t\mid c)}
     =\frac{2}{\beta}\,\nabla_{x_t}\alpha(x_t,c). \tag{12}
     \end{align*}
@@ -426,6 +427,10 @@ Adding $\mathrm{KL}(p_t\|p^{(0)}_t)$ transforms online DiffusionNFT from an accu
 > In practice, the finetuned model in DiffusionNFT is initialized from a pre-trained diffusion model without CFG. Moreover, the initial reference model is also the pre-trained diffusion model without CFG. 
 > Thus, with large inital KL strength, the online DiffusionNFT procedure effectively regularizes the finetuned model toward the pre-trained diffusion model without CFG and the learned model can only generate blurry samples; with small initial KL strength used in the experiments in the paper, the finetuned model generates samples with high reward but low diversity and pure color background, which suggests severe reward hacking.
 > Based on the analysis above, we suggest adding an medium-strength initial KL regularization and inference the pre-trained model with CFG as the initial reference to mitigate reward hacking in online DiffusionNFT.
+
+## Acknowledgements
+The author thanks Huayu Chen for his insightful work, helpful discussions, and valuable feedback. The author also thanks Ruiqing Wang for proofreading.
+
 
 ## References
 
