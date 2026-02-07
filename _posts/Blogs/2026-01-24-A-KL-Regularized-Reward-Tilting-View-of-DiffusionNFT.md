@@ -24,6 +24,12 @@ authors:
 --- -->
 ## Offline DiffusionNFT[1] as KL-Regularized Reward Tilting
 
+In my personal view, DiffusionNFT is a significant work because it is 
+<!-- color text -->
+<span style="color:orange;">the first native algorithm for diffusion RL</span> without relying on differentiable reward models.
+
+The paper derives an optimal velocity field update and interprets it as a positive/negative split, but the corresponding density-level optimum can be written explicitly as a reward-tilted distribution. This section provides a detailed derivation of this closed-form solution.
+
 ### Setup (From DiffusionNFT)
 
 Introduce a binary optimality variable $o\in\{0,1\}$ and a prompt/context $c$.
@@ -121,12 +127,12 @@ $$
 $$
 </div>
 
-Note that $\alpha(x_t,c)=\mathbb{E}_{x_0\sim \pi _{\mathrm{old}}(\cdot \mid c)}[r(x_0,c)\mid x_t]$. This shows that the mixture coefficient equals the optimality posterior distribution at the noisy state $x_t$ under the old model.
+Note that $\alpha(x_t,c)=\mathbb{E}_{x_0\sim \pi _{\mathrm{old}}(\cdot \mid x_t,c)}[r(x_0,c)]$. This shows that the mixture coefficient equals the optimality posterior distribution at the noisy state $x_t$ under the old model.
 
 
 #### Remark
 
-This equality is a direct consequence of the definition of $\pi_{+}$ as an optimality-conditioned distribution and Bayes' rule under the fixed forward noising kernel. It may be omitted or only implicit in the original DiffusionNFT paper.
+This equality is a direct consequence of the definition of $\pi_{+}$ as an optimality-conditioned distribution and Bayes' rule under the fixed forward noising kernel. It may be omitted or only implicit in the original DiffusionNFT paper. With this finding, the Lemma A.2 (Posterior Split) in the paper becomes obvious.
 
 
 ### DiffusionNFT optimal distribution at each step
