@@ -69,7 +69,15 @@ $$
 $$
 </div>
 
-DiffusionNFT's training objective yields an optimal velocity field of the form
+DiffusionNFT's training objective<a href="#intractable"><sup>1</sup></a> yields an optimal velocity field of the form
+
+<div class="sidebar" id="intractable">
+    <div style="font-size: 12px;">
+        <p style='margin-bottom: 10px;'>
+        <sup>1</sup> When fully online such that $v^{\mathrm{old}}=v_\theta$, the training objectice becomes regular flow matching, but trained on data generated with $v_\theta$.
+        </p>
+    </div>
+</div>
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
@@ -150,7 +158,7 @@ $$ -->
 <div class="sidebar" id="intractable">
     <div style="font-size: 12px;">
         <p style='margin-bottom: 10px;'>
-        <sup>1</sup> for $x_t = \alpha_t x_1 + \sigma_t x_0$ with $x_0\sim\mathcal{N}(0,I)$, the velocity field relates to the score function as $v(x_t,t) = \kappa(t)\nabla_{x_t}\log p_t(x_t)+\frac{\dot{\alpha}_t}{\alpha_t}x_t$, where $\kappa(t) = \sigma_t^2\left(\frac{\dot{\alpha}_t}{\alpha_t}-\frac{\dot{\sigma}_t}{\sigma_t}\right)$. We only use the $\alpha_t$ in this side note, do not confuse it with the $\alpha(x_t,c)$ defined in eq(5).
+        <sup>2</sup> for $x_t = \alpha_t x_1 + \sigma_t x_0$ with $x_0\sim\mathcal{N}(0,I)$, the velocity field relates to the score function as $v(x_t,t) = \kappa(t)\nabla_{x_t}\log p_t(x_t)+\frac{\dot{\alpha}_t}{\alpha_t}x_t$, where $\kappa(t) = \sigma_t^2\left(\frac{\dot{\alpha}_t}{\alpha_t}-\frac{\dot{\sigma}_t}{\sigma_t}\right)$. We only use the $\alpha_t$ in this side note, do not confuse it with the $\alpha(x_t,c)$ defined in eq(5).
         </p>
     </div>
 </div>
@@ -165,7 +173,7 @@ $$
 $$
 </div>
 
-and i) utilizing the relation between velocity fields and score functions under fixed Gaussian noising<a href="#intractable"><sup>1</sup></a>, and ii) applying log and gradient, one has
+and i) utilizing the relation between velocity fields and score functions under fixed Gaussian noising<a href="#intractable"><sup>2</sup></a>, and ii) applying log and gradient, one has
 
 <div style="overflow-x: auto; white-space: nowrap; margin-top: -20px;">
 $$
