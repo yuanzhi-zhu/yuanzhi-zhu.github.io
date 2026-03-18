@@ -35,7 +35,7 @@ As shown in the figure below, the on-policy generator is actually a model $\thet
 For diffusion model, this generation can take multiple $T$ steps, using corresponding samplers such as DDIM, DPM solver or even CM sampler (for the generator trained with consistency model objective or DMD objective). 
 
 <div style="text-align: center;">
-    <img src="/images/blog/Distillation_OPD/generator.png" alt="On-Policy Generator" style="max-width: 50%; height: auto;">
+    <img src="/images/blog/Distillation_OPD/Generator.png" alt="On-Policy Generator" style="max-width: 50%; height: auto;">
 </div>
 
 Let's denote the generator's output distribution as $p_\theta(x_1\mid c)$, then we can write the objective of the on-policy distillation as minimizing some divergence between the generator's output distribution and a target distribution $p_{\mathrm{target}}(x_1\mid c, c_\mathrm{ext})$, where $c_\mathrm{ext}$ is the external signals (e.g., reward model, privileged information, expert demonstrations, etc.).
