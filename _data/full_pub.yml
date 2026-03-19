@@ -6,9 +6,11 @@
   arxiv_url: https://arxiv.org/abs/2603.14128
   blog_url: https://yuanzhi-zhu.github.io/2026/03/17/The-Distillation-in-On-Policy-Distillation/
   type: pre-print
+  display: true
 
 - authors: "Minh-Quan Le, [MY_NAME], Vicky Kalogeiton, Dimitris Samaras."
   name: "What about gravity in video generation? Post-Training Newton's Laws with Verifiable Rewards,"
+  website: https://cvlab-stonybrook.github.io/NewtonRewards/
   publication: "Arxiv."
   arxiv_num: 2512.00425
   paper_url: https://arxiv.org/pdf/2512.00425
@@ -31,6 +33,7 @@
   paper_url: https://arxiv.org/pdf/2509.22925
   arxiv_url: https://arxiv.org/abs/2509.22925
   type: conference
+  display: true
 
 - authors: "[MY_NAME], Hanshu Yan, Huan Yang, Kai Zhang, Junnan Li."
   name: "Accelerating Video Diffusion Models via Distribution Matching,"
@@ -39,15 +42,6 @@
   paper_url: https://arxiv.org/pdf/2412.05899
   arxiv_url: https://arxiv.org/abs/2412.05899
   type: pre-print
-
-- authors: "[MY_NAME], Ruiqing Wang, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
-  name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
-  publication: '_ICLR_ (2026).'
-  arxiv_num: 2412.09465
-  paper_url: https://arxiv.org/pdf/2412.09465
-  arxiv_url: https://arxiv.org/abs/2412.09465
-  code_url: https://github.com/yuanzhi-zhu/OFTSR
-  type: conference
 
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Di[M]O: Distilling Masked Diffusion Models into One-Step Generator,"
@@ -60,6 +54,17 @@
   slides_url: /documents/slides/DiMO.pdf
   poster_url: /documents/poster/poster_DiMO.pdf
   type: conference
+  display: true
+
+- authors: "[MY_NAME][EQUAL], Ruiqing Wang[EQUAL], Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang."
+  name: "OFTSR: One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs,"
+  publication: '_ICLR_ (2026).'
+  arxiv_num: 2412.09465
+  paper_url: https://arxiv.org/pdf/2412.09465
+  arxiv_url: https://arxiv.org/abs/2412.09465
+  code_url: https://github.com/yuanzhi-zhu/OFTSR
+  type: conference
+  display: true
 
 - authors: "Yuqing Wang, Zhijie Lin, Yao Teng, [MY_NAME], Shuhuai Ren, Jiashi Feng, Xihui Liu."
   name: "Bridging Continuous and Discrete Tokens for Autoregressive Visual Generation,"
@@ -94,6 +99,7 @@
   code_url: https://github.com/yuanzhi-zhu/SlimFlow
   poster_url: /documents/poster/poster_SlimFlow.pdf
   type: conference
+  display: true
 
 - authors: "Zixiang Zhao, Haowen Bai, [MY_NAME], Jiangshe Zhang, Shuang Xu, Yulun Zhang, Kai Zhang, Deyu Meng, Radu Timofte, Luc Van Gool."
   name: "DDFM: Denoising Diffusion Model for Multi-Modality Image Fusion,"
@@ -121,6 +127,7 @@
   slides_url: /documents/slides/diffusion_models_for_pnp_IR.pdf
   poster_url: /documents/poster/poster_DiffPIR.pdf
   type: conference
+  display: true
 
 - authors: Hayato Mizuno, Hironari Isshiki, Kouta Kondou, [MY_NAME], and  Yoshichika Otani.
   name: "Influence of Planar Hall Effect on the Output Signal in a T-shaped Spin Conversion Device,"

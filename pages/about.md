@@ -57,16 +57,12 @@ permalink: /about/
 <!-- <p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p> -->
 
 <h2><a href="https://yuanzhi-zhu.github.io/publications/" style="text-decoration: none; color: inherit;">Selected Publications</a></h2>
-{% for artical in site.data.conferences %}
+{% for artical in site.data.full_pub %}
+{% if artical.display %}
 * {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
   {% if artical.website != null %} [**{{ artical.name }}**]({{ artical.website }}) {% else %} **{{ artical.name }}** {% endif %}
-  {{ artical.publication }} {% if artical.arxiv_num %} *arxiv*: {{ artical.arxiv_num }} {% endif %}
-  {% if artical.paper_url %} [ [paper] ]({{artical.paper_url }}) {% endif %} {% if artical.arxiv_url %} [ [arxiv] ]({{ artical.arxiv_url }}) {% endif %} {% if artical.code_url %} [ [code] ]({{ artical.code_url }}) {% endif %} {% if artical.slides_url %} [ [slides] ]({{ artical.slides_url }}) {% endif %} {% if artical.poster_url %} [ [poster] ]({{ artical.poster_url }}) {% endif %} {% if artical.blog_url %} [ [blog] ]({{ artical.blog_url }}) {% endif %}
-{% endfor %}
-
-{% for artical in site.data.journals %}
-* {{ artical.authors | replace: '[MY_NAME]', '<ins>Yuanzhi Zhu</ins>' | replace: '[EQUAL]', '\*' }} <br>
-  **{{ artical.name }}**, {{artical.info}}[ [DOI: {{ artical.available }}] ]({{ artical.url }})
+  {% if artical.publication %} {{ artical.publication }} {% if artical.arxiv_num %} *arxiv*: {{ artical.arxiv_num }} {% endif %} {% endif %} {% if artical.info %} {{ artical.info }} [ [DOI: {{ artical.available }}] ]({{ artical.url }}) {% endif %} {% if artical.paper_url %} [ [paper] ]({{ artical.paper_url }}) {% endif %} {% if artical.arxiv_url %} [ [arxiv] ]({{ artical.arxiv_url }}) {% endif %} {% if artical.code_url %} [ [code] ]({{ artical.code_url }}) {% endif %} {% if artical.slides_url %} [ [slides] ]({{ artical.slides_url }}) {% endif %} {% if artical.poster_url %} [ [poster] ]({{ artical.poster_url }}) {% endif %} {% if artical.blog_url %} [ [blog] ]({{ artical.blog_url }}) {% endif %}
+{% endif %}
 {% endfor %}
 
 <div class="my_container" style="display: flex; justify-content: space-between;">
