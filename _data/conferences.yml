@@ -1,4 +1,13 @@
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
+  name: "Diffusion Reinforcement Learning via Centered Reward Distillation,"
+  publication: "Arxiv."
+  arxiv_num: 2603.14128
+  paper_url: https://arxiv.org/pdf/2603.14128
+  arxiv_url: https://arxiv.org/abs/2603.14128
+  blog_url: https://yuanzhi-zhu.github.io/2026/03/17/The-Distillation-in-On-Policy-Distillation/
+  type: pre-print
+
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
   name: "Soft-Di[M]O: Improving One-Step Discrete Image Generation with Soft Embeddings,"
   publication: '_ICLR_ (2026).'
   arxiv_num: 2509.22925

@@ -1,3 +1,12 @@
+- authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
+  name: "Diffusion Reinforcement Learning via Centered Reward Distillation,"
+  publication: "Arxiv."
+  arxiv_num: 2603.14128
+  paper_url: https://arxiv.org/pdf/2603.14128
+  arxiv_url: https://arxiv.org/abs/2603.14128
+  blog_url: https://yuanzhi-zhu.github.io/2026/03/17/The-Distillation-in-On-Policy-Distillation/
+  type: pre-print
+
 - authors: "Minh-Quan Le, [MY_NAME], Vicky Kalogeiton, Dimitris Samaras."
   name: "What about gravity in video generation? Post-Training Newton's Laws with Verifiable Rewards,"
   publication: "Arxiv."
@@ -12,6 +21,7 @@
   arxiv_num: 2510.16983
   paper_url: /documents/paper/bregman_distil.pdf
   arxiv_url: https://arxiv.org/abs/2510.16983
+  blog_url: https://yuanzhi-zhu.github.io/2025/11/06/On-the-Connection-between-DMD-and-GAN/
   type: pre-print
 
 - authors: "[MY_NAME], Xi Wang, Stéphane Lathuilière, Vicky Kalogeiton."
