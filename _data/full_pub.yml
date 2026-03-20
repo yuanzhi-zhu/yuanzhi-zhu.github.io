@@ -32,6 +32,9 @@
   arxiv_num: 2509.22925
   paper_url: https://arxiv.org/pdf/2509.22925
   arxiv_url: https://arxiv.org/abs/2509.22925
+  code_url: https://github.com/yuanzhi-zhu/SoftDiMO
+  slides_url: /documents/slides/SoftDiMO.pdf
+  poster_url: /documents/poster/SoftDiMO.pdf
   type: conference
   display: true
 
