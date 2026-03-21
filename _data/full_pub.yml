@@ -4,6 +4,7 @@
   arxiv_num: 2603.14128
   paper_url: https://arxiv.org/pdf/2603.14128
   arxiv_url: https://arxiv.org/abs/2603.14128
+  code_url: https://github.com/yuanzhi-zhu/CRD
   blog_url: https://yuanzhi-zhu.github.io/2026/03/17/The-Distillation-in-On-Policy-Distillation/
   type: pre-print
   display: true
@@ -66,6 +67,8 @@
   paper_url: https://arxiv.org/pdf/2412.09465
   arxiv_url: https://arxiv.org/abs/2412.09465
   code_url: https://github.com/yuanzhi-zhu/OFTSR
+  slides_url: /documents/slides/OFTSR.pdf
+  poster_url: /documents/poster/OFTSR.pdf
   type: conference
   display: true
 
