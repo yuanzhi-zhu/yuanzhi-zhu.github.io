@@ -35,7 +35,7 @@
   arxiv_url: https://arxiv.org/abs/2509.22925
   code_url: https://github.com/yuanzhi-zhu/SoftDiMO
   slides_url: /documents/slides/SoftDiMO.pdf
-  poster_url: /documents/poster/SoftDiMO.pdf
+  poster_url: /documents/poster/poster_SoftDiMO.pdf
   type: conference
   display: true
 
@@ -68,7 +68,7 @@
   arxiv_url: https://arxiv.org/abs/2412.09465
   code_url: https://github.com/yuanzhi-zhu/OFTSR
   slides_url: /documents/slides/OFTSR.pdf
-  poster_url: /documents/poster/OFTSR.pdf
+  poster_url: /documents/poster/poster_OFTSR.pdf
   type: conference
   display: true
 
