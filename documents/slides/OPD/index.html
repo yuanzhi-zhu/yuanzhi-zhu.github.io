@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distillation as Divergence Minimization — Yuanzhi Zhu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<style>
+
+/* ============================================
+   THEME: DEEP SCHOLAR
+   Dark academic · GitHub-inspired palette
+   Gold serif + monospace equations
+   ============================================ */
+:root {
+    --bg:           #0d1117;
+    --bg2:          #161b22;
+    --bg3:          #21262d;
+    --border:       rgba(255,255,255,0.08);
+
+    --gold:         #d4a94a;
+    --gold-dim:     rgba(212,169,74,0.1);
+    --gold-border:  rgba(212,169,74,0.28);
+
+    --text:         #e6edf3;
+    --text2:        #b1bac4;
+    --muted:        #7d8590;
+
+    --blue:         #58a6ff;
+    --blue-dim:     rgba(88,166,255,0.12);
+    --green:        #3fb950;
+    --green-dim:    rgba(63,185,80,0.12);
+    --rust:         #c084fc;
+    --rust-dim:     rgba(192,132,252,0.12);
+
+    --font-serif:   'Cormorant Garamond', Georgia, serif;
+    --font-mono:    'Times New Roman', Times, serif;
+    --font-sans:    'Times New Roman', Times, serif;
+
+    /* Viewport normalizer — caps vw influence at reference width.
+       Adjust 12.8px (= 1280px / 100) to match your target screen.
+       E.g., for 1920px reference, use 19.2px instead. */
+    --_u: min(0.5svw, 12px);
+
+    /* Typography — all clamp() */
+    --title-size:   clamp(3.1rem, calc(10 * var(--_u)), 7.8rem);
+    --h2-size:      clamp(3.5rem, calc(9.5 * var(--_u)), 7rem);
+    --h3-size:      clamp(2rem, calc(5 * var(--_u)), 3.6rem);
+    --body-size:    clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);
+    --small-size:   clamp(1.2rem, calc(2 * var(--_u)), 1.65rem);
+
+    /* Spacing — all clamp() */
+    --slide-padding: clamp(1.5rem, calc(3.5 * var(--_u)), 3.5rem);
+    --content-gap:   clamp(0.8rem, calc(2.5 * var(--_u)), 2rem);
+    --element-gap:   clamp(0.4rem, calc(1.2 * var(--_u)), 1rem);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================
+   VIEWPORT BASE — mandatory responsive CSS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow-x: hidden; }
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.slide {
+    width: 100svw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg);
+}
+
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+}
+
+.feature-list, .bullet-list {
+    gap: clamp(0.4rem, 1vh, 0.8rem);
+    list-style: none;
+}
+.feature-list li, .bullet-list li {
+    font-size: var(--body-size);
+    line-height: 1.4;
+}
+
+img, .image-container {
+    max-width: 100%;
+    max-height: min(50vh, 400px);
+    object-fit: contain;
+}
+
+/* Height breakpoints */
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, calc(3 * var(--_u)), 2rem);
+        --content-gap:   clamp(0.5rem, calc(1.8 * var(--_u)), 1.2rem);
+        --title-size:    clamp(1.9rem, calc(6.5 * var(--_u)), 3.6rem);
+        --h2-size:       clamp(1.85rem, calc(6.1 * var(--_u)), 3.35rem);
+        --body-size:     clamp(1rem, calc(2 * var(--_u)), 1.4rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.5rem, calc(2.5 * var(--_u)), 1.5rem);
+        --content-gap:   clamp(0.3rem, calc(1.2 * var(--_u)), 0.8rem);
+        --title-size:    clamp(1.55rem, calc(5.4 * var(--_u)), 2.65rem);
+        --body-size:     clamp(0.95rem, calc(1.8 * var(--_u)), 1.2rem);
+        --small-size:    clamp(0.72rem, calc(1.2 * var(--_u)), 0.95rem);
+    }
+    .nav-dots, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+    :root {
+        --slide-padding: clamp(0.4rem, calc(2 * var(--_u)), 1rem);
+        --title-size:    clamp(1.3rem, calc(4.2 * var(--_u)), 2rem);
+        --h2-size:       clamp(1.52rem, calc(4.25 * var(--_u)), 2.15rem);
+        --body-size:     clamp(0.85rem, calc(1.45 * var(--_u)), 1.1rem);
+    }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.5rem, calc(8.4 * var(--_u)), 3rem); }
+    .two-col { grid-template-columns: 1fr !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* ============================================
+   REVEAL ANIMATIONS
+   ============================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.22s; }
+.delay-3 { transition-delay: 0.36s; }
+.delay-4 { transition-delay: 0.50s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.80s; }
+
+/* ============================================
+   GLOBAL OVERLAYS
+   ============================================ */
+.progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), rgba(212,169,74,0.3));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.nav-dots {
+    position: fixed;
+    right: clamp(0.6rem, calc(1.5 * var(--_u)), 1.2rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 0.8vh, 8px);
+    z-index: 1000;
+}
+.nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+.nav-dot.active {
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--gold);
+    transform: scale(1.5);
+}
+.nav-dot:hover { background: rgba(255,255,255,0.4); }
+
+.slide-counter {
+    position: fixed;
+    bottom: clamp(0.6rem, 1.5vh, 1.2rem);
+    right: clamp(1rem, calc(2.5 * var(--_u)), 2rem);
+    font-family: var(--font-mono);
+    font-size: clamp(1.4rem, calc(2.1 * var(--_u)), 1.75rem);
+    color: var(--muted);
+    z-index: 1000;
+    letter-spacing: 0.12em;
+}
+
+/* ============================================
+   SLIDE HEADER (content slides)
+   ============================================ */
+.slide-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(0.7rem, 1.8vh, 1.3rem) var(--slide-padding);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.slide-num {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    font-weight: 500;
+}
+.slide-section {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.header-spacer { flex: 1; }
+
+/* ============================================
+   REUSABLE COMPONENTS
+   ============================================ */
+
+/* Formulas */
+.formula {
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, calc(3.5 * var(--_u)), 2.65rem);
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    padding: clamp(0.7rem, 1.5vh, 1.2rem) clamp(1rem, calc(2.5 * var(--_u)), 1.8rem);
+    line-height: 1.7;
+}
+.formula .comment {
+    color: var(--muted);
+    font-size: 0.78em;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+.formula-sm {
+    font-family: var(--font-mono);
+    font-size: clamp(1.5rem, calc(2.65 * var(--_u)), 2.1rem);
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 3px;
+    padding: 0.25em 0.8em;
+    display: inline-block;
+    line-height: 1.6;
+}
+
+/* Badges */
+.badge {
+    font-family: var(--font-mono);
+    font-size: clamp(1.08rem, calc(1.7 * var(--_u)), 1.4rem);
+    padding: 0.2em 0.65em;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    display: inline-block;
+}
+.badge-blue  { color: var(--blue);  background: var(--blue-dim);  border: 1px solid rgba(88,166,255,0.25); }
+.badge-green { color: var(--green); background: var(--green-dim); border: 1px solid rgba(63,185,80,0.25); }
+.badge-gold  { color: var(--gold);  background: var(--gold-dim);  border: 1px solid var(--gold-border); }
+.badge-rust  { color: var(--rust);  background: var(--rust-dim);  border: 1px solid rgba(192,132,252,0.25); }
+
+/* Cards */
+.card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: clamp(0.7rem, calc(1.5 * var(--_u)), 1.2rem);
+}
+.card-gold {
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 6px;
+    padding: clamp(0.7rem, calc(1.5 * var(--_u)), 1.2rem);
+}
+
+/* Headings */
+h2.slide-title {
+    font-family: var(--font-serif);
+    font-size: var(--h2-size);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+h2.slide-title em { color: var(--gold); font-style: italic; }
+
+.body-text {
+    font-size: var(--body-size);
+    color: var(--text2);
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* Item list */
+.item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 1vh, 0.65rem);
+}
+.item-list li {
+    font-size: var(--body-size);
+    color: var(--text2);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    line-height: 1.5;
+}
+.item-list li .marker {
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    min-width: 1.5em;
+}
+
+/* Two-column */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.8rem, calc(2 * var(--_u)), 2rem);
+    align-items: center;
+}
+
+/* Image frame — white card for diagrams with white backgrounds */
+.img-frame {
+    background: rgba(248,248,248,0.96);
+    border-radius: 8px;
+    padding: clamp(6px, calc(1 * var(--_u)), 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.img-frame img {
+    max-width: 100%;
+    max-height: min(40vh, 320px);
+    object-fit: contain;
+    display: block;
+}
+/* Stack two images vertically inside a frame column */
+.img-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 1vh, 0.8rem);
+}
+
+/* Highlight helpers */
+.hl-gold { color: var(--gold); }
+.hl-blue { color: var(--blue); }
+.hl-green { color: var(--green); }
+.hl-rust { color: var(--rust); }
+.mono { font-family: var(--font-mono); }
+
+/* Background glow effects */
+.glow-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 15% 85%, rgba(212,169,74,0.05) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-blue::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 85% 15%, rgba(88,166,255,0.05) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-both::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 10% 80%, rgba(212,169,74,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 20%, rgba(88,166,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-gold > *, .glow-blue > *, .glow-both > * { position: relative; z-index: 1; }
+
+/* Scan-line texture */
+.scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(255,255,255,0.007) 3px, rgba(255,255,255,0.007) 4px
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--body-size);
+}
+.data-table th {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: clamp(0.5rem, 1vh, 0.75rem) clamp(0.75rem, calc(1.5 * var(--_u)), 1.2rem);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+}
+.data-table td {
+    padding: clamp(0.55rem, 1.1vh, 0.9rem) clamp(0.75rem, calc(1.5 * var(--_u)), 1.2rem);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text2);
+    line-height: 1.5;
+    vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td:first-child { color: var(--text); font-weight: 500; }
+.data-table td code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--gold);
+    background: var(--gold-dim);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+}
+
+/* ============================================
+   TITLE SLIDE LAYOUT
+   ============================================ */
+.title-slide {
+    display: grid !important;
+    grid-template-columns: clamp(48px, calc(5.5 * var(--_u)), 70px) 1fr;
+    background: var(--bg);
+}
+
+.title-sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--gold-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(1.2rem, 3vh, 2.5rem) 0;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.sidebar-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, calc(1.08 * var(--_u)), 0.9rem);
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards 1.4s;
+}
+
+.s-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.s-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+}
+.s-dot.on {
+    background: var(--gold);
+    box-shadow: 0 0 4px var(--gold);
+}
+
+.title-main {
+    padding: clamp(2rem, calc(5 * var(--_u)), 5rem) clamp(2rem, calc(5 * var(--_u)), 5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+}
+/* Radial glow on title main */
+.title-main::before {
+    content: '';
+    position: absolute;
+    top: -10%; right: 0;
+    width: 65%; height: 100%;
+    background: radial-gradient(ellipse at right center, rgba(212,169,74,0.07) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.title-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(1.1rem, calc(1.8 * var(--_u)), 1.56rem);
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 0.3s;
+    position: relative;
+    z-index: 2;
+}
+
+.title-h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: var(--h2-size);
+    color: var(--text);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(0.8rem, 2vh, 1.5rem);
+}
+.title-h1 .line { display: block; overflow: hidden; padding-bottom: 0.18em; }
+.title-h1 .line span {
+    display: block;
+    transform: translateY(105%);
+    animation: wordReveal 0.9s var(--ease) forwards;
+}
+.title-h1 .line:nth-child(1) span { animation-delay: 0.5s; }
+.title-h1 .line:nth-child(2) span { animation-delay: 0.65s; }
+.title-h1 em { color: var(--gold); font-style: italic; }
+
+.title-formula {
+    font-family: var(--font-mono);
+    font-size: clamp(2.3rem, calc(4.5 * var(--_u)), 3.6rem);
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    padding: clamp(0.5rem, 1vh, 0.8rem) clamp(0.8rem, calc(1.5 * var(--_u)), 1.2rem);
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 1.1s;
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(1rem, 2.5vh, 2rem);
+    width: fit-content;
+    line-height: 1.6;
+}
+
+.title-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 1.3s;
+    position: relative;
+    z-index: 2;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+.author-name {
+    font-family: var(--font-sans);
+    font-size: clamp(2.4rem, calc(5 * var(--_u)), 4.3rem);
+    font-weight: 400;
+    color: var(--text);
+}
+.author-sub {
+    font-family: var(--font-mono);
+    font-size: clamp(1.2rem, calc(1.9 * var(--_u)), 1.6rem);
+    color: var(--muted);
+    margin-top: 0.3rem;
+    letter-spacing: 0.04em;
+}
+.paper-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
+}
+.paper-ref {
+    font-family: var(--font-mono);
+    font-size: clamp(1.6rem, calc(2.5 * var(--_u)), 2.1rem);
+    color: var(--muted);
+    letter-spacing: 0.03em;
+}
+.paper-ref strong { color: var(--blue); font-weight: 500; }
+
+/* ============================================
+   EDIT MODE
+   ============================================ */
+.edit-hotzone {
+    position: fixed;
+    top: 0; left: 0;
+    width: 80px; height: 80px;
+    z-index: 10000;
+    cursor: pointer;
+}
+.edit-toggle {
+    position: fixed;
+    top: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    left: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 0.35rem 0.65rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.48rem, calc(0.8 * var(--_u)), 0.62rem);
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s ease;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active {
+    background: var(--gold-dim);
+    border-color: var(--gold-border);
+    color: var(--gold);
+}
+.save-btn {
+    position: fixed;
+    top: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    left: clamp(4.5rem, calc(8 * var(--_u)), 7rem);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 0.35rem 0.65rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.48rem, calc(0.8 * var(--_u)), 0.62rem);
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+.save-btn.show { opacity: 1; pointer-events: auto; }
+[contenteditable="true"] {
+    outline: 1px solid rgba(212,169,74,0.35);
+    border-radius: 2px;
+    cursor: text;
+    min-width: 1em;
+}
+[contenteditable="true"]:focus {
+    outline: 2px solid var(--gold);
+    background: rgba(212,169,74,0.05);
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes wordReveal {
+    to { transform: translateY(0); }
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ============================================
+   KATEX OVERRIDES
+   Match rendered math to the Deep Scholar palette
+   ============================================ */
+.formula .katex,
+.formula .katex-display > .katex { color: var(--gold); }
+
+/* Remove KaTeX's default display-math margin — our .formula already pads */
+.formula .katex-display { margin: 0.2em 0 0; }
+
+/* Inline math in body text inherits text color */
+.body-text .katex,
+.item-list .katex { color: inherit; }
+
+/* formula-sm inline KaTeX */
+.formula-sm .katex { color: var(--gold); font-size: 1em; }
+
+/* table code cells — KaTeX inside table */
+.data-table td .katex { color: var(--gold); font-size: 0.95em; }
+</style>
+</head>
+<body>
+
+<!-- === GLOBAL OVERLAYS === -->
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="slide-counter" id="slideCounter">01 / 13</div>
+
+<!-- Edit mode -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle">✏ edit</button>
+<button class="save-btn" id="saveBtn">↓ save</button>
+
+
+<!-- ========================================================
+     SLIDE 01 — TITLE
+     ======================================================== -->
+<section class="slide title-slide scanlines" id="slide-1" aria-label="Title">
+    <div class="title-sidebar">
+        <div class="sidebar-label">distillation</div>
+        <div class="s-dots">
+            <div class="s-dot on"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+        </div>
+        <div class="sidebar-label">RL</div>
+    </div>
+
+    <div class="title-main" style="display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, calc(3 * var(--_u)), 3rem); align-items: center;">
+        <!-- Left: text content -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+            <div class="title-tag">// Research Talk · April/2026</div>
+
+            <div>
+                <h1 class="title-h1">
+                    <div class="line"><span>Distillation as</span></div>
+                    <div class="line"><span><em>Divergence</em> Minimization</span></div>
+                </h1>
+                <div class="title-formula">$$\min_{\theta} \; \mathbb{E}\!\left[ D\!\left( p_{\text{target}} \,\|\, p_{\theta} \right) \right]$$</div>
+            </div>
+
+            <div class="title-bottom">
+                <div>
+                    <div class="author-name">Yuanzhi Zhu</div>
+                    <div class="author-sub">Diffusion Models · Distillation · Reinforcement Learning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: CRD teaser -->
+        <div class="img-frame" style="background: transparent; border: none; padding: 0;">
+            <img src="assets/crd_teaser.png" alt="CRD teaser" style="max-height: min(75vh, 650px); width: 100%; object-fit: contain;">
+        </div>
+    </div>
+
+    <!-- Paper refs: bottom-right corner -->
+    <div class="paper-refs" style="position: absolute; bottom: clamp(3rem, 6vh, 5rem); right: var(--slide-padding); text-align: right;">
+        <div class="paper-ref"><strong>Di[M]O</strong> · arXiv:2503.15457</div>
+        <div class="paper-ref"><strong>Di-Bregman</strong> · arXiv:2510.16983</div>
+        <div class="paper-ref"><strong>CRD</strong> · arXiv:2603.14128</div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 02 — THE BIG IDEA
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-2" aria-label="The big idea">
+    <div class="slide-header reveal">
+        <span class="slide-num">02</span>
+        <span class="slide-section">Motivation</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1" style="display: grid; grid-template-columns: 2fr 1fr; gap: clamp(0.8rem, calc(2 * var(--_u)), 2rem); align-items: center;">
+            <h2 class="slide-title">Almost every learning objective<br><em>minimizes a divergence</em></h2>
+            <div class="formula" style="width: fit-content;">
+                <span class="comment">// The universal learning objective</span>
+                $$\min_{\theta} \; D\!\left( p \,\|\, p_{\theta} \right)$$
+            </div>
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="card">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Classical</div>
+                <div class="body-text">
+                    <span class="hl-gold mono">p</span> = empirical data; <span class="hl-gold mono">D</span> = KL<br>
+                    → maximum likelihood estimation
+                </div>
+            </div>
+            <div class="card">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Modern Post-Training</div>
+                <div class="body-text">
+                    <span class="hl-gold mono">p</span> = $p_{\text{target}}$: teacher output dist. <em>or</em> reward-tilted pretrained dist.<br>
+                    <span class="hl-gold mono">D</span> = KL, Bregman divergence, $f$-divergence…
+                </div>
+            </div>
+        </div>
+
+        <div class="card-gold reveal delay-4" style="margin-top: var(--content-gap);">
+            <div style="font-size: var(--body-size); font-style: italic; font-family: var(--font-sans); line-height: 1.5; color: var(--text);">
+                Diffusion distillation and diffusion RL are two instances of the same divergence minimization framework.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 03 — THE ON-POLICY GENERATOR
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-3" aria-label="The on-policy generator">
+    <div class="slide-header reveal">
+        <span class="slide-num">03</span>
+        <span class="slide-section">Framework</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">The On-Policy Generator</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1.4fr; align-items: center;">
+            <!-- Left: notation + objective -->
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <ul class="item-list">
+                    <li>
+                        <span class="marker">→</span>
+                        <span>$x_1 = G_\theta(x_0, c)$</span>
+                    </li>
+                    <li>
+                        <span class="marker">→</span>
+                        <span>$G_\theta$ runs $T$ denoising steps; $c_{\text{ext}}$ is an optional external signal (reward, expert demo…)</span>
+                    </li>
+                    <li>
+                        <span class="marker">→</span>
+                        <span>Induces output distribution $p_{\theta}(x_1 \mid c)$</span>
+                    </li>
+                </ul>
+                <div class="formula" style="font-size: clamp(1.45rem, calc(2.65 * var(--_u)), 2rem);">
+                    <span class="comment">// Instantiating $\min_\theta D(p \,\|\, p_\theta)$ with $p = p_{\text{target}}$</span>
+                    $$\mathcal{L}(\theta) = \mathbb{E}_{x_0, c, c_{\text{ext}}}\!\left[ D\!\left( p_{\text{target}} \,\|\, p_{\theta} \right) \right]$$
+                </div>
+            </div>
+            <!-- Right: diagrams from blog -->
+            <div class="img-stack">
+                <div class="img-frame">
+                    <img src="https://yuanzhi-zhu.github.io/images/blog/Distillation_OPD/Generator.png" alt="On-policy generator: x₀, c → Model θ → x₁">
+                </div>
+                <div class="img-frame">
+                    <img src="https://yuanzhi-zhu.github.io/images/blog/Distillation_OPD/OPD_obj.png" alt="On-policy distillation objective diagram">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 04 — DIFFUSION STEP DISTILLATION
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-4" aria-label="Diffusion step distillation">
+    <div class="slide-header reveal">
+        <span class="slide-num">04</span>
+        <span class="slide-section">Instantiation I — Distillation</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">$p_{\text{target}} = p_{\text{teacher}}$</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Diffusion Step Distillation</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1.3fr; align-items: center;">
+            <!-- Left: formula + methods -->
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <p class="body-text">Compress a slow multi-step teacher into a few(or one)-step student.</p>
+                <div class="formula">
+                    <span class="comment">// Target = teacher distribution</span>
+                    $$p_{\text{target}}(x_1 \mid c) = p_{\text{teacher}}(x_1 \mid c)$$
+                </div>
+                <ul class="item-list">
+                    <li><span class="marker badge badge-gold" style="min-width:auto;">(a)</span><span>Score-based — estimate generator score; no discriminator &nbsp;<span style="color:var(--muted);">DMD · Diff-Instruct</span></span></li>
+                    <li><span class="marker badge badge-blue" style="min-width:auto;">(b)</span><span>Discriminator-based — classify student vs teacher<br>&nbsp;<span style="color:var(--muted);">Diffusion GAN</span></span></li>
+                </ul>
+            </div>
+            <!-- Right: blog figure -->
+            <div class="img-frame" style="align-self: center;">
+                <img src="https://yuanzhi-zhu.github.io/images/blog/Distillation_OPD/distillation.png" alt="Distillation pipeline: (a) score-based, (b) discriminator-based approaches" style="max-height: min(58vh, 500px);">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 05 — Di[M]O
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-5" aria-label="DiMO paper">
+    <div class="slide-header reveal">
+        <span class="slide-num">05</span>
+        <span class="slide-section">Instantiation I — Distillation</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">arXiv:2503.15457</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">Di[M]O <span style="font-weight:300; font-style:italic; font-size:0.65em; color: var(--text2);">Distilling Masked Diffusion Models into One-step Generator</span></h2>
+        </div>
+
+        <p class="body-text reveal delay-2" style="margin-top: var(--element-gap);">
+            <span class="hl-gold">Masked Diffusion Models (MDMs)</span> operate on discrete tokens — no PF-ODE, no score function. Existing distillation breaks. Two unique challenges:
+        </p>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--element-gap); grid-template-columns: 0.85fr 1.35fr; align-items: center;">
+            <!-- Left: challenges + result -->
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--gold); margin-bottom: 0.4rem;">Challenge 1</div>
+                    <div class="body-text" style="margin-bottom: 0.35rem;">Intermediate states <strong style="color: var(--text);">intractable</strong> for one-step generation</div>
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted);">→ Estimate with auxiliary model $\psi$</div>
+                </div>
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--gold); margin-bottom: 0.4rem;">Challenge 2</div>
+                    <div class="body-text" style="margin-bottom: 0.35rem;">Fully-masked prior <strong style="color: var(--text);">lacks diversity</strong> — mode collapse</div>
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted);">→ Hybrid token init: random + mask tokens</div>
+                </div>
+                <div class="card">
+                    <span class="badge badge-green" style="margin-bottom: 0.35rem;">Result</span>
+                    <div class="body-text" style="margin-top: 0.25rem;">First one-step distillation of MDMs — c2i &amp; t2i</div>
+                </div>
+            </div>
+            <!-- Right: token-level matching pipeline figure -->
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); align-self: center;">
+                <div class="img-frame">
+                    <img src="https://yuanzhi-zhu.github.io/DiMO/static/images/illustration.png" alt="DiMO token-level distribution matching pipeline">
+                </div>
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-align: center; letter-spacing: 0.05em;">OVERVIEW OF DI[M]O PIPELINE</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 06 — Di-Bregman
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-6" aria-label="Di-Bregman paper">
+    <div class="slide-header reveal">
+        <span class="slide-num">06</span>
+        <span class="slide-section">Instantiation I — Distillation</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">arXiv:2510.16983</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">Di-Bregman <span style="font-weight:300; font-style:italic; font-size:0.6em; color: var(--text2);">One-step Diffusion via Bregman Density-Ratio Matching</span></h2>
+        </div>
+
+        <p class="body-text reveal delay-2">Key insight: <span class="hl-gold">minimize $D_h(r \,\|\, 1)$</span> — match the density ratio to $\mathbf{1}$, not distributions directly:</p>
+
+        <div class="two-col reveal delay-3" style="grid-template-columns: 1.15fr 1fr; align-items: center;">
+            <!-- Left: formula + list -->
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula">
+                    <span class="comment">// Distillation objective = matching r(x) to 1</span>
+                    $$r(x) = \frac{p_{\theta}(x)}{p_{\text{teacher}}(x)}, \qquad \min_\theta\; \mathbb{E}_{p_{\text{teacher}}}\!\left[D_h\!\left(r(x) \,\|\, 1\right)\right]$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.5rem, calc(2.65 * var(--_u)), 2.1rem);">
+                    <span class="comment">// Gradient — h''(r)·r reweights the score difference</span>
+                    $$\nabla_\theta \mathcal{L} \;\propto\; h''(r) \cdot r \cdot \nabla_x \log r \cdot \nabla_\theta G_\theta$$
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <span class="marker">→</span>
+                        <span>Choice of $h$ selects the divergence: KL, reverse-KL, and more</span>
+                    </li>
+                    <li>
+                        <span class="marker">→</span>
+                        <span>$r$ estimated via <strong style="color:var(--text);">lightweight discriminator</strong></span>
+                    </li>
+                    <li>
+                        <span class="marker">→</span>
+                        <span>General form $D_h(r \,\|\, r^*)$: $r^*$ is the <strong style="color:var(--text);">normalized reward</strong></span>
+                    </li>
+                </ul>
+            </div>
+            <!-- Right: FID comparison plot -->
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="img-frame" style="align-self: center;">
+                    <img src="assets/di_bregman.png" alt="" style="max-height: min(58vh, 500px);">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 07 — DIFFUSION RL
+     ======================================================== -->
+<section class="slide glow-both" id="slide-7" aria-label="Diffusion reinforcement learning">
+    <div class="slide-header reveal">
+        <span class="slide-num">07</span>
+        <span class="slide-section">Instantiation II — Diffusion RL</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">p<sub>target</sub> = p<sub>ref</sub> · exp(r)</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Diffusion Reinforcement Learning</h2>
+
+        <p class="body-text reveal delay-2"><strong style="color:var(--text);">Same framework</strong> — only the <span class="hl-gold">target</span> changes. Instead of a teacher, it encodes a reward:</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(1rem, calc(2.5 * var(--_u)), 2.5rem); align-items: center;">
+            <!-- Left: formula + bullets -->
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula reveal delay-3">
+                    <span class="comment">// Boltzmann (reward-tilted) target distribution</span>
+                    $$p_{\text{target}}(x_1 \mid c) \;\propto\; p_{\text{ref}} \cdot \exp\!\left( r(x_1) \right)$$
+                </div>
+
+                <ul class="item-list reveal delay-4">
+                    <li>
+                        <span class="marker">→</span>
+                        <span>$r(x_1)$: reward model — encodes desired behavior (alignment, text fidelity…)</span>
+                    </li>
+                    <li>
+                        <span class="marker">→</span>
+                        <span>$p_{\text{ref}}$: reference model — KL regularizer, prevents collapse</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Right: RL pipeline figure -->
+            <div class="reveal delay-3" style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="img-frame">
+                    <img src="https://yuanzhi-zhu.github.io/images/blog/Distillation_OPD/RL.png" alt="Diffusion RL training loop: reward signal + KL regularization">
+                </div>
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-align: center;">
+                    RL training loop: reward maximization penalized by KL from $p_{\text{ref}}$
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 08 — RL OBJECTIVE EXPANDED
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-8" aria-label="RL objective expanded">
+    <div class="slide-header reveal">
+        <span class="slide-num">08</span>
+        <span class="slide-section">Instantiation II — Diffusion RL</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Expanding the <em>Objective</em></h2>
+        <p class="body-text reveal delay-2" style="margin-top: var(--element-gap);">
+            Substituting the Boltzmann target into the reverse-KL divergence and expanding:
+        </p>
+
+        <div class="formula reveal delay-3" style="margin-top: var(--content-gap);">
+            <span class="comment">// Reward maximization + KL regularization</span>
+            $$\mathcal{L}(\theta) \;\propto\; -\mathbb{E}_{p_{\text{ref}}}\!\left[ \frac{p_{\theta}}{p_{\text{ref}}} \cdot r(x_1) \right] + \mathbb{E}_{p_{\theta}}\!\left[ \log \frac{p_{\theta}}{p_{\text{ref}}} \right]$$
+        </div>
+
+        <div class="two-col reveal delay-4" style="margin-top: var(--content-gap);">
+            <div class="card">
+                <div class="badge badge-rust" style="margin-bottom: 0.45rem;">Reward Maximization</div>
+                <div class="formula-sm" style="display: block; margin: 0.45rem 0;">$-\mathbb{E}_{p_{\text{ref}}}\!\left[\dfrac{p_{\theta}}{p_{\text{ref}}} \cdot r(x_1)\right]$</div>
+                <div class="body-text">Importance-weighted reward maximization</div>
+            </div>
+            <div class="card">
+                <div class="badge badge-blue" style="margin-bottom: 0.45rem;">KL Regularization</div>
+                <div class="formula-sm" style="display: block; margin: 0.45rem 0;">$\mathbb{E}_{p_{\theta}}\!\left[\log\dfrac{p_{\theta}}{p_{\text{ref}}}\right]$</div>
+                <div class="body-text">Penalizes drift from the reference model</div>
+            </div>
+        </div>
+
+        <div class="reveal delay-5" style="margin-top: var(--content-gap);">
+            <p class="body-text">
+                <span class="hl-gold">Diffusion ELBO</span> makes this tractable: $\log(p_\theta/p_\text{ref})$ ≈ difference in denoising losses at each noise level $t$ — a weighted score-matching loss.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 09 — CENTERED REWARD DISTILLATION
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-9" aria-label="Centered Reward Distillation">
+    <div class="slide-header reveal">
+        <span class="slide-num">09</span>
+        <span class="slide-section">Instantiation II — Diffusion RL</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">arXiv:2603.14128</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">CRD <span style="font-weight:300; font-style:italic; font-size:0.6em; color: var(--text2);">Diffusion RL via Centered Reward Distillation</span></h2>
+        </div>
+
+        <div class="card reveal delay-2">
+            <div class="badge" style="margin-bottom: 0.45rem; color: #fb923c; background: rgba(251,146,60,0.12); border: 1px solid rgba(251,146,60,0.3);">Motivation</div>
+           <div class="body-text">The optimal policy satisfies $\log(p_\theta/p_\text{ref}) \propto r$ — but only up to an unknown normalizer $Z(c)$ per prompt.</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(1rem, calc(2.5 * var(--_u)), 2.5rem); align-items: center;">
+            <!-- Left: text + controls -->
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card-gold reveal delay-3">
+                    <div class="badge badge-gold" style="margin-bottom: 0.45rem;">Key Insight: Centered Reward</div>
+                    <div class="body-text">$\beta\log Z(c)$ is intractable but <em>prompt-constant</em>. <strong style="color:var(--text);">Subtracting the group mean cancels it exactly</strong> — well-posed objective, no approximation.</div>
+                </div>
+
+                <ul class="item-list reveal delay-4">
+                    <li>
+                        <span class="marker">01</span>
+                        <span><strong style="color:var(--text);">Decouple sampler from reference</strong> — preserves meaningful log-ratio signal</span>
+                    </li>
+                    <li>
+                        <span class="marker">02</span>
+                        <span><strong style="color:var(--text);">KL anchoring</strong> to CFG-guided pretrained model — prevents long-run drift</span>
+                    </li>
+                    <li>
+                        <span class="marker">03</span>
+                        <span><strong style="color:var(--text);">Reward-adaptive KL strength</strong> $\propto$ reward to block loopholes</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Right: CRD qualitative results -->
+            <div class="reveal delay-3" style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="img-frame">
+                    <img src="https://raw.githubusercontent.com/yuanzhi-zhu/CRD/main/assets/pipeline.png" alt="CRD training pipeline: centered reward distillation">
+                </div>
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-align: center;">
+                    CRD: centered reward + decoupled sampling + adaptive KL
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 10 — THE UNIFIED PICTURE
+     ======================================================== -->
+<section class="slide glow-both" id="slide-10" aria-label="The unified picture">
+    <div class="slide-header reveal">
+        <span class="slide-num">10</span>
+        <span class="slide-section">Unification</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">The <em>Unified Picture</em></h2>
+        <p class="body-text reveal delay-2" style="margin-top: var(--element-gap);">
+            Both paradigms minimize $D(p_{\text{target}} \,\|\, p_{\theta})$ — they differ only in what the target <em>means</em>.
+        </p>
+
+        <div class="reveal delay-3" style="margin-top: var(--content-gap); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Target $p_{\text{target}}$</th>
+                        <th>Divergence $D$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Di[M]O <span style="color:var(--muted); font-size:0.82em;">2503.15457</span></td>
+                        <td>$p_{\text{teacher}}(x_1 \mid c)$</td>
+                        <td>Gen. Jeffrey Div.</td>
+                    </tr>
+                    <tr>
+                        <td>Di-Bregman <span style="color:var(--muted); font-size:0.82em;">2510.16983</span></td>
+                        <td>$p_{\text{teacher}}(x_1 \mid c)$</td>
+                        <td>Bregman family</td>
+                    </tr>
+                    <tr>
+                        <td>CRD <span style="color:var(--muted); font-size:0.82em;">2603.14128</span></td>
+                        <td>$p_{\text{ref}} \cdot \exp\!\left( r(x_1) \right)$</td>
+                        <td>Reverse KL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-gold reveal delay-4" style="margin-top: var(--content-gap);">
+            <div style="font-size: var(--body-size); font-style: italic; font-family: var(--font-sans); line-height: 1.5; color: var(--text);">
+                The two lines of research are not parallel — they are the same river.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 11 — KEY TAKEAWAYS
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-11" aria-label="Key takeaways">
+    <div class="slide-header reveal">
+        <span class="slide-num">11</span>
+        <span class="slide-section">Summary</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Key <em>Takeaways</em></h2>
+
+        <ul class="item-list reveal delay-2" style="margin-top: var(--content-gap);">
+            <li>
+                <span class="marker">01</span>
+                <span>Diffusion distillation and diffusion RL both minimize <span class="formula-sm">$D(p_{\text{target}} \| p_{\theta})$</span> — the framework is unified</span>
+            </li>
+            <li>
+                <span class="marker">02</span>
+                <span>The target is the only semantic difference: $p_{\text{teacher}}$ vs $p_{\text{ref}} \cdot e^{r(x)}$ (reward-tilted Boltzmann)</span>
+            </li>
+            <li>
+                <span class="marker">03</span>
+                <span>Progress in estimating D transfers freely across both regimes — share methods, not just intuitions</span>
+            </li>
+        </ul>
+
+        <div class="card-gold reveal delay-3" style="margin-top: var(--content-gap);">
+            <ul class="item-list">
+                <li><span class="marker">→</span><span><strong style="color:var(--text);">Di[M]O</strong> (masked diffusion distillation) — pushes distillation into discrete token space</span></li>
+                <li><span class="marker">→</span><span><strong style="color:var(--text);">Di-Bregman</strong> (continuous diffusion distillation) — unifies distillation and reward fine-tuning under a principled divergence framework</span></li>
+                <li><span class="marker">→</span><span><strong style="color:var(--text);">CRD</strong> (diffusion RL alignment) — fast, stable diffusion RL training without reward hacking</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 12 — CLOSING / Q&A
+     ======================================================== -->
+<section class="slide glow-gold scanlines" id="slide-12" aria-label="Thank you">
+    <div class="slide-content" style="justify-content: space-between; height: 100%;">
+        <div class="reveal">
+            <span class="badge badge-gold">// Thank You · Questions Welcome</span>
+        </div>
+
+        <div>
+            <h1 class="reveal delay-1" style="font-family: var(--font-serif); font-weight: 300; font-size: clamp(4rem, calc(10 * var(--_u)), 8rem); line-height: 1.0; color: var(--text); letter-spacing: -0.01em;">
+                Questions?
+            </h1>
+            <div class="formula reveal delay-2" style="margin-top: var(--content-gap); width: fit-content;">
+                $$D\!\left( p_{\text{target}} \,\|\, p_{\theta} \right) \; \text{— one framework, many post-training methods}$$
+            </div>
+        </div>
+
+        <div class="reveal delay-3" style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: clamp(3rem, 6vh, 5rem);">
+            <div>
+                <div style="font-family: var(--font-sans); font-size: clamp(1.45rem, calc(3.35 * var(--_u)), 2.65rem); color: var(--text);">Yuanzhi Zhu</div>
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-top: 0.3rem;">yuanzhi-zhu.github.io</div>
+            </div>
+            <div class="paper-refs">
+                <div class="paper-ref"><strong>Di[M]O</strong> — arXiv:2503.15457</div>
+                <div class="paper-ref"><strong>Di-Bregman</strong> — arXiv:2510.16983</div>
+                <div class="paper-ref"><strong>CRD</strong> — arXiv:2603.14128</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     KATEX — LaTeX math rendering
+     ======================================================== -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {
+        delimiters: [
+            { left: '$$', right: '$$', display: true  },
+            { left: '$',  right: '$',  display: false }
+        ],
+        throwOnError: false,
+        trust: true
+    });"></script>
+
+<!-- ========================================================
+     JAVASCRIPT
+     ======================================================== -->
+<script>
+/* =============================================
+   SLIDE PRESENTATION CONTROLLER
+   ============================================= */
+class SlidePresentation {
+    constructor() {
+        this.slides     = Array.from(document.querySelectorAll('.slide'));
+        this.total      = this.slides.length;
+        this.current    = 0;
+        this.touchY     = 0;
+
+        this.$progress  = document.getElementById('progressBar');
+        this.$counter   = document.getElementById('slideCounter');
+        this.$navDots   = document.getElementById('navDots');
+
+        this.setupObserver();
+        this.setupDots();
+        this.setupKeyboard();
+        this.setupTouch();
+        this.setupWheel();
+        this.updateUI(0);
+    }
+
+    /* Intersection observer — adds .visible to trigger CSS animations */
+    setupObserver() {
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    this.updateUI(this.slides.indexOf(e.target));
+                }
+            });
+        }, { threshold: 0.45 });
+        this.slides.forEach(s => obs.observe(s));
+    }
+
+    /* Navigation dots */
+    setupDots() {
+        this.slides.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.className = 'nav-dot';
+            d.setAttribute('aria-label', `Slide ${i + 1}`);
+            d.addEventListener('click', () => this.go(i));
+            this.$navDots.appendChild(d);
+        });
+    }
+
+    /* Update progress bar, counter, dots */
+    updateUI(idx) {
+        this.current = idx;
+        this.$progress.style.width = ((idx + 1) / this.total * 100) + '%';
+        this.$counter.textContent =
+            String(idx + 1).padStart(2, '0') + ' / ' + String(this.total).padStart(2, '0');
+        this.$navDots.querySelectorAll('.nav-dot').forEach((d, i) =>
+            d.classList.toggle('active', i === idx)
+        );
+    }
+
+    go(idx) {
+        idx = Math.max(0, Math.min(this.total - 1, idx));
+        this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+    }
+    next() { this.go(this.current + 1); }
+    prev() { this.go(this.current - 1); }
+
+    /* Keyboard */
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if (e.target.getAttribute('contenteditable')) return;
+            const map = {
+                ArrowDown: () => this.next(),  ArrowRight: () => this.next(),
+                ArrowUp:   () => this.prev(),  ArrowLeft:  () => this.prev(),
+                ' ':       () => this.next(),  PageDown:   () => this.next(),
+                PageUp:    () => this.prev(),  Home:       () => this.go(0),
+                End:       () => this.go(this.total - 1)
+            };
+            if (map[e.key]) { e.preventDefault(); map[e.key](); }
+        });
+    }
+
+    /* Touch/swipe */
+    setupTouch() {
+        document.addEventListener('touchstart', e => {
+            this.touchY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const d = this.touchY - e.changedTouches[0].clientY;
+            if (Math.abs(d) > 45) d > 0 ? this.next() : this.prev();
+        }, { passive: true });
+    }
+
+    /* Mouse wheel (debounced) */
+    setupWheel() {
+        let t = null;
+        document.addEventListener('wheel', e => {
+            e.preventDefault();
+            if (t) return;
+            t = setTimeout(() => { t = null; }, 750);
+            e.deltaY > 0 ? this.next() : this.prev();
+        }, { passive: false });
+    }
+}
+
+const deck = new SlidePresentation();
+
+/* =============================================
+   INLINE EDITOR
+   ============================================= */
+class InlineEditor {
+    constructor() {
+        this.isActive    = false;
+        this.editables   = [];
+        this.$toggle     = document.getElementById('editToggle');
+        this.$save       = document.getElementById('saveBtn');
+        this.$hotzone    = document.getElementById('editHotzone');
+        this.hideTimer   = null;
+
+        this.$toggle.addEventListener('click', () => this.toggle());
+        this.setupHotzone();
+        this.setupKeyboard();
+        this.$save.addEventListener('click', () => this.exportFile());
+    }
+
+    /* JS-based hover reveal (CSS ~ sibling approach breaks with pointer-events: none) */
+    setupHotzone() {
+        const show = () => {
+            clearTimeout(this.hideTimer);
+            this.$toggle.classList.add('show');
+        };
+        const hide = () => {
+            this.hideTimer = setTimeout(() => {
+                if (!this.isActive) this.$toggle.classList.remove('show');
+            }, 400);
+        };
+        this.$hotzone.addEventListener('mouseenter', show);
+        this.$hotzone.addEventListener('mouseleave', hide);
+        this.$hotzone.addEventListener('click', () => this.toggle());
+        this.$toggle.addEventListener('mouseenter', show);
+        this.$toggle.addEventListener('mouseleave', hide);
+    }
+
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable'))
+                this.toggle();
+        });
+    }
+
+    toggle() {
+        this.isActive = !this.isActive;
+        if (this.isActive) {
+            this.$toggle.textContent = '✓ done';
+            this.$toggle.classList.add('active', 'show');
+            this.$save.classList.add('show');
+            this.enable();
+        } else {
+            this.$toggle.textContent = '✏ edit';
+            this.$toggle.classList.remove('active');
+            this.$save.classList.remove('show');
+            this.disable();
+            this.saveLocal();
+        }
+    }
+
+    enable() {
+        const sel = 'h1, h2, h3, p, li, td, .body-text, .author-name, .author-sub, .paper-ref, .title-tag, .slide-section';
+        this.editables = Array.from(document.querySelectorAll(sel));
+        this.editables.forEach(el => {
+            el.setAttribute('contenteditable', 'true');
+            el.setAttribute('spellcheck', 'false');
+        });
+    }
+
+    disable() {
+        this.editables.forEach(el => el.removeAttribute('contenteditable'));
+        this.editables = [];
+    }
+
+    saveLocal() {
+        try { localStorage.setItem('ddm-slides-v1', document.body.innerHTML); } catch(e) {}
+    }
+
+    exportFile() {
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const a = Object.assign(document.createElement('a'), {
+            href: URL.createObjectURL(new Blob([html], { type: 'text/html' })),
+            download: 'distillation-as-divergence-minimization.html'
+        });
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+}
+
+const editor = new InlineEditor();
+</script>
+</body>
+</html>
