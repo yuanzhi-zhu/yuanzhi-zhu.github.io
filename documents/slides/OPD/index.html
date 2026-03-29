@@ -626,7 +626,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
 }
 .paper-ref {
     font-family: var(--font-mono);
-    font-size: clamp(1.6rem, calc(2.5 * var(--_u)), 2.1rem);
+    font-size: clamp(1.3rem, calc(2.0 * var(--_u)), 1.7rem);
     color: var(--muted);
     letter-spacing: 0.03em;
 }
@@ -791,7 +791,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
     </div>
 
     <!-- Paper refs: bottom-right corner -->
-    <div class="paper-refs" style="position: absolute; bottom: clamp(3rem, 6vh, 5rem); right: var(--slide-padding); text-align: right;">
+    <div class="paper-refs" style="position: absolute; bottom: clamp(3rem, 4.5vh, 4rem); right: var(--slide-padding); text-align: right;">
         <div class="paper-ref"><strong>Di[M]O</strong> · arXiv:2503.15457</div>
         <div class="paper-ref"><strong>Di-Bregman</strong> · arXiv:2510.16983</div>
         <div class="paper-ref"><strong>CRD</strong> · arXiv:2603.14128</div>
@@ -1134,7 +1134,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
 
         <div class="card reveal delay-2">
             <div class="badge" style="margin-bottom: 0.45rem; color: #fb923c; background: rgba(251,146,60,0.12); border: 1px solid rgba(251,146,60,0.3);">Motivation</div>
-           <div class="body-text">The optimal policy satisfies $\log(p_\theta/p_\text{ref}) \propto r$ — but only up to an unknown normalizer $Z(c)$ per prompt.</div>
+            <div class="body-text">The optimal policy satisfies $\log(p_\theta/p_\text{ref}) \propto r$ — but only up to an unknown normalizer $Z(c)$ per prompt.</div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(1rem, calc(2.5 * var(--_u)), 2.5rem); align-items: center;">
@@ -1282,16 +1282,17 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
             </div>
         </div>
 
-        <div class="reveal delay-3" style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: clamp(3rem, 6vh, 5rem);">
+        <div class="reveal delay-3" style="display: flex; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;">
             <div>
                 <div style="font-family: var(--font-sans); font-size: clamp(1.45rem, calc(3.35 * var(--_u)), 2.65rem); color: var(--text);">Yuanzhi Zhu</div>
                 <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-top: 0.3rem;">yuanzhi-zhu.github.io</div>
             </div>
-            <div class="paper-refs">
-                <div class="paper-ref"><strong>Di[M]O</strong> — arXiv:2503.15457</div>
-                <div class="paper-ref"><strong>Di-Bregman</strong> — arXiv:2510.16983</div>
-                <div class="paper-ref"><strong>CRD</strong> — arXiv:2603.14128</div>
-            </div>
+        </div>
+
+        <div class="paper-refs reveal delay-4" style="position: absolute; bottom: clamp(3rem, 4.5vh, 4rem); right: var(--slide-padding); text-align: right;">
+            <div class="paper-ref"><strong>Di[M]O</strong> — arXiv:2503.15457</div>
+            <div class="paper-ref"><strong>Di-Bregman</strong> — arXiv:2510.16983</div>
+            <div class="paper-ref"><strong>CRD</strong> — arXiv:2603.14128</div>
         </div>
     </div>
 </section>
