@@ -21,3 +21,7 @@
 - name: 'Tutorial on Blessing of Flow by Prof. Qiang Liu'
   url: https://rectifiedflow.github.io/assets/slides/
   src: www  
+  
+- name: 'Distillation as Divergence Minimization'
+  url: /documents/slides/OPD
+  src: www  
