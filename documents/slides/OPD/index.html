@@ -1035,7 +1035,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
         <span class="slide-num">07</span>
         <span class="slide-section">Instantiation II — Diffusion RL</span>
         <div class="header-spacer"></div>
-        <span class="badge badge-rust">p<sub>target</sub> = p<sub>ref</sub> · exp(r)</span>
+        <span class="badge badge-rust">$p_{\text{target}}(x_1 \mid c) \;\propto\; p_{\text{ref}} \cdot \exp\!\left( \beta r(x_1) \right)$</span>
     </div>
     <div class="slide-content" style="gap: var(--content-gap);">
         <h2 class="slide-title reveal delay-1">Diffusion Reinforcement Learning</h2>
@@ -1047,7 +1047,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
             <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
                 <div class="formula reveal delay-3">
                     <span class="comment">// Boltzmann (reward-tilted) target distribution</span>
-                    $$p_{\text{target}}(x_1 \mid c) \;\propto\; p_{\text{ref}} \cdot \exp\!\left( r(x_1) \right)$$
+                    $$p_{\text{target}}(x_1 \mid c) \;\propto\; p_{\text{ref}} \cdot \exp\!\left( \beta r(x_1) \right)$$
                 </div>
 
                 <ul class="item-list reveal delay-4">
@@ -1092,7 +1092,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
 
         <div class="formula reveal delay-3" style="margin-top: var(--content-gap);">
             <span class="comment">// Reward maximization + KL regularization</span>
-            $$\mathcal{L}(\theta) \;\propto\; -\mathbb{E}_{p_{\text{ref}}}\!\left[ \frac{p_{\theta}}{p_{\text{ref}}} \cdot r(x_1) \right] + \mathbb{E}_{p_{\theta}}\!\left[ \log \frac{p_{\theta}}{p_{\text{ref}}} \right]$$
+            $$\mathcal{L}(\theta) \;\propto\; -\mathbb{E}_{p_{\text{ref}}}\!\left[ \frac{p_{\theta}}{p_{\text{ref}}} \cdot r(x_1) \right] + \frac{1}{\beta} \mathbb{E}_{p_{\theta}}\!\left[ \log \frac{p_{\theta}}{p_{\text{ref}}} \right]$$
         </div>
 
         <div class="two-col reveal delay-4" style="margin-top: var(--content-gap);">
@@ -1103,7 +1103,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
             </div>
             <div class="card">
                 <div class="badge badge-blue" style="margin-bottom: 0.45rem;">KL Regularization</div>
-                <div class="formula-sm" style="display: block; margin: 0.45rem 0;">$\mathbb{E}_{p_{\theta}}\!\left[\log\dfrac{p_{\theta}}{p_{\text{ref}}}\right]$</div>
+                <div class="formula-sm" style="display: block; margin: 0.45rem 0;">$\frac{1}{\beta} \mathbb{E}_{p_{\theta}}\!\left[\log\dfrac{p_{\theta}}{p_{\text{ref}}}\right]$</div>
                 <div class="body-text">Penalizes drift from the reference model</div>
             </div>
         </div>
@@ -1211,7 +1211,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
                     </tr>
                     <tr>
                         <td>CRD <span style="color:var(--muted); font-size:0.82em;">2603.14128</span></td>
-                        <td>$p_{\text{ref}} \cdot \exp\!\left( r(x_1) \right)$</td>
+                        <td>$p_{\text{ref}} \cdot \exp\!\left( \beta r(x_1) \right)$</td>
                         <td>Reverse KL</td>
                     </tr>
                 </tbody>
@@ -1245,7 +1245,7 @@ h2.slide-title em { color: var(--gold); font-style: italic; }
             </li>
             <li>
                 <span class="marker">02</span>
-                <span>The target is the only semantic difference: $p_{\text{teacher}}$ vs $p_{\text{ref}} \cdot e^{r(x)}$ (reward-tilted Boltzmann)</span>
+                <span>The target is the only semantic difference: $p_{\text{teacher}}$ vs $p_{\text{ref}} \cdot \exp({\beta r(x)})$ (reward-tilted Boltzmann)</span>
             </li>
             <li>
                 <span class="marker">03</span>
