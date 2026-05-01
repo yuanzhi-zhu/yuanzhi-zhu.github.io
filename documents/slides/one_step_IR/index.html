@@ -1,0 +1,2624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toward One-Step Image Restoration with Generative Priors — Yuanzhi Zhu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<style>
+
+/* ============================================
+   THEME: DEEP SCHOLAR
+   Dark academic · GitHub-inspired palette
+   Gold serif + monospace equations
+   ============================================ */
+:root {
+    --bg:           #faf6e8;        /* warm cream paper */
+    --bg2:          #ffffff;        /* card white */
+    --bg3:          #ede6d3;        /* light gold/tan */
+    --border:       rgba(60,50,30,0.14);
+
+    --gold:         #876213;        /* dark academic gold (boxes / borders / decorations) */
+    --gold-dim:     rgba(135,98,19,0.12);
+    --gold-border:  rgba(135,98,19,0.35);
+    --highlight:    #6E2236;        /* lacquer burgundy 酒红漆色 — for text highlights */
+
+    --text:         #1f2433;        /* dark slate */
+    --text2:        #4a5260;        /* medium */
+    --muted:        #7a8290;        /* light gray */
+
+    --blue:         #1d4ed8;        /* darker blue */
+    --blue-dim:     rgba(29,78,216,0.10);
+    --green:        #15803d;        /* deeper green */
+    --green-dim:    rgba(21,128,61,0.10);
+    --rust:         #7c3aed;        /* deeper purple */
+    --rust-dim:     rgba(124,58,237,0.10);
+
+    --font-serif:   'Cormorant Garamond', Georgia, serif;
+    --font-mono:    'Times New Roman', Times, serif;
+    --font-sans:    'Times New Roman', Times, serif;
+
+    --_u: min(0.5svw, 12px);
+
+    --title-size:   clamp(3.1rem, calc(10 * var(--_u)), 7.8rem);
+    --h2-size:      clamp(3.5rem, calc(9.5 * var(--_u)), 7rem);
+    --h3-size:      clamp(2rem, calc(5 * var(--_u)), 3.6rem);
+    --body-size:    clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);
+    --small-size:   clamp(1.2rem, calc(2 * var(--_u)), 1.65rem);
+
+    --slide-padding: clamp(1.5rem, calc(3.5 * var(--_u)), 3.5rem);
+    --content-gap:   clamp(0.8rem, calc(2.5 * var(--_u)), 2rem);
+    --element-gap:   clamp(0.4rem, calc(1.2 * var(--_u)), 1rem);
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ============================================
+   VIEWPORT BASE
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow-x: hidden; }
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.slide {
+    width: 100svw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg);
+}
+
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+}
+
+.feature-list, .bullet-list {
+    gap: clamp(0.4rem, 1vh, 0.8rem);
+    list-style: none;
+}
+.feature-list li, .bullet-list li {
+    font-size: var(--body-size);
+    line-height: 1.4;
+}
+
+img, .image-container {
+    max-width: 100%;
+    max-height: min(50vh, 400px);
+    object-fit: contain;
+}
+
+/* Height breakpoints */
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, calc(3 * var(--_u)), 2rem);
+        --content-gap:   clamp(0.5rem, calc(1.8 * var(--_u)), 1.2rem);
+        --title-size:    clamp(1.9rem, calc(6.5 * var(--_u)), 3.6rem);
+        --h2-size:       clamp(1.85rem, calc(6.1 * var(--_u)), 3.35rem);
+        --body-size:     clamp(1rem, calc(2 * var(--_u)), 1.4rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.5rem, calc(2.5 * var(--_u)), 1.5rem);
+        --content-gap:   clamp(0.3rem, calc(1.2 * var(--_u)), 0.8rem);
+        --title-size:    clamp(1.55rem, calc(5.4 * var(--_u)), 2.65rem);
+        --body-size:     clamp(0.95rem, calc(1.8 * var(--_u)), 1.2rem);
+        --small-size:    clamp(0.72rem, calc(1.2 * var(--_u)), 0.95rem);
+    }
+    .nav-dots, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+    :root {
+        --slide-padding: clamp(0.4rem, calc(2 * var(--_u)), 1rem);
+        --title-size:    clamp(1.3rem, calc(4.2 * var(--_u)), 2rem);
+        --h2-size:       clamp(1.52rem, calc(4.25 * var(--_u)), 2.15rem);
+        --body-size:     clamp(0.85rem, calc(1.45 * var(--_u)), 1.1rem);
+    }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.5rem, calc(8.4 * var(--_u)), 3rem); }
+    .two-col { grid-template-columns: 1fr !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* ============================================
+   REVEAL ANIMATIONS
+   ============================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.22s; }
+.delay-3 { transition-delay: 0.36s; }
+.delay-4 { transition-delay: 0.50s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.80s; }
+
+/* ============================================
+   GLOBAL OVERLAYS
+   ============================================ */
+.progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), rgba(135,98,19,0.3));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.nav-dots {
+    position: fixed;
+    right: clamp(0.6rem, calc(1.5 * var(--_u)), 1.2rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 0.8vh, 8px);
+    z-index: 1000;
+}
+.nav-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.20);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+.nav-dot.active {
+    background: var(--gold);
+    box-shadow: 0 0 6px var(--gold);
+    transform: scale(1.5);
+}
+.nav-dot:hover { background: rgba(0,0,0,0.40); }
+
+.slide-counter {
+    position: fixed;
+    bottom: clamp(0.6rem, 1.5vh, 1.2rem);
+    right: clamp(1rem, calc(2.5 * var(--_u)), 2rem);
+    font-family: var(--font-mono);
+    font-size: clamp(1.4rem, calc(2.1 * var(--_u)), 1.75rem);
+    color: var(--muted);
+    z-index: 1000;
+    letter-spacing: 0.12em;
+}
+
+/* ============================================
+   SLIDE HEADER
+   ============================================ */
+.slide-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(0.7rem, 1.8vh, 1.3rem) var(--slide-padding);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.slide-num {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--highlight);
+    letter-spacing: 0.2em;
+    font-weight: 500;
+}
+.slide-section {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.header-spacer { flex: 1; }
+
+/* ============================================
+   REUSABLE COMPONENTS
+   ============================================ */
+.formula {
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, calc(3.5 * var(--_u)), 2.65rem);
+    color: var(--highlight);
+    background: var(--gold-dim);                  /* unified gold tint */
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    padding: clamp(0.7rem, 1.5vh, 1.2rem) clamp(1rem, calc(2.5 * var(--_u)), 1.8rem);
+    line-height: 1.7;
+    box-shadow: 0 1px 3px rgba(135,98,19,0.08);
+}
+.formula .comment {
+    color: var(--muted);
+    font-size: 0.78em;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+.formula-sm {
+    font-family: var(--font-mono);
+    font-size: clamp(1.5rem, calc(2.65 * var(--_u)), 2.1rem);
+    color: var(--highlight);
+    background: var(--gold-dim);                  /* unified gold tint */
+    border: 1px solid var(--gold-border);
+    border-radius: 3px;
+    padding: 0.25em 0.8em;
+    display: inline-block;
+    line-height: 1.6;
+    box-shadow: 0 1px 3px rgba(135,98,19,0.08);
+}
+
+.badge {
+    font-family: var(--font-mono);
+    font-size: clamp(1.08rem, calc(1.7 * var(--_u)), 1.4rem);
+    padding: 0.2em 0.65em;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    display: inline-block;
+}
+.badge-blue  { color: var(--blue);  background: var(--blue-dim);  border: 1px solid rgba(29,78,216,0.25); }
+.badge-green { color: var(--green); background: var(--green-dim); border: 1px solid rgba(21,128,61,0.25); }
+.badge-gold  { color: var(--highlight);  background: var(--gold-dim);  border: 1px solid var(--gold-border); }
+.badge-rust  { color: var(--rust);  background: var(--rust-dim);  border: 1px solid rgba(124,58,237,0.25); }
+
+.card {
+    background: var(--gold-dim);                  /* unified gold tint */
+    border: 1px solid var(--gold-border);
+    border-radius: 6px;
+    padding: clamp(0.7rem, calc(1.5 * var(--_u)), 1.2rem);
+    box-shadow: 0 1px 3px rgba(135,98,19,0.08);
+}
+.card-gold {
+    background: var(--gold-dim);                  /* same gold tint as .card */
+    border: 1px solid var(--gold-border);
+    border-left: 3px solid var(--highlight);           /* gold accent on the left */
+    border-radius: 6px;
+    padding: clamp(0.7rem, calc(1.5 * var(--_u)), 1.2rem);
+    box-shadow: 0 1px 3px rgba(135,98,19,0.08);
+}
+
+h2.slide-title {
+    font-family: var(--font-serif);
+    font-size: var(--h2-size);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+h2.slide-title em { color: var(--highlight); font-style: italic; }
+
+.body-text {
+    font-size: var(--body-size);
+    color: var(--text2);
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 1vh, 0.65rem);
+}
+.item-list li {
+    font-size: var(--body-size);
+    color: var(--text2);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    line-height: 1.5;
+}
+.item-list li .marker {
+    color: var(--highlight);
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    min-width: 1.5em;
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.8rem, calc(2 * var(--_u)), 2rem);
+    align-items: center;
+}
+
+.img-frame {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: clamp(6px, calc(1 * var(--_u)), 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(60,50,30,0.08);
+    border: 1px solid rgba(60,50,30,0.06);
+}
+.img-frame img {
+    max-width: 100%;
+    max-height: min(40vh, 320px);
+    object-fit: contain;
+    display: block;
+}
+.img-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 1vh, 0.8rem);
+}
+
+.hl-gold { color: var(--highlight); }
+.hl-blue { color: var(--blue); }
+.hl-green { color: var(--green); }
+.hl-rust { color: var(--rust); }
+.mono { font-family: var(--font-mono); }
+
+/* Background glow effects */
+.glow-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 15% 85%, rgba(135,98,19,0.10) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-blue::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 85% 15%, rgba(29,78,216,0.07) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-both::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 10% 80%, rgba(135,98,19,0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 20%, rgba(29,78,216,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+.glow-gold > *, .glow-blue > *, .glow-both > * { position: relative; z-index: 1; }
+
+.scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.020) 3px, rgba(0,0,0,0.020) 4px
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--body-size);
+}
+.data-table th {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: clamp(0.5rem, 1vh, 0.75rem) clamp(0.75rem, calc(1.5 * var(--_u)), 1.2rem);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+}
+.data-table td {
+    padding: clamp(0.55rem, 1.1vh, 0.9rem) clamp(0.75rem, calc(1.5 * var(--_u)), 1.2rem);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    color: var(--text2);
+    line-height: 1.5;
+    vertical-align: top;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td:first-child { color: var(--text); font-weight: 500; }
+.data-table td code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--highlight);
+    background: var(--gold-dim);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+}
+
+/* ============================================
+   TITLE SLIDE LAYOUT
+   ============================================ */
+.title-slide {
+    display: grid !important;
+    grid-template-columns: clamp(48px, calc(5.5 * var(--_u)), 70px) 1fr;
+    background: var(--bg);
+}
+
+.title-sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--gold-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(1.2rem, 3vh, 2.5rem) 0;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.sidebar-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, calc(1.08 * var(--_u)), 0.9rem);
+    color: var(--highlight);
+    letter-spacing: 0.2em;
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards 1.4s;
+}
+
+.s-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.s-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.12);
+}
+.s-dot.on {
+    background: var(--gold);
+    box-shadow: 0 0 4px var(--gold);
+}
+
+.title-main {
+    padding: clamp(2rem, calc(5 * var(--_u)), 5rem) clamp(2rem, calc(5 * var(--_u)), 5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+}
+.title-main::before {
+    content: '';
+    position: absolute;
+    top: -10%; right: 0;
+    width: 65%; height: 100%;
+    background: radial-gradient(ellipse at right center, rgba(135,98,19,0.14) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.title-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(1.1rem, calc(1.8 * var(--_u)), 1.56rem);
+    color: var(--highlight);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 0.3s;
+    position: relative;
+    z-index: 2;
+}
+
+.title-h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: var(--h2-size);
+    color: var(--text);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(0.8rem, 2vh, 1.5rem);
+}
+.title-h1 .line { display: block; overflow: hidden; padding-bottom: 0.18em; }
+.title-h1 .line span {
+    display: block;
+    transform: translateY(105%);
+    animation: wordReveal 0.9s var(--ease) forwards;
+}
+.title-h1 .line:nth-child(1) span { animation-delay: 0.5s; }
+.title-h1 .line:nth-child(2) span { animation-delay: 0.65s; }
+.title-h1 .line:nth-child(3) span { animation-delay: 0.8s; }
+.title-h1 em { color: var(--highlight); font-style: italic; }
+
+.title-formula {
+    font-family: var(--font-mono);
+    font-size: clamp(2.3rem, calc(4.5 * var(--_u)), 3.6rem);
+    color: var(--highlight);
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    padding: clamp(0.5rem, 1vh, 0.8rem) clamp(0.8rem, calc(1.5 * var(--_u)), 1.2rem);
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 1.1s;
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(1rem, 2.5vh, 2rem);
+    width: fit-content;
+    line-height: 1.6;
+}
+
+.title-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeUp 0.7s var(--ease) forwards 1.3s;
+    position: relative;
+    z-index: 2;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+.author-name {
+    font-family: var(--font-sans);
+    font-size: clamp(2.4rem, calc(5 * var(--_u)), 4.3rem);
+    font-weight: 400;
+    color: var(--text);
+}
+.author-sub {
+    font-family: var(--font-mono);
+    font-size: clamp(1.2rem, calc(1.9 * var(--_u)), 1.6rem);
+    color: var(--muted);
+    margin-top: 0.3rem;
+    letter-spacing: 0.04em;
+}
+.paper-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
+}
+.paper-ref {
+    font-family: var(--font-mono);
+    font-size: clamp(1.3rem, calc(2.0 * var(--_u)), 1.7rem);
+    color: var(--muted);
+    letter-spacing: 0.03em;
+}
+.paper-ref strong { color: var(--blue); font-weight: 500; }
+
+/* ============================================
+   SECTION DIVIDER
+   ============================================ */
+.section-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.section-divider .section-number {
+    font-family: var(--font-mono);
+    font-size: clamp(5rem, calc(12 * var(--_u)), 10rem);
+    color: var(--highlight);
+    opacity: 0.15;
+    font-weight: 300;
+    line-height: 1;
+}
+.section-divider .section-label {
+    font-family: var(--font-serif);
+    font-size: var(--h2-size);
+    color: var(--text);
+    margin-top: clamp(-1.5rem, calc(-2 * var(--_u)), -2rem);
+}
+.section-divider .section-sub {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    margin-top: var(--element-gap);
+    letter-spacing: 0.1em;
+}
+
+/* ============================================
+   TIMELINE
+   ============================================ */
+.timeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0 var(--slide-padding);
+}
+.timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    position: relative;
+}
+.timeline-dot {
+    width: clamp(10px, calc(1.5 * var(--_u)), 16px);
+    height: clamp(10px, calc(1.5 * var(--_u)), 16px);
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 2px solid var(--muted);
+    z-index: 1;
+}
+.timeline-dot.active {
+    background: var(--gold);
+    border-color: var(--highlight);
+    box-shadow: 0 0 8px var(--gold);
+}
+.timeline-label {
+    font-family: var(--font-mono);
+    font-size: var(--small-size);
+    color: var(--muted);
+    text-align: center;
+}
+.timeline-label strong { color: var(--text); display: block; }
+.timeline-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 -0.5rem;
+}
+.timeline-line.filled { background: var(--gold); }
+
+/* ============================================
+   EDIT MODE
+   ============================================ */
+.edit-hotzone {
+    position: fixed;
+    top: 0; left: 0;
+    width: 80px; height: 80px;
+    z-index: 10000;
+    cursor: pointer;
+}
+.edit-toggle {
+    position: fixed;
+    top: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    left: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 0.35rem 0.65rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.48rem, calc(0.8 * var(--_u)), 0.62rem);
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s ease;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active {
+    background: var(--gold-dim);
+    border-color: var(--gold-border);
+    color: var(--highlight);
+}
+.save-btn {
+    position: fixed;
+    top: clamp(0.5rem, calc(1.2 * var(--_u)), 0.9rem);
+    left: clamp(4.5rem, calc(8 * var(--_u)), 7rem);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 0.35rem 0.65rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.48rem, calc(0.8 * var(--_u)), 0.62rem);
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+.save-btn.show { opacity: 1; pointer-events: auto; }
+[contenteditable="true"] {
+    outline: 1px solid rgba(135,98,19,0.35);
+    border-radius: 2px;
+    cursor: text;
+    min-width: 1em;
+}
+[contenteditable="true"]:focus {
+    outline: 2px solid var(--gold);
+    background: rgba(135,98,19,0.10);
+}
+
+/* ============================================
+   KEYFRAMES
+   ============================================ */
+@keyframes wordReveal {
+    to { transform: translateY(0); }
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ============================================
+   KATEX OVERRIDES
+   ============================================ */
+.formula .katex,
+.formula .katex-display > .katex { color: var(--highlight); }
+.formula .katex-display { margin: 0.2em 0 0; }
+.body-text .katex,
+.item-list .katex { color: inherit; }
+.formula-sm .katex { color: var(--highlight); font-size: 1em; }
+.data-table td .katex { color: var(--highlight); font-size: 0.95em; }
+</style>
+</head>
+<body>
+
+<!-- === GLOBAL OVERLAYS === -->
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="slide-counter" id="slideCounter">01 / 37</div>
+
+<!-- Edit mode -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle">✏ edit</button>
+<button class="save-btn" id="saveBtn">↓ save</button>
+
+
+<!-- ========================================================
+     SLIDE 01 — TITLE
+     ======================================================== -->
+<section class="slide title-slide scanlines" id="slide-1" aria-label="Title">
+    <div class="title-sidebar">
+        <div class="sidebar-label">diffusion</div>
+        <div class="s-dots">
+            <div class="s-dot on"></div>
+            <div class="s-dot on"></div>
+            <div class="s-dot on"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+            <div class="s-dot"></div><div class="s-dot"></div><div class="s-dot"></div>
+        </div>
+        <div class="sidebar-label">flow</div>
+    </div>
+
+    <div class="title-main">
+        <div class="title-tag">// Imaging in Paris · IHP · 05/12/2026</div>
+
+        <div>
+            <h1 class="title-h1">
+                <div class="line"><span>Toward <em>One-Step</em> Image Restoration</span></div>
+                <div class="line"><span>with Generative Priors</span></div>
+            </h1>
+            <div style="font-family: var(--font-serif); font-style: italic; font-weight: 300; color: var(--highlight); font-size: var(--h2-size); line-height: 1.1; margin-top: clamp(0.8rem, 1.5vh, 1.4rem); letter-spacing: -0.01em;">
+                From Plug-and-Play Diffusion to Flow Distillation
+            </div>
+            <div class="title-formula" style="margin-top: clamp(0.8rem, 1.5vh, 1.4rem);">$$\mathbf{y} = \mathcal{H}(\mathbf{x}) + \mathbf{n} \;\;\longrightarrow\;\; \hat{\mathbf{x}}$$</div>
+        </div>
+
+        <div class="title-bottom">
+            <div>
+                <div class="author-name">Yuanzhi Zhu</div>
+                <div class="author-sub">Diffusion Models · Flow Matching · Image Restoration</div>
+                <div class="author-sub" style="margin-top: 0.6rem; color: var(--highlight); font-style: italic;">Imaging in Paris Seminar &middot; Institut Henri Poincaré</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="paper-refs" style="position: absolute; bottom: clamp(3rem, 4.5vh, 4rem); right: var(--slide-padding); text-align: right;">
+        <div class="paper-ref"><strong>DiffPIR</strong> · CVPRW 2023</div>
+        <div class="paper-ref"><strong>OFTSR</strong> · ICLR 2026</div>
+        <div class="paper-ref"><strong>MFSR</strong> · arXiv 2026</div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 02 — ROADMAP
+     ======================================================== -->
+<section class="slide glow-both" id="slide-2" aria-label="Roadmap">
+    <div class="slide-header reveal">
+        <span class="slide-num">02</span>
+        <span class="slide-section">Roadmap</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">A Research <em>Journey</em></h2>
+
+        <div class="reveal delay-2" style="display: flex; align-items: center; gap: 0; margin-top: var(--content-gap); padding: 0 clamp(0.5rem, calc(1.5 * var(--_u)), 1.5rem);">
+            <!-- DiffPIR -->
+            <div style="flex: 1; text-align: center;">
+                <div class="card-gold" style="display: block; padding: clamp(1.2rem, 2.5vh, 2.2rem) clamp(1.2rem, calc(2.5 * var(--_u)), 2.5rem);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;">Part I &middot; 2023</div>
+                    <div style="font-family: var(--font-serif); font-size: var(--h2-size); color: var(--text); font-weight: 600; margin-top: 0.3rem;">DiffPIR</div>
+                    <div style="font-size: var(--body-size); color: var(--muted); margin-top: 0.5rem;">Multi-step Diffusion<br>Plug-and-Play IR</div>
+                    <div style="margin-top: 0.7rem;"><span class="badge badge-blue">~100 NFEs</span></div>
+                </div>
+            </div>
+            <!-- Arrow -->
+            <div style="font-size: clamp(2rem, calc(4 * var(--_u)), 3.5rem); color: var(--highlight); flex-shrink: 0; padding: 0 clamp(0.3rem, calc(0.8 * var(--_u)), 0.8rem);">→</div>
+            <!-- OFTSR -->
+            <div style="flex: 1; text-align: center;">
+                <div class="card-gold" style="display: block; padding: clamp(1.2rem, 2.5vh, 2.2rem) clamp(1.2rem, calc(2.5 * var(--_u)), 2.5rem);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;">Part II &middot; 2024</div>
+                    <div style="font-family: var(--font-serif); font-size: var(--h2-size); color: var(--text); font-weight: 600; margin-top: 0.3rem;">OFTSR</div>
+                    <div style="font-size: var(--body-size); color: var(--muted); margin-top: 0.5rem;">One-step Flow SR<br><span class="hl-gold">Tunable Trade-off</span></div>
+                    <div style="margin-top: 0.7rem;"><span class="badge badge-green">1 NFE</span></div>
+                </div>
+            </div>
+            <!-- Arrow -->
+            <div style="font-size: clamp(2rem, calc(4 * var(--_u)), 3.5rem); color: var(--highlight); flex-shrink: 0; padding: 0 clamp(0.3rem, calc(0.8 * var(--_u)), 0.8rem);">→</div>
+            <!-- MFSR -->
+            <div style="flex: 1; text-align: center;">
+                <div class="card-gold" style="display: block; padding: clamp(1.2rem, 2.5vh, 2.2rem) clamp(1.2rem, calc(2.5 * var(--_u)), 2.5rem);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;">Part III &middot; 2025</div>
+                    <div style="font-family: var(--font-serif); font-size: var(--h2-size); color: var(--text); font-weight: 600; margin-top: 0.3rem;">MFSR</div>
+                    <div style="font-size: var(--body-size); color: var(--muted); margin-top: 0.5rem;">MeanFlow Distillation<br>Real-World SR</div>
+                    <div style="margin-top: 0.7rem;"><span class="badge badge-green">1 NFE</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="body-text" style="font-style: italic;">
+                Progressive efficiency: <span class="hl-gold">100 steps → 1 step</span> <span style="color: var(--muted);">(with tunable fidelity ↔ realism trade-off)</span>.&nbsp;&nbsp;Progressive generality: <span class="hl-blue">synthetic → real-world</span>.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 03 — INVERSE PROBLEM
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-3" aria-label="Inverse problem">
+    <div class="slide-header reveal">
+        <span class="slide-num">03</span>
+        <span class="slide-section">Background</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Image Restoration as an <em>Inverse Problem</em></h2>
+
+        <div class="formula reveal delay-2" style="width: fit-content; margin-top: var(--content-gap); align-self: center; font-size: clamp(2.5rem, calc(5 * var(--_u)), 4rem); padding: clamp(1rem, 2vh, 1.8rem) clamp(1.5rem, calc(4 * var(--_u)), 3rem);">
+            <span class="comment">// Forward degradation model</span>
+            $$\mathbf{y} = \mathcal{H}(\mathbf{x}) + \mathbf{n}$$
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap);">
+            <ul class="item-list">
+                <li><span class="marker">→</span><span>$\mathbf{y}$: observed degraded image</span></li>
+                <li><span class="marker">→</span><span>$\mathcal{H}$: degradation operator (blur, downsampling, masking)</span></li>
+                <li><span class="marker">→</span><span>$\mathbf{n}$: additive noise</span></li>
+                <li><span class="marker">→</span><span><strong style="color:var(--text);">Goal:</strong> recover $\mathbf{x}$ from $\mathbf{y}$</span></li>
+            </ul>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card" style="text-align: center;">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.4rem;">Tasks</div>
+                    <div class="body-text">Super-Resolution &middot; Deblurring &middot; Inpainting</div>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.4rem;">Challenge</div>
+                    <div class="body-text">Ill-posed: many $\mathbf{x}$ explain the same $\mathbf{y}$</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 04 — PNP FRAMEWORK
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-4" aria-label="PnP framework">
+    <div class="slide-header reveal">
+        <span class="slide-num">04</span>
+        <span class="slide-section">Background</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Plug-and-Play <em>Image Restoration</em></h2>
+
+        <div class="formula reveal delay-2" style="width: fit-content; align-self: center;">
+            <span class="comment">// MAP estimation with explicit prior</span>
+            $$\hat{\mathbf{x}} = \arg\min_{\mathbf{x}} \;\underbrace{\frac{1}{2}\|\mathbf{y} - \mathcal{H}(\mathbf{x})\|^2}_{\text{data fidelity}} + \underbrace{\lambda \, \Phi(\mathbf{x})}_{\text{prior}}$$
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="card">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">HQS Splitting</div>
+                <ul class="item-list">
+                    <li><span class="marker">1.</span><span><span class="hl-blue">Data subproblem</span>: proximal step on $\|\mathbf{y}-\mathcal{H}(\mathbf{x})\|^2$</span></li>
+                    <li><span class="marker">2.</span><span><span class="hl-gold">Prior subproblem</span>: apply denoiser $\mathcal{D}_\sigma$</span></li>
+                </ul>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">KEY INSIGHT</div>
+                <div class="body-text">
+                    Any denoiser can serve as an implicit image prior. Replace $\Phi(\mathbf{x})$ with a denoiser — <span class="hl-gold">no need to define the prior explicitly</span>.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 05 — DIFFUSION MODELS PRIMER
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-5" aria-label="Diffusion models">
+    <div class="slide-header reveal">
+        <span class="slide-num">05</span>
+        <span class="slide-section">Background</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Diffusion Models are <em>Powerful Priors</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Forward Process</div>
+                    <div class="body-text">Gradually add Gaussian noise: $\mathbf{x}_0 \to \mathbf{x}_1 \to \cdots \to \mathbf{x}_T \sim \mathcal{N}(0, \mathbf{I})$</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Reverse Process</div>
+                    <div class="body-text">Learn to denoise: $\mathbf{x}_t \to \mathbf{x}_0$. The denoiser $D_\theta(\mathbf{x}_t, t)$ predicts clean $\mathbf{x}_0$ from noisy $\mathbf{x}_t$.</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Score &harr; Denoiser (Tweedie)</div>
+                    <div class="body-text">$$\nabla_{\mathbf{x}_t}\!\log q(\mathbf{x}_t) = \frac{\sqrt{\bar\alpha_t}\,D_\theta(\mathbf{x}_t, t) - \mathbf{x}_t}{1 - \bar\alpha_t}$$</div>
+                </div>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">WHY DIFFUSION FOR IR?</div>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>Diffusion models provide a <span class="hl-gold">family of denoisers</span> at different noise levels</span></li>
+                    <li><span class="marker">→</span><span>This naturally matches PnP where denoiser strength <span class="hl-gold">decreases</span> over iterations</span></li>
+                    <li><span class="marker">→</span><span>Much richer generative capacity with <span class="hl-gold">scaled-up denoisers</span> <span style="color: var(--muted); font-style: italic;">— the sampling schedule is very important</span></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 06 — DDPM: FORWARD PROCESS
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-6" aria-label="DDPM forward">
+    <div class="slide-header reveal">
+        <span class="slide-num">06</span>
+        <span class="slide-section">Preliminaries</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">DDPM</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">DDPM: <em>Forward</em> Process</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Gradually add noise over $T$ steps</span>
+                    $$q(\mathbf{x}_t|\mathbf{x}_{t-1}) = \mathcal{N}\!\left(\mathbf{x}_t;\, \sqrt{1-\beta_t}\,\mathbf{x}_{t-1},\, \beta_t \mathbf{I}\right)$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Closed-form for arbitrary $t$ (skip steps)</span>
+                    $$\mathbf{x}_t = \sqrt{\bar\alpha_t}\,\mathbf{x}_0 + \sqrt{1-\bar\alpha_t}\,\boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon}\sim\mathcal{N}(0,\mathbf{I})$$
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>$\beta_t$: noise schedule</span></li>
+                    <li><span class="marker">→</span><span>$\alpha_t = 1 - \beta_t$, $\;\bar\alpha_t = \prod_{i=1}^{t}\alpha_i$</span></li>
+                    <li><span class="marker">→</span><span>As $t\to T$: $\bar\alpha_T \approx 0$, so $\mathbf{x}_T \sim \mathcal{N}(0, \mathbf{I})$</span></li>
+                </ul>
+                <div class="card-gold">
+                    <div class="body-text" style="font-style: italic;">The forward process destroys structure; the reverse process must learn to recover it.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 07 — DDPM: REVERSE & TRAINING
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-7" aria-label="DDPM reverse">
+    <div class="slide-header reveal">
+        <span class="slide-num">07</span>
+        <span class="slide-section">Preliminaries</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">DDPM</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">DDPM: <em>Reverse</em> Process &amp; Training</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Learned reverse step</span>
+                    $$p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t) = \mathcal{N}\!\left(\mathbf{x}_{t-1};\, \boldsymbol{\mu}_\theta(\mathbf{x}_t, t),\, \sigma_t^2\mathbf{I}\right)$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Simple denoising objective (predict the noise)</span>
+                    $$L_{\text{simple}} = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon},t}\!\left[\|\boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\right]$$
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.4rem;">DENOISER = SCORE</div>
+                    <div class="body-text">The noise predictor $\boldsymbol{\epsilon}_\theta$ is equivalent to the score function: $$\nabla_{\mathbf{x}_t}\!\log q(\mathbf{x}_t) = -\frac{\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{1-\bar\alpha_t}}$$</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">EQUIVALENT PREDICTIONS</div>
+                    <div class="body-text">Predict noise $\boldsymbol{\epsilon}$, clean image $\mathbf{x}_0$, score $\nabla\!\log q(\mathbf{x}_t)$, or velocity $\mathbf{v}$</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--
+========================================================
+     SLIDE 08 — DDIM & SAMPLING (COMMENTED OUT)
+========================================================
+<section class="slide glow-blue" id="slide-8" aria-label="DDIM">
+    <div class="slide-header reveal">
+        <span class="slide-num">08</span>
+        <span class="slide-section">Preliminaries</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">DDIM</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">DDIM: <em>Deterministic</em> Sampling</h2>
+
+        <div class="formula reveal delay-2" style="width: fit-content; font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+            <span class="comment">// DDIM update rule (set σ=0 for deterministic ODE)</span>
+            $$\mathbf{x}_{t-1} = \sqrt{\bar\alpha_{t-1}}\underbrace{\left(\frac{\mathbf{x}_t - \sqrt{1-\bar\alpha_t}\,\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{\bar\alpha_t}}\right)}_{\text{"predicted } \mathbf{x}_0\text{"}} + \sqrt{1-\bar\alpha_{t-1}} \cdot \boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)$$
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap);">
+            <ul class="item-list">
+                <li><span class="marker">→</span><span>Same trained model, just <span class="hl-gold">different sampler</span></span></li>
+                <li><span class="marker">→</span><span>Defines a <span class="hl-blue">probability flow ODE</span> (PF-ODE)</span></li>
+                <li><span class="marker">→</span><span>Can skip timesteps: 1000 → 50 → 20 steps</span></li>
+            </ul>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.4rem;">KEY OBSERVATION</div>
+                <div class="body-text">DDIM reveals diffusion sampling as <span class="hl-gold">solving an ODE</span> — connecting it directly to flow-based models.</div>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!-- ========================================================
+     SLIDE 09 — FLOW MATCHING / RECTIFIED FLOW
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-9" aria-label="Flow matching">
+    <div class="slide-header reveal">
+        <span class="slide-num">08</span>
+        <span class="slide-section">Preliminaries</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-green">Flow Matching</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Flow Matching / Rectified Flow <em>(Simple Schedule)</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Learn a velocity field that transports noise → data</span>
+                    $$\frac{d\mathbf{x}_t}{dt} = \mathbf{v}_\theta(\mathbf{x}_t, t), \quad t \in [0, 1]$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.6rem, calc(3.2 * var(--_u)), 2.4rem);">
+                    <span class="comment">// Conditional flow matching loss</span>
+                    $$L_{\text{CFM}} = \mathbb{E}_{t,\,\mathbf{x}_0,\,\mathbf{x}_1}\!\left[\|\mathbf{v}_\theta(\mathbf{x}_t, t) - (\mathbf{x}_1 - \mathbf{x}_0)\|^2\right]$$
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">LINEAR INTERPOLATION</div>
+                    <div class="body-text">$$\mathbf{x}_t = (1-t)\,\mathbf{x}_0 + t\,\mathbf{x}_1$$</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">TARGET VELOCITY</div>
+                    <div class="body-text">$$\frac{d\mathbf{x}_t}{dt} = \mathbf{x}_1 - \mathbf{x}_0$$</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--
+========================================================
+     SLIDE 10 — UNIFICATION: DIFFUSION = FLOW (COMMENTED OUT)
+========================================================
+<section class="slide glow-both" id="slide-10" aria-label="Unification">
+    <div class="slide-header reveal">
+        <span class="slide-num">10</span>
+        <span class="slide-section">Preliminaries</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">Unification</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">They Are the <em>Same Thing</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card" style="border-left: 3px solid var(--blue);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--blue); margin-bottom: 0.4rem;">DIFFUSION (PF-ODE)</div>
+                    <div class="body-text">$$d\mathbf{x}_t = -\frac{1}{2}\beta(t)\,\mathbf{x}_t\,dt - \frac{1}{2}\beta(t)\,\nabla\!\log q_t(\mathbf{x}_t)\,dt$$</div>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--green);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--green); margin-bottom: 0.4rem;">FLOW MATCHING</div>
+                    <div class="body-text">$$d\mathbf{x}_t = \mathbf{v}_\theta(\mathbf{x}_t, t)\,dt$$</div>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">THE CONNECTION</div>
+                    <ul class="item-list">
+                        <li><span class="marker">→</span><span>Both define an ODE from noise to data</span></li>
+                        <li><span class="marker">→</span><span>$\boldsymbol{\epsilon}$-prediction, $\mathbf{x}_0$-prediction, $\mathbf{v}$-prediction are <span class="hl-gold">interconvertible</span></span></li>
+                        <li><span class="marker">→</span><span>Differ only in <span class="hl-blue">noise schedule</span> and <span class="hl-green">interpolation path</span></span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="body-text" style="font-style: italic;">Flow matching: <span class="hl-gold">linear</span> path $\mathbf{x}_t = (1-t)\,\boldsymbol{\epsilon} + t\,\mathbf{x}_{\text{data}}$. Diffusion: <span class="hl-blue">VP</span> schedule $\mathbf{x}_t = \sqrt{\bar\alpha_t}\,\mathbf{x}_{\text{data}} + \sqrt{1-\bar\alpha_t}\,\boldsymbol{\epsilon}$. Same ODE framework, different interpolation &amp; noise schedule.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!--
+========================================================
+     SLIDE 11 — TRANSITION TO DIFFPIR (COMMENTED OUT)
+========================================================
+<section class="slide glow-blue" id="slide-11" aria-label="Key idea">
+    <div class="slide-header reveal">
+        <span class="slide-num">09</span>
+        <span class="slide-section">Background</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center; text-align: center;">
+        <h2 class="slide-title reveal delay-1" style="max-width: 80%;">Use Diffusion Models as<br><em>Plug-and-Play Denoisers</em></h2>
+        <p class="body-text reveal delay-2" style="max-width: 70%;">
+            Replace discriminative Gaussian denoisers with <span class="hl-gold">pretrained diffusion models</span> in the PnP framework. Interleave data-fidelity steps with reverse diffusion steps.
+        </p>
+        <div class="formula reveal delay-3" style="width: fit-content;">
+            $$\underbrace{\hat{\mathbf{x}}_0^{(t)}}_{\text{data step}} \;\;\longrightarrow\;\; \underbrace{\mathbf{x}_{t-1}}_{\text{diffusion step}} \;\;\longrightarrow\;\; \cdots \;\;\longrightarrow\;\; \hat{\mathbf{x}}_0$$
+        </div>
+    </div>
+</section>
+-->
+
+
+<!-- ========================================================
+     SLIDE 12 — DIFFPIR TITLE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-12" aria-label="DiffPIR title">
+    <div class="slide-header reveal">
+        <span class="slide-num">09</span>
+        <span class="slide-section">I · DiffPIR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">CVPRW 2023</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">DiffPIR <span style="font-weight:300; font-style:italic; font-size:0.55em; color: var(--text2);">Denoising Diffusion Models for Plug-and-Play Image Restoration</span></h2>
+        </div>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1.3fr 1fr;">
+            <div class="img-frame">
+                <img src="https://raw.githubusercontent.com/yuanzhi-zhu/DiffPIR/main/figs/illustration.png" alt="DiffPIR pipeline illustration" style="max-height: min(45vh, 380px);">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <p class="body-text">
+                    Yuanzhi Zhu, Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool
+                </p>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>General framework for SR, deblurring, inpainting</span></li>
+                    <li><span class="marker">→</span><span><span class="hl-gold">Training-free</span>: no task-specific training, just an off-the-shelf diffusion model</span></li>
+                    <li><span class="marker">→</span><span>Strong perceptual quality on FFHQ &amp; ImageNet</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 13 — DIFFPIR FORMULATION
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-13" aria-label="DiffPIR formulation">
+    <div class="slide-header reveal">
+        <span class="slide-num">10</span>
+        <span class="slide-section">I · DiffPIR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Method</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">HQS <em>Formulation</em></h2>
+
+        <div class="formula reveal delay-2" style="width: fit-content; align-self: center;">
+            <span class="comment">// Data subproblem (closed-form for linear H)</span>
+            $$\hat{\mathbf{x}}_0^{(t)} = \arg\min_{\mathbf{x}} \;\|\mathbf{y} - \mathcal{H}(\mathbf{x})\|^2 + \rho_t \|\mathbf{x} - \tilde{\mathbf{x}}_0^{(t)}\|^2$$
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap);">
+            <ul class="item-list">
+                <li><span class="marker">1.</span><span><span class="hl-blue">Predict</span> $\tilde{\mathbf{x}}_0$ from noisy $\mathbf{x}_t$ via score model</span></li>
+                <li><span class="marker">2.</span><span><span class="hl-gold">Solve</span> data subproblem: enforce consistency with $\mathbf{y}$</span></li>
+                <li><span class="marker">3.</span><span><span class="hl-green">Diffuse</span> back: one reverse diffusion step → $\mathbf{x}_{t-1}$</span></li>
+            </ul>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.4rem;">KEY PARAMETER</div>
+                <div class="body-text">$\rho_t$ controls data fidelity weight — increases over time as denoiser noise decreases</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 14 — DIFFPIR ALGORITHM
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-14" aria-label="DiffPIR algorithm">
+    <div class="slide-header reveal">
+        <span class="slide-num">11</span>
+        <span class="slide-section">I · DiffPIR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Algorithm</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Algorithm <em>Walkthrough</em></h2>
+
+        <div class="reveal delay-2" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: clamp(1.5rem, calc(3 * var(--_u)), 3rem); margin-top: var(--content-gap); flex: 1;">
+            <div class="img-frame" style="flex-shrink: 0;">
+                <img src="https://raw.githubusercontent.com/yuanzhi-zhu/DiffPIR/main/figs/algorithm.png" alt="DiffPIR Algorithm 1" style="max-height: min(60vh, 500px); width: auto;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>Start from pure noise $\mathbf{x}_T \sim \mathcal{N}(0, \mathbf{I})$</span></li>
+                    <li><span class="marker">→</span><span>At each step $t$: predict clean $\tilde{\mathbf{x}}_0$ via the diffusion denoiser</span></li>
+                    <li><span class="marker">→</span><span>Solve data subproblem (closed-form for linear $\mathcal{H}$)</span></li>
+                    <li><span class="marker">→</span><span>Perform one reverse diffusion step → $\mathbf{x}_{t-1}$</span></li>
+                </ul>
+                <div class="card-gold">
+                    <div class="body-text">Works with any linear $\mathcal{H}$ — just change the data step</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 15 — DIFFPIR DESIGN CHOICES
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-15" aria-label="DiffPIR design choices">
+    <div class="slide-header reveal">
+        <span class="slide-num">12</span>
+        <span class="slide-section">I · DiffPIR</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Key Design <em>Choices</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">Noise Schedule Alignment</div>
+                    <div class="body-text">Diffusion noise level <span class="hl-gold">matches</span> PnP denoiser strength at each iteration</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">Pretrained Model</div>
+                    <div class="body-text">No task-specific fine-tuning — uses off-the-shelf diffusion model trained on ImageNet</div>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">Sub-sampled Schedule</div>
+                    <div class="body-text">100 NFEs (sub-sampled from 1000) — enough for high-quality restoration</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">Versatility</div>
+                    <div class="body-text">Same framework for <span class="hl-blue">SR</span>, <span class="hl-green">deblurring</span>, <span class="hl-rust">inpainting</span> — just change $\mathcal{H}$</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 16 — DIFFPIR QUALITATIVE RESULTS (SR + DEBLUR + INPAINT)
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-16" aria-label="DiffPIR qualitative results">
+    <div class="slide-header reveal">
+        <span class="slide-num">13</span>
+        <span class="slide-section">I · DiffPIR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Qualitative Results</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">One Framework, <em>Three Tasks</em></h2>
+
+        <div class="reveal delay-2" style="display: grid; grid-template-columns: auto auto auto; justify-content: center; gap: clamp(3.5rem, calc(7 * var(--_u)), 6rem); margin-top: var(--content-gap); align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); align-items: center;">
+                <span class="badge badge-blue">Super-Resolution</span>
+                <div class="img-frame" style="flex-shrink: 0;">
+                    <img src="https://raw.githubusercontent.com/yuanzhi-zhu/DiffPIR/main/figs/SR_results.png" alt="DiffPIR SR qualitative results on FFHQ" style="max-height: min(62vh, 540px); width: auto;">
+                </div>
+                <p class="body-text" style="text-align: center; font-size: 0.9em;">4× downsampled FFHQ</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); align-items: center;">
+                <span class="badge badge-green">Deblurring</span>
+                <div class="img-frame" style="flex-shrink: 0;">
+                    <img src="https://raw.githubusercontent.com/yuanzhi-zhu/DiffPIR/main/figs/deblur_results.png" alt="DiffPIR deblurring results" style="max-height: min(62vh, 540px); width: auto;">
+                </div>
+                <p class="body-text" style="text-align: center; font-size: 0.9em;">Motion &amp; Gaussian blur</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); align-items: center;">
+                <span class="badge badge-rust">Inpainting</span>
+                <div class="img-frame" style="flex-shrink: 0;">
+                    <img src="https://raw.githubusercontent.com/yuanzhi-zhu/DiffPIR/main/figs/inpainting_results.png" alt="DiffPIR inpainting results" style="max-height: min(62vh, 540px); width: auto;">
+                </div>
+                <p class="body-text" style="text-align: center; font-size: 0.9em;">Box &amp; random mask</p>
+            </div>
+        </div>
+
+        <p class="body-text reveal delay-3" style="text-align: center; margin-top: var(--element-gap); font-style: italic; color: var(--text2);">
+            Same pretrained diffusion model — only the operator $\mathcal{H}$ changes between tasks.
+        </p>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 19 — DIFFPIR SUMMARY
+     ======================================================== -->
+<section class="slide glow-both" id="slide-19" aria-label="DiffPIR summary">
+    <div class="slide-header reveal">
+        <span class="slide-num">14</span>
+        <span class="slide-section">I · DiffPIR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Summary</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">DiffPIR: <em>Summary</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div class="card" style="border-color: rgba(21,128,61,0.25); border-left: 3px solid var(--green);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--green); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Strengths</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--green);">+</span><span>General framework for multiple IR tasks</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>Strong perceptual quality (SOTA on FFHQ/ImageNet)</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>No task-specific training</span></li>
+                </ul>
+            </div>
+            <div class="card" style="border-color: rgba(124,58,237,0.25); border-left: 3px solid var(--rust);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Limitations</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--rust);">−</span><span><strong style="color:var(--text);">~100 NFEs per image</strong> — slow inference</span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span>Requires known degradation model $\mathcal{H}$</span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span><strong style="color:var(--text);">Theory–practice gap</strong> for training-free methods</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-gold reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="body-text" style="font-style: italic; text-align: center;">
+                Can we achieve similar quality in <span class="hl-gold" style="font-weight: 600;">one single step</span>?
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 20 — SPEED PROBLEM
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-20" aria-label="Speed problem">
+    <div class="slide-header reveal">
+        <span class="slide-num">15</span>
+        <span class="slide-section">Transition · I → II</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">The <em>Speed</em> Problem</h2>
+
+        <div class="reveal delay-2" style="margin-top: var(--content-gap);">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Method</th><th>Steps (NFEs)</th><th>Quality</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>DiffPIR</td><td><code>100</code></td><td>SOTA</td></tr>
+                    <tr><td>DDRM</td><td><code>20</code></td><td>Good</td></tr>
+                    <tr><td>DPS</td><td><code>1000</code></td><td>Good</td></tr>
+                    <tr><td style="color:var(--highlight); font-weight:600;">One-step?</td><td><code style="background:var(--green-dim); color:var(--green);">1</code></td><td>???</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="body-text reveal delay-3" style="margin-top: var(--content-gap);">
+            Practical deployment needs cheap inference. <span class="hl-gold">Distillation</span> is the standard answer: compress a multi-step teacher into a one-step student.
+        </p>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 21 — OFTSR TITLE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-21" aria-label="OFTSR title">
+    <div class="slide-header reveal">
+        <span class="slide-num">16</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-green">ICLR 2026</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">OFTSR <span style="font-weight:300; font-style:italic; font-size:0.5em; color: var(--text2);">One-Step Flow for Image Super-Resolution with Tunable Fidelity-Realism Trade-offs</span></h2>
+        </div>
+
+        <div class="reveal delay-2" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: clamp(1.5rem, calc(3 * var(--_u)), 3rem); margin-top: var(--content-gap); flex: 1;">
+            <div class="img-frame" style="flex-shrink: 0;">
+                <img src="materials/OFTSR/fig1a_overview.png" alt="OFTSR overview with tunable outputs" style="max-height: min(60vh, 500px); width: auto;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
+                <p class="body-text">Yuanzhi Zhu*, Ruiqing Wang*, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang</p>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span><span class="hl-gold">One-step</span> flow-based super-resolution</span></li>
+                    <li><span class="marker">→</span><span><span class="hl-blue">Tunable</span> fidelity-realism trade-off at inference</span></li>
+                    <li><span class="marker">→</span><span>SOTA one-step SR on FFHQ, DIV2K, ImageNet</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 22 — OFTSR METHOD OVERVIEW
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-22" aria-label="OFTSR method">
+    <div class="slide-header reveal">
+        <span class="slide-num">17</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Method</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Two-Stage <em>Framework</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1.5fr;">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card" style="border-left: 3px solid var(--blue);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--blue); margin-bottom: 0.4rem;">STAGE 1: Train Teacher</div>
+                    <div class="body-text">Conditional rectified flow model for SR. Multi-step sampling with noise-augmented LR inputs.</div>
+                </div>
+                <div class="card-gold" style="border-left: 3px solid var(--highlight);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.4rem;">STAGE 2: Distill Student</div>
+                    <div class="body-text">One-step student via <span class="hl-gold">trajectory-aligned distillation</span>. Force student predictions to lie on teacher's ODE trajectory.</div>
+                </div>
+            </div>
+            <div class="img-frame" style="justify-self: stretch;">
+                <img src="materials/OFTSR/fig2_distillation.png" alt="OFTSR distillation diagram" style="max-height: min(65vh, 540px); width: 100%;">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 23 — OFTSR TEACHER
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-23" aria-label="OFTSR teacher">
+    <div class="slide-header reveal">
+        <span class="slide-num">18</span>
+        <span class="slide-section">II · OFTSR</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Noise-Augmented <em>Conditional Flow</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.45rem, calc(2.65 * var(--_u)), 2rem);">
+                    <span class="comment">// Variance-Preserving (VP) noise augmentation</span>
+                    $$\mathbf{x}_0 = \sqrt{1 - \sigma_p^2}\,\mathbf{x}_{\text{LR}} + \sigma_p\,\boldsymbol{\epsilon}$$
+                    <span class="comment" style="margin-top: 0.5rem;">// then condition on $\mathbf{x}_{\text{LR}}$ via concatenation</span>
+                </div>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>Expand support of initial distribution</span></li>
+                    <li><span class="marker">→</span><span>Enable diverse HR reconstructions from single LR</span></li>
+                    <li><span class="marker">→</span><span>VP noise preserves LR information</span></li>
+                </ul>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">WHY NOISE AUGMENTATION?</div>
+                <div class="body-text">
+                    Without noise: flow collapses LR→HR mapping to a single deterministic output.
+                    With noise: learns a <span class="hl-gold">distribution</span> over possible HR images, enabling tunable generation.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 24 — OFTSR DISTILLATION
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-24" aria-label="OFTSR distillation">
+    <div class="slide-header reveal">
+        <span class="slide-num">19</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Key Innovation</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Trajectory-Aligned <em>Distillation</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--element-gap); grid-template-columns: 1fr 1fr; align-items: start;">
+            <!-- Left: Derivation chain -->
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="formula" style="font-size: clamp(1.1rem, calc(2.0 * var(--_u)), 1.55rem);">
+                    <span class="comment">// (1) Teacher's ODE trajectory: $s > t$ on same path</span>
+                    $$\mathbf{x}_s = \mathbf{x}_t + (s - t)\,\mathbf{v}_\theta(\mathbf{x}_{t,\text{LR}}, t)$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.1rem, calc(2.0 * var(--_u)), 1.55rem);">
+                    <span class="comment">// (2) Student's one-step predictions from $\mathbf{x}_0$</span>
+                    $$\mathbf{x}_t = \mathbf{x}_0 + t\,\mathbf{v}_\phi(\mathbf{x}_{0,\text{LR}}, t), \quad \mathbf{x}_s = \mathbf{x}_0 + s\,\mathbf{v}_\phi(\mathbf{x}_{0,\text{LR}}, s)$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.1rem, calc(2.0 * var(--_u)), 1.55rem);">
+                    <span class="comment">// (3) Substitute (2) into (1) → constraint on student</span>
+                    $$s\bigl(\mathbf{v}_\phi^{(s)} - \mathbf{v}_\phi^{(t)}\bigr) = (s{-}t)\bigl(\mathbf{v}_\theta^{(t)} - \mathbf{v}_\phi^{(t)}\bigr)$$
+                </div>
+            </div>
+            <!-- Right: Final loss -->
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.5rem;">FINAL DISTILLATION LOSS</div>
+                    <div class="formula" style="font-size: clamp(1.0rem, calc(1.85 * var(--_u)), 1.45rem); padding: 0.6rem 0.8rem;">
+                        $$\mathcal{L}_{\text{distill}}(\phi) = \mathbb{E}\!\left[\Bigl\|\mathbf{v}_\phi^{(s)} - \mathrm{SG}\!\Bigl[\mathbf{v}_\phi^{(t)} + \tfrac{dt}{s}\bigl(\mathbf{v}_\theta^{(t)} - \mathbf{v}_\phi^{(t)}\bigr)\Bigr]\Bigr\|^2\right]$$
+                    </div>
+                    <div class="body-text" style="font-size: 0.85em; color: var(--muted); margin-top: 0.5rem;">where $dt = s - t$ and SG is stop-gradient (training stability)</div>
+                </div>
+                <ul class="item-list" style="font-size: clamp(1.0rem, calc(1.8 * var(--_u)), 1.4rem);">
+                    <li><span class="marker">→</span><span>Forces one-step student onto teacher's <span class="hl-gold">ODE trajectory</span></span></li>
+                    <li><span class="marker">→</span><span>Discrete counterpart of <span class="hl-blue">forward distillation</span> (related to MeanFlow / AlignYourFlow)</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 25 — OFTSR TUNABILITY
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-25" aria-label="OFTSR tunability">
+    <div class="slide-header reveal">
+        <span class="slide-num">20</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-green">Unique Feature</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center;">
+        <h2 class="slide-title reveal delay-1">Tunable <em>Fidelity-Realism</em></h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; max-width: 95%;">
+            <img src="materials/OFTSR/fig3_tradeoff.png" alt="OFTSR fidelity-realism tradeoff visualization" style="max-height: min(55vh, 460px); width: 100%;">
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--element-gap);">
+            <div class="formula-sm">$t = 0$: high fidelity (PSNR-optimal)</div>
+            <div class="formula-sm">$t = 1$: high realism (perceptual quality)</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 26 — OFTSR QUANTITATIVE
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-26" aria-label="OFTSR quantitative">
+    <div class="slide-header reveal">
+        <span class="slide-num">21</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">Results</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Quantitative <em>Results</em></h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; margin-top: var(--content-gap);">
+            <img src="materials/OFTSR/fig1b_scatter.png" alt="OFTSR PSNR vs FID comparison" style="max-height: min(62vh, 520px); width: auto;">
+        </div>
+
+        <p class="body-text reveal delay-3" style="text-align: center;">
+            OFTSR achieves <span class="hl-gold">state-of-the-art</span> one-step SR on ImageNet 256×256.
+            Bubble size indicates NFEs — OFTSR uses only <span class="hl-green">1 NFE</span>.
+        </p>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 27 — OFTSR QUALITATIVE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-27" aria-label="OFTSR qualitative">
+    <div class="slide-header reveal">
+        <span class="slide-num">22</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Comparison</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center;">
+        <h2 class="slide-title reveal delay-1">Qualitative <em>Comparisons</em></h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; max-width: 95%;">
+            <img src="materials/OFTSR/fig5_qualitative.png" alt="OFTSR qualitative comparison with other methods" style="max-height: min(62vh, 520px); width: 100%;">
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 28 — OFTSR SUMMARY
+     ======================================================== -->
+<section class="slide glow-both" id="slide-28" aria-label="OFTSR summary">
+    <div class="slide-header reveal">
+        <span class="slide-num">23</span>
+        <span class="slide-section">II · OFTSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Summary</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">OFTSR: <em>Summary</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div class="card" style="border-color: rgba(21,128,61,0.25); border-left: 3px solid var(--green);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--green); text-transform: uppercase; margin-bottom: 0.55rem;">Achievements</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--green);">+</span><span><span class="hl-gold">One step</span> — 100× faster than DiffPIR</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>Tunable fidelity-realism at inference</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>SOTA on FFHQ, DIV2K, ImageNet — also extends to <span class="hl-blue">real-world SR</span> &amp; AIGC enhancement</span></li>
+                </ul>
+            </div>
+            <div class="card" style="border-color: rgba(124,58,237,0.25); border-left: 3px solid var(--rust);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); text-transform: uppercase; margin-bottom: 0.55rem;">Limitations</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--rust);">−</span><span>Performance bounded by <strong style="color:var(--text);">teacher model</strong> capabilities</span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span>Limited robustness to <strong style="color:var(--text);">complex LR degradations</strong></span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span><span style="color: var(--muted); font-style: italic;">Future: GT regression / adversarial supervision, better degradation handling</span></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-gold reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="body-text" style="font-style: italic; text-align: center;">
+                Next: a framework <span class="hl-gold" style="font-weight: 600;">specialized</span> for real-world degradations.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--
+========================================================
+     SLIDE 29 — SYNTHETIC VS REAL-WORLD (COMMENTED OUT)
+========================================================
+<section class="slide glow-gold" id="slide-29" aria-label="Real-world gap">
+    <div class="slide-header reveal">
+        <span class="slide-num">24</span>
+        <span class="slide-section">Transition · II → III</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center; text-align: center;">
+        <h2 class="slide-title reveal delay-1">Synthetic vs <em>Real-World</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div class="card">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Synthetic Degradation</div>
+                <div class="body-text">Bicubic downsampling<br>Gaussian blur + noise<br><span class="hl-blue">Known, clean model</span></div>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.55rem;">Real-World Degradation</div>
+                <div class="body-text">JPEG compression + sensor noise<br>ISP artifacts + unknown blur<br><span class="hl-gold">Complex, unknown pipeline</span></div>
+            </div>
+        </div>
+
+        <p class="body-text reveal delay-3">
+            Models trained on synthetic data <span class="hl-rust">fail</span> on real photos. Need methods designed for <span class="hl-gold">real-world degradation pipelines</span>.
+        </p>
+    </div>
+</section>
+-->
+
+
+<!-- ========================================================
+     SLIDE 30 — MFSR TITLE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-30" aria-label="MFSR title">
+    <div class="slide-header reveal">
+        <span class="slide-num">24</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">arXiv 2026</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">MFSR <span style="font-weight:300; font-style:italic; font-size:0.5em; color: var(--text2);">MeanFlow Distillation for One Step Real-World Image Super Resolution</span></h2>
+        </div>
+
+        <div class="reveal delay-2" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: clamp(1.5rem, calc(3 * var(--_u)), 3rem); margin-top: var(--content-gap); flex: 1;">
+            <div class="img-frame" style="flex-shrink: 0;">
+                <img src="materials/MFSR/fig1_results.png" alt="MFSR multi-step results on real-world images" style="max-height: min(60vh, 500px); width: auto;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
+                <p class="body-text">Ruiqing Wang, Kai Zhang, Yuanzhi Zhu, Hanshu Yan, Shilin Lu, Jian Yang</p>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span><span class="hl-gold">MeanFlow</span> distillation for one-step SR</span></li>
+                    <li><span class="marker">→</span><span>Designed for <span class="hl-blue">real-world</span> degradations</span></li>
+                    <li><span class="marker">→</span><span>Optional multi-step refinement path</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 31 — MFSR PIPELINE
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-31" aria-label="MFSR pipeline">
+    <div class="slide-header reveal">
+        <span class="slide-num">25</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Pipeline</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center;">
+        <h2 class="slide-title reveal delay-1">MeanFlow Distillation <em>Pipeline</em></h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; max-width: 95%;">
+            <img src="materials/MFSR/fig2_pipeline.png" alt="MFSR MeanFlow distillation pipeline" style="max-height: min(55vh, 460px); width: 100%;">
+        </div>
+
+        <p class="body-text reveal delay-3" style="text-align: center;">
+            Teacher predicts <span class="hl-blue">instantaneous velocity</span> $\mathbf{v}(\mathbf{z}_t, t)$. Student learns <span class="hl-gold">average velocity</span> $\mathbf{u}(\mathbf{z}_t, t, s)$ over intervals.
+        </p>
+    </div>
+</section>
+
+
+<!--
+========================================================
+     SLIDE 32 — MFSR MEANFLOW CONCEPT (COMMENTED OUT)
+========================================================
+<section class="slide glow-gold" id="slide-32" aria-label="MeanFlow concept">
+    <div class="slide-header reveal">
+        <span class="slide-num">26</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Key Innovation</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">The <em>MeanFlow</em> Identity</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.45rem, calc(2.65 * var(--_u)), 2rem);">
+                    <span class="comment">// Student approximates average velocity</span>
+                    $$\mathbf{u}_\phi(\mathbf{z}_t, t, s) \approx \frac{1}{s-t}\int_t^s \mathbf{v}_\theta(\mathbf{z}_\tau, \tau)\,d\tau$$
+                </div>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>Average velocity captures teacher dynamics <span class="hl-gold">without explicit rollouts</span></span></li>
+                    <li><span class="marker">→</span><span>For one-step: set $t=0, s=1$ to traverse entire ODE</span></li>
+                </ul>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">WHY MEANFLOW?</div>
+                <div class="body-text">
+                    Unlike consistency distillation or trajectory distillation, MeanFlow provides a <span class="hl-gold">more stable training signal</span> by averaging over the velocity field rather than matching single trajectory points.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!--
+========================================================
+     SLIDE 33 — MFSR CFG (COMMENTED OUT)
+========================================================
+<section class="slide glow-blue" id="slide-33" aria-label="MFSR CFG">
+    <div class="slide-header reveal">
+        <span class="slide-num">27</span>
+        <span class="slide-section">III · MFSR</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Improved <em>CFG</em> Formulation</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="formula" style="font-size: clamp(1.3rem, calc(2.3 * var(--_u)), 1.8rem);">
+                    <span class="comment">// Standard CFG</span>
+                    $$\mathbf{v}_{\text{cfg}} = \mathbf{v}_{\text{uncond}} + w \cdot (\mathbf{v}_{\text{cond}} - \mathbf{v}_{\text{uncond}})$$
+                </div>
+                <div class="card" style="border-color: rgba(124,58,237,0.25); border-left: 3px solid var(--rust);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); margin-bottom: 0.4rem;">Problem</div>
+                    <div class="body-text">Distilling CFG-enhanced velocity is tricky — scale factor causes instability</div>
+                </div>
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">MFSR SOLUTION</div>
+                <div class="body-text" style="margin-bottom: 0.5rem;">
+                    <span class="hl-gold">Teacher CFG distillation</span>: use teacher's CFG-enhanced predictions as instantaneous velocity in the MeanFlow loss.
+                </div>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span>Stronger supervision signal</span></li>
+                    <li><span class="marker">→</span><span>Student produces CFG-quality outputs <span class="hl-gold">without runtime CFG</span></span></li>
+                    <li><span class="marker">→</span><span>Preserves fine details and textures</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!--
+========================================================
+     SLIDE 34 — MFSR MULTI-STEP (COMMENTED OUT)
+========================================================
+<section class="slide glow-gold" id="slide-34" aria-label="MFSR multi-step">
+    <div class="slide-header reveal">
+        <span class="slide-num">29</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-green">Flexibility</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Optional <em>Multi-Step</em> Refinement</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1.2fr 1fr;">
+            <div class="img-frame">
+                <img src="https://arxiv.org/html/2603.20690v1/figs/steps_v4.png" alt="MFSR quality vs number of sampling steps" style="max-height: min(45vh, 380px);">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <ul class="item-list">
+                    <li><span class="marker">1s</span><span>Already strong quality (MANIQA ~0.601)</span></li>
+                    <li><span class="marker">2s</span><span>Significant jump (~0.618)</span></li>
+                    <li><span class="marker">4s</span><span>Near teacher quality</span></li>
+                </ul>
+                <div class="card-gold">
+                    <div class="body-text" style="font-style: italic;">
+                        Unlike competing methods (S3Diff, TSDSR) that plateau at 1 step, MFSR can <span class="hl-gold">improve</span> with more steps — a unique advantage.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!--
+========================================================
+     SLIDE 35 — MFSR USER STUDY (COMMENTED OUT)
+========================================================
+<section class="slide glow-blue" id="slide-35" aria-label="MFSR user study">
+    <div class="slide-header reveal">
+        <span class="slide-num">30</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">User Study</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Human <em>Preference</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1fr;">
+            <div class="img-frame">
+                <img src="https://arxiv.org/html/2603.20690v1/figs/user_study_v9.png" alt="MFSR user study preference chart" style="max-height: min(45vh, 380px);">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--content-gap);">
+                <div class="card-gold" style="text-align: center;">
+                    <div style="font-family: var(--font-serif); font-size: var(--h2-size); color: var(--highlight); font-weight: 600;">38.9%</div>
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-top: 0.3rem;">MFSR PREFERENCE RATE</div>
+                </div>
+                <div class="card">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--muted); margin-bottom: 0.4rem;">Competitors</div>
+                    <div class="body-text">TSDSR: 20.8% · OSEDiff: 19.8% · SinSR: 13.4% · CTMSR: 7.1%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+-->
+
+
+<!-- ========================================================
+     SLIDE 36 — MFSR QUALITATIVE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-36" aria-label="MFSR qualitative">
+    <div class="slide-header reveal">
+        <span class="slide-num">26</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Comparison</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center;">
+        <h2 class="slide-title reveal delay-1">Real-World <em>Qualitative Results</em></h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center;">
+            <img src="materials/MFSR/fig3_qualitative.png" alt="MFSR qualitative comparison on real-world images" style="max-height: min(65vh, 540px); width: auto;">
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 36b — MFSR SUMMARY
+     ======================================================== -->
+<section class="slide glow-both" id="slide-36b" aria-label="MFSR summary">
+    <div class="slide-header reveal">
+        <span class="slide-num">27</span>
+        <span class="slide-section">III · MFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Summary</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">MFSR: <em>Summary</em></h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap);">
+            <div class="card" style="border-color: rgba(21,128,61,0.25); border-left: 3px solid var(--green);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--green); text-transform: uppercase; margin-bottom: 0.55rem;">Achievements</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--green);">+</span><span><span class="hl-gold">One-step Real-ISR</span> with high realism &amp; fine details</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>Optional <span class="hl-blue">multi-step refinement</span> — trade compute for quality</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>Improved <strong style="color:var(--text);">teacher CFG distillation</strong> — stronger guidance signal</span></li>
+                    <li><span class="marker" style="color:var(--green);">+</span><span>Strong human preference (38.9%) on real-world benchmarks</span></li>
+                </ul>
+            </div>
+            <div class="card" style="border-color: rgba(124,58,237,0.25); border-left: 3px solid var(--rust);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); text-transform: uppercase; margin-bottom: 0.55rem;">Limitations</div>
+                <ul class="item-list">
+                    <li><span class="marker" style="color:var(--rust);">−</span><span>Quality still bounded by the <strong style="color:var(--text);">multi-step teacher</strong> (DiT4SR)</span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span>Specialized for SR — not yet a general restoration framework</span></li>
+                    <li><span class="marker" style="color:var(--rust);">−</span><span><span style="color: var(--muted); font-style: italic;">Future: human/RL feedback, broader inverse problems</span></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-gold reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="body-text" style="font-style: italic; text-align: center;">
+                MeanFlow distillation: a <span class="hl-gold" style="font-weight: 600;">flexible</span> bridge between one-step efficiency and multi-step quality.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 36c — SMFSR TITLE
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-36c" aria-label="SMFSR title">
+    <div class="slide-header reveal">
+        <span class="slide-num">28</span>
+        <span class="slide-section">IV · SMFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">ICML 2026</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">SMFSR <span style="font-weight:300; font-style:italic; font-size:0.5em; color: var(--text2);">Noise-Started One-Step Real-SR via SplitMeanFlow &amp; GAN Refinement</span></h2>
+        </div>
+
+        <div class="reveal delay-2" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: clamp(1.5rem, calc(3 * var(--_u)), 3rem); margin-top: var(--content-gap); flex: 1;">
+            <div class="img-frame" style="flex-shrink: 0;">
+                <img src="materials/SMFSR/fig1_paradigms.png" alt="SMFSR three paradigms: multi-step, vanilla one-step, noise-started one-step" style="max-height: min(70vh, 580px); width: auto;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
+                <p class="body-text" style="color: var(--text2);">Wei Zhu, Kai Zhang, Yu Zheng, Lei Luo, Yong Guo, Jian Yang</p>
+                <ul class="item-list">
+                    <li><span class="marker">→</span><span><span class="hl-gold">Noise-started</span> one-step Real-SR</span></li>
+                    <li><span class="marker">→</span><span>Built on <span class="hl-blue">SplitMeanFlow</span> &mdash; an algebraic alternative to MeanFlow</span></li>
+                    <li><span class="marker">→</span><span>GAN refinement with DINOv3 + VSD</span></li>
+                </ul>
+                <div class="card" style="border-left: 3px solid var(--rust);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); margin-bottom: 0.4rem;">KEY INSIGHT</div>
+                    <div class="body-text" style="font-size: 0.95em;">Many one-step Real-SR methods (OSEDiff, TSD-SR, CTMSR) map <em>LR → HR</em> directly. SMFSR keeps the <span class="hl-gold">noise → HR</span> paradigm — preserving stochasticity for richer textures.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 36d — SMFSR METHOD
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-36d" aria-label="SMFSR method">
+    <div class="slide-header reveal">
+        <span class="slide-num">29</span>
+        <span class="slide-section">IV · SMFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">Method</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1"><em>SplitMeanFlow</em> + GAN Refinement</h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; max-width: 100%;">
+            <img src="materials/SMFSR/fig2_pipeline.png" alt="SMFSR two-stage training pipeline" style="max-height: min(56vh, 480px); width: 100%;">
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--element-gap); grid-template-columns: 1.1fr 1fr;">
+            <div class="formula" style="font-size: clamp(1.1rem, calc(2 * var(--_u)), 1.55rem);">
+                <span class="comment">// Interval Splitting Consistency: any $r \le s \le t$</span>
+                $$(t-r)\,\mathbf{u}_\theta(\mathbf{z}_t,r,t) = (s-r)\,\mathbf{u}_\theta(\mathbf{z}_s,r,s) + (t-s)\,\mathbf{u}_\theta(\mathbf{z}_t,s,t)$$
+            </div>
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.4rem;">VS. MEANFLOW</div>
+                <div class="body-text" style="font-size: 0.92em;">Algebraic identity replaces JVPs &mdash; <span class="hl-gold">no autograd through time</span>. Set $r=0,\,t=1$ for one-step inference.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 36e — SMFSR RESULTS
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-36e" aria-label="SMFSR results">
+    <div class="slide-header reveal">
+        <span class="slide-num">30</span>
+        <span class="slide-section">IV · SMFSR</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Results</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">SOTA <em>Perceptual Quality</em> on Real-SR</h2>
+
+        <div class="img-frame reveal delay-2" style="align-self: center; max-width: 100%;">
+            <img src="materials/SMFSR/fig3_qualitative.png" alt="SMFSR qualitative comparison vs SOTA Real-SR methods" style="max-height: min(60vh, 520px); width: 100%; object-fit: contain;">
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--element-gap); grid-template-columns: 1fr 1fr 1fr;">
+            <div class="card-gold" style="text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.3rem;">DIV2K · CLIPIQA</div>
+                <div style="font-family: var(--font-serif); font-size: clamp(1.5rem, calc(2.8 * var(--_u)), 2rem); color: var(--highlight); font-weight: 600;">0.7545</div>
+                <div style="font-size: 0.8em; color: var(--muted);">vs InvSR 0.7181</div>
+            </div>
+            <div class="card-gold" style="text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.3rem;">DIV2K · MUSIQ</div>
+                <div style="font-family: var(--font-serif); font-size: clamp(1.5rem, calc(2.8 * var(--_u)), 2rem); color: var(--highlight); font-weight: 600;">69.97</div>
+                <div style="font-size: 0.8em; color: var(--muted);">vs SeeSR 68.04</div>
+            </div>
+            <div class="card-gold" style="text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.3rem;">DIV2K · MANIQA</div>
+                <div style="font-family: var(--font-serif); font-size: clamp(1.5rem, calc(2.8 * var(--_u)), 2rem); color: var(--highlight); font-weight: 600;">0.6611</div>
+                <div style="font-size: 0.8em; color: var(--muted);">vs InvSR 0.6424</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 37 — COMPARISON TABLE
+     ======================================================== -->
+<section class="slide glow-both" id="slide-37" aria-label="Comparison">
+    <div class="slide-header reveal">
+        <span class="slide-num">31</span>
+        <span class="slide-section">Synthesis</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">A <em>Unified</em> View</h2>
+
+        <div class="reveal delay-2" style="margin-top: var(--content-gap);">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Aspect</th><th>DiffPIR</th><th>OFTSR</th><th>MFSR</th><th>SMFSR</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Framework</td><td>PnP + Diffusion</td><td>Flow Matching</td><td>MeanFlow Distill.</td><td>SplitMeanFlow + GAN</td></tr>
+                    <tr><td>Steps</td><td><code>~100</code></td><td><code>1</code></td><td><code>1</code> (+ optional multi)</td><td><code>1</code></td></tr>
+                    <tr><td>Tasks</td><td>SR, Deblur, Inpaint</td><td>SR (+ AIGC enh.)</td><td>Real-world SR</td><td>Real-world SR</td></tr>
+                    <tr><td>Degradation</td><td>Known / synthetic</td><td>Synthetic + <code style="background:var(--green-dim);color:var(--green);">Real-world</code></td><td><code style="background:var(--green-dim);color:var(--green);">Real-world</code></td><td><code style="background:var(--green-dim);color:var(--green);">Real-world</code></td></tr>
+                    <tr><td>Start Point</td><td>Noise</td><td>Noise-aug. LR</td><td>Noise + LR cond.</td><td>Noise + LR cond.</td></tr>
+                    <tr><td>Key Innovation</td><td>Diffusion as PnP denoiser</td><td>Trajectory distillation</td><td>MeanFlow averaging</td><td>ISC + GAN refinement</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 38 — TAKEAWAYS
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-38" aria-label="Takeaways">
+    <div class="slide-header reveal">
+        <span class="slide-num">32</span>
+        <span class="slide-section">Conclusion</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Key <em>Takeaways</em></h2>
+
+        <div style="display: flex; flex-direction: column; gap: var(--element-gap); margin-top: var(--content-gap);">
+            <div class="card-gold reveal delay-2">
+                <div class="body-text"><span class="hl-gold" style="font-weight:500;">1.</span> Diffusion and flow models are <span class="hl-gold">powerful priors</span> for image restoration — far beyond discriminative denoisers</div>
+            </div>
+            <div class="card-gold reveal delay-3">
+                <div class="body-text"><span class="hl-gold" style="font-weight:500;">2.</span> Progressive efficiency: <span class="hl-gold">100 steps → 1 step</span> — distillation (trajectory, MeanFlow, SplitMeanFlow) is the key enabler</div>
+            </div>
+            <div class="card-gold reveal delay-4">
+                <div class="body-text"><span class="hl-gold" style="font-weight:500;">3.</span> Progressive generality: <span class="hl-blue">synthetic → real-world</span> — bridging the domain gap with task-specific design</div>
+            </div>
+            <div class="card-gold reveal delay-5">
+                <div class="body-text"><span class="hl-gold" style="font-weight:500;">4.</span> Design choices matter: <span class="hl-green">tunable trade-offs</span>, <span class="hl-rust">noise-started</span> generation, and refinement stages all reshape the quality–efficiency frontier</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 39 — FUTURE DIRECTIONS
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-39" aria-label="Future directions">
+    <div class="slide-header reveal">
+        <span class="slide-num">33</span>
+        <span class="slide-section">Conclusion</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">Future</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">Future <em>Directions</em></h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(0.6rem, calc(1.5 * var(--_u)), 1.5rem); margin-top: var(--content-gap);">
+            <div class="card-gold reveal delay-2" style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); letter-spacing: 0.1em;">01</div>
+                <div style="font-family: var(--font-serif); font-size: var(--h3-size); color: var(--text); font-weight: 600;">Test-Time Scaling</div>
+                <div class="body-text">Can we <span class="hl-gold">adaptively allocate compute</span> at inference? Use more steps for hard regions, fewer for easy ones — scaling quality with test-time budget.</div>
+            </div>
+            <div class="card-gold reveal delay-3" style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); letter-spacing: 0.1em;">02</div>
+                <div style="font-family: var(--font-serif); font-size: var(--h3-size); color: var(--text); font-weight: 600;">Reinforcement Learning</div>
+                <div class="body-text">Move beyond distillation — <span class="hl-gold">optimize generators directly</span> with reward signals (perceptual quality, human preference) via RL-based fine-tuning.</div>
+            </div>
+            <div class="card-gold reveal delay-4" style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); letter-spacing: 0.1em;">03</div>
+                <div style="font-family: var(--font-serif); font-size: var(--h3-size); color: var(--text); font-weight: 600;">Predictive Uncertainty</div>
+                <div class="body-text">Quantify <span class="hl-gold">where the model hallucinates</span> — per-object / per-region confidence maps that distinguish faithful reconstruction from plausible guesses. Critical for trustworthy use in medical, scientific, and forensic imaging.</div>
+            </div>
+        </div>
+
+        <div class="card reveal delay-5" style="margin-top: var(--content-gap);">
+            <div class="body-text" style="font-style: italic; text-align: center;">
+                Toward generative restoration that is <span class="hl-gold">fast</span>, <span class="hl-blue">controllable</span>, and <span class="hl-gold">self-aware</span> — bridging distillation, RL, and uncertainty quantification.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 40 — THANK YOU
+     ======================================================== -->
+<section class="slide section-divider scanlines glow-both" id="slide-40" aria-label="Thank you">
+    <div class="slide-content" style="gap: var(--content-gap); align-items: center; text-align: center;">
+        <div class="section-number reveal delay-1" style="opacity: 0.15;">Q&A</div>
+        <div class="section-label reveal delay-2" style="font-family: var(--font-serif); font-size: var(--h2-size); color: var(--text);">Thank You</div>
+
+        <div class="reveal delay-3" style="margin-top: var(--content-gap);">
+            <div class="paper-refs" style="align-items: center;">
+                <div class="paper-ref"><strong>DiffPIR</strong> · <a href="https://github.com/yuanzhi-zhu/DiffPIR" style="color: var(--blue); text-decoration: none;">github.com/yuanzhi-zhu/DiffPIR</a></div>
+                <div class="paper-ref"><strong>OFTSR</strong> · <a href="https://github.com/yuanzhi-zhu/OFTSR" style="color: var(--blue); text-decoration: none;">github.com/yuanzhi-zhu/OFTSR</a></div>
+                <div class="paper-ref"><strong>MFSR</strong> · <a href="https://arxiv.org/abs/2603.20690" style="color: var(--blue); text-decoration: none;">arXiv:2603.20690</a></div>
+            </div>
+        </div>
+
+        <div class="reveal delay-4" style="margin-top: var(--content-gap);">
+            <div class="author-name" style="font-size: clamp(2rem, calc(4 * var(--_u)), 3.5rem);">Yuanzhi Zhu</div>
+            <div class="author-sub"><a href="https://yuanzhi-zhu.github.io" style="color: var(--muted); text-decoration: none;">yuanzhi-zhu.github.io</a></div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 41 — BACKUP: FLOW MAPS UNIFICATION
+     ======================================================== -->
+<section class="slide glow-both" id="slide-41" aria-label="Flow maps unification">
+    <div class="slide-header reveal">
+        <span class="slide-num">backup</span>
+        <span class="slide-section">Flow Maps · A Unifying View</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-rust">Bonus</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">OFTSR &amp; MFSR are <em>Flow Maps</em></h2>
+
+        <div class="formula reveal delay-2" style="width: fit-content; align-self: center; font-size: clamp(1.5rem, calc(3 * var(--_u)), 2.2rem);">
+            <span class="comment">// Flow map: maps any state at time $t$ directly to the state at time $s$ along the PF-ODE</span>
+            $$f_\theta(\mathbf{x}_t,\, t,\, s) \;\approx\; \mathbf{x}_s$$
+        </div>
+
+        <div class="two-col reveal delay-3" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1fr;">
+            <div class="card-gold" style="border-left: 3px solid var(--blue);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--blue); letter-spacing: 0.15em; margin-bottom: 0.5rem;">PART II · OFTSR</div>
+                <div class="body-text" style="margin-bottom: 0.4rem;">Fixed source: $t = 0$ (noise-aug LR start)</div>
+                <div class="formula-sm" style="font-size: clamp(1.2rem, calc(2.1 * var(--_u)), 1.6rem);">$f_\theta(\mathbf{x}_0, 0, s) \approx \mathbf{x}_s$</div>
+                <div class="body-text" style="margin-top: 0.5rem; font-size: 0.9em; color: var(--muted);">Predict state at any output time $s$ from the fixed start.</div>
+            </div>
+            <div class="card-gold" style="border-left: 3px solid var(--highlight);">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); letter-spacing: 0.15em; margin-bottom: 0.5rem;">PART III · MFSR</div>
+                <div class="body-text" style="margin-bottom: 0.4rem;">Average-velocity parameterization:</div>
+                <div class="formula-sm" style="font-size: clamp(1.2rem, calc(2.1 * var(--_u)), 1.6rem);">$f_\theta(\mathbf{x}_t, t, s) = \mathbf{x}_t + (s-t)\,\mathbf{u}_\theta(\mathbf{x}_t, t, s)$</div>
+                <div class="body-text" style="margin-top: 0.5rem; font-size: 0.9em; color: var(--muted);">Any pair $(t, s)$ &mdash; enables one-step <em>and</em> multi-step refinement.</div>
+            </div>
+        </div>
+
+        <div class="card reveal delay-4" style="margin-top: var(--element-gap);">
+            <div class="body-text" style="font-style: italic; text-align: center;">
+                Other special cases: <span class="hl-blue">consistency models</span> (fixed target $s = 1$, any source $t$) &nbsp;·&nbsp; <span class="hl-green">flow matching</span> ($s \to t$, instantaneous velocity).
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 42 — BACKUP: REVERSE CONVOLUTION (CONCEPT)
+     ======================================================== -->
+<section class="slide glow-blue" id="slide-42" aria-label="Reverse convolution concept">
+    <div class="slide-header reveal">
+        <span class="slide-num">backup</span>
+        <span class="slide-section">Reverse Convolution · A Different Path</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-blue">ICCV 2025</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <div class="reveal delay-1">
+            <h2 class="slide-title">Reverse Convolution <span style="font-weight:300; font-style:italic; font-size:0.5em; color: var(--text2);">A True Inverse Operator for Restoration</span></h2>
+            <div class="body-text" style="color: var(--text2); font-size: 1.5em; margin-top: 0.8rem;">Huang, Liu, Zhang, Tai, Yang, Zeng, Zhang &mdash; <span style="color: var(--blue); font-weight: 600;">ICCV 2025</span></div>
+        </div>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1.1fr 1fr;">
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card" style="border-color: rgba(124,58,237,0.25); border-left: 3px solid var(--rust);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--rust); margin-bottom: 0.4rem;">PROBLEM</div>
+                    <div class="body-text">Transposed convolution is <span class="hl-rust">not a true inverse</span> of convolution &mdash; it just upsamples with learned filters.</div>
+                </div>
+                <div class="formula" style="font-size: clamp(1.2rem, calc(2.2 * var(--_u)), 1.7rem);">
+                    <span class="comment">// Forward: depthwise conv + downsample</span>
+                    $$\mathbf{Y} = (\mathbf{X} \otimes \mathbf{K})\!\downarrow_s$$
+                </div>
+                <div class="formula" style="font-size: clamp(1.15rem, calc(2.1 * var(--_u)), 1.65rem);">
+                    <span class="comment">// Inverse via regularized least-squares</span>
+                    $$\mathbf{X}^{*} = \arg\min_{\mathbf{X}}\;\| \mathbf{Y} - (\mathbf{X}\otimes\mathbf{K})\!\downarrow_s\|_F^2 + \lambda\,\|\mathbf{X} - \mathbf{X}_0\|_F^2$$
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <div class="card-gold">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">CLOSED-FORM (s = 1)</div>
+                    <div class="body-text" style="font-size: 0.95em;">
+                        $$\mathbf{X}^{*} = \mathcal{F}^{-1}\!\!\left(\frac{\overline{\mathcal{F}_K}\,\mathcal{F}_Y + \lambda\,\mathcal{F}_{X_0}}{|\mathcal{F}_K|^2 + \lambda}\right)$$
+                    </div>
+                    <div class="body-text" style="margin-top: 0.5rem; font-size: 0.85em; color: var(--muted); font-style: italic;">FFT-based &mdash; differentiable, $\mathcal{O}(N\log N)$.</div>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--green);">
+                    <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--green); margin-bottom: 0.4rem;">CONNECTION</div>
+                    <div class="body-text" style="font-size: 0.95em;">A learnable analog of the <span class="hl-gold">data step</span> we saw in DiffPIR &mdash; but baked into a single CNN layer.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ========================================================
+     SLIDE 43 — BACKUP: CONVERSENET RESULTS
+     ======================================================== -->
+<section class="slide glow-gold" id="slide-43" aria-label="ConverseNet results">
+    <div class="slide-header reveal">
+        <span class="slide-num">backup</span>
+        <span class="slide-section">ConverseNet · Drop-in Replacement</span>
+        <div class="header-spacer"></div>
+        <span class="badge badge-gold">Results</span>
+    </div>
+    <div class="slide-content" style="gap: var(--content-gap);">
+        <h2 class="slide-title reveal delay-1">A <em>Reverse-Conv Block</em> for Any Network</h2>
+
+        <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1fr 1.3fr;">
+            <div class="card-gold">
+                <div style="font-family: var(--font-mono); font-size: var(--small-size); color: var(--highlight); margin-bottom: 0.55rem;">CONVERSE2D BLOCK</div>
+                <div class="body-text" style="font-family: var(--font-mono); font-size: 0.95em; line-height: 1.9;">
+                    Converse2D<br>
+                    &nbsp;&nbsp;↓<br>
+                    LayerNorm<br>
+                    &nbsp;&nbsp;↓<br>
+                    1×1 Conv<br>
+                    &nbsp;&nbsp;↓<br>
+                    GELU
+                </div>
+                <div class="body-text" style="margin-top: 0.6rem; font-size: 0.85em; color: var(--muted); font-style: italic;">Transformer-like stack &mdash; replaces conv / transposed-conv layers.</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
+                <table class="data-table" style="font-size: clamp(0.8rem, calc(1.6 * var(--_u)), 1.05rem);">
+                    <thead>
+                        <tr><th>Task</th><th>Dataset</th><th>Conv</th><th>ConvT</th><th>Converse</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Denoise σ=25</td><td>Set12</td><td>30.64</td><td>30.61</td><td><strong style="color:var(--highlight);">30.70</strong></td></tr>
+                        <tr><td>Denoise σ=25</td><td>BSD68</td><td>29.30</td><td>29.29</td><td><strong style="color:var(--highlight);">29.36</strong></td></tr>
+                        <tr><td>SR ×4</td><td>Set5</td><td>32.23</td><td>32.09</td><td><strong style="color:var(--highlight);">32.25</strong></td></tr>
+                        <tr><td>SR ×4</td><td>Urban100</td><td>26.24</td><td>25.89</td><td><strong style="color:var(--highlight);">26.24</strong></td></tr>
+                        <tr><td>Deblur</td><td>BSD100</td><td>32.18</td><td>&mdash;</td><td><strong style="color:var(--highlight);">32.46</strong></td></tr>
+                        <tr><td>Deblur</td><td>Urban100</td><td>31.48</td><td>&mdash;</td><td><strong style="color:var(--highlight);">31.96</strong></td></tr>
+                    </tbody>
+                </table>
+                <div class="card" style="font-size: 0.95em;">
+                    <div class="body-text" style="font-style: italic;">
+                        Consistent gains across <span class="hl-gold">denoising · SR · deblurring</span> &mdash; a complementary, non-generative direction for image restoration.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================
+     JAVASCRIPT
+     ============================================ -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {
+        delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$',  right: '$',  display: false }
+        ],
+        throwOnError: false,
+        trust: true
+    });"></script>
+
+<script>
+/* =============================================
+   SLIDE PRESENTATION CONTROLLER
+   ============================================= */
+class SlidePresentation {
+    constructor() {
+        this.slides    = document.querySelectorAll('.slide');
+        this.total     = this.slides.length;
+        this.current   = 0;
+        this.$progress = document.getElementById('progressBar');
+        this.$counter  = document.getElementById('slideCounter');
+        this.$navDots  = document.getElementById('navDots');
+
+        this.setupObserver();
+        this.setupDots();
+        this.setupKeyboard();
+        this.setupTouch();
+        this.setupWheel();
+    }
+
+    setupObserver() {
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    const idx = Array.from(this.slides).indexOf(e.target);
+                    if (idx >= 0) this.updateUI(idx);
+                }
+            });
+        }, { threshold: 0.45 });
+        this.slides.forEach(s => obs.observe(s));
+    }
+
+    setupDots() {
+        this.slides.forEach((_, i) => {
+            const d = document.createElement('button');
+            d.className = 'nav-dot';
+            d.setAttribute('aria-label', `Slide ${i + 1}`);
+            d.addEventListener('click', () => this.go(i));
+            this.$navDots.appendChild(d);
+        });
+    }
+
+    updateUI(idx) {
+        this.current = idx;
+        this.$progress.style.width = ((idx + 1) / this.total * 100) + '%';
+        this.$counter.textContent =
+            String(idx + 1).padStart(2, '0') + ' / ' + String(this.total).padStart(2, '0');
+        this.$navDots.querySelectorAll('.nav-dot').forEach((d, i) =>
+            d.classList.toggle('active', i === idx)
+        );
+    }
+
+    go(idx) {
+        idx = Math.max(0, Math.min(this.total - 1, idx));
+        this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+    }
+    next() { this.go(this.current + 1); }
+    prev() { this.go(this.current - 1); }
+
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if (e.target.getAttribute('contenteditable')) return;
+            const map = {
+                ArrowDown: () => this.next(),  ArrowRight: () => this.next(),
+                ArrowUp:   () => this.prev(),  ArrowLeft:  () => this.prev(),
+                ' ':       () => this.next(),  PageDown:   () => this.next(),
+                PageUp:    () => this.prev(),  Home:       () => this.go(0),
+                End:       () => this.go(this.total - 1)
+            };
+            if (map[e.key]) { e.preventDefault(); map[e.key](); }
+        });
+    }
+
+    setupTouch() {
+        document.addEventListener('touchstart', e => {
+            this.touchY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const d = this.touchY - e.changedTouches[0].clientY;
+            if (Math.abs(d) > 45) d > 0 ? this.next() : this.prev();
+        }, { passive: true });
+    }
+
+    setupWheel() {
+        let t = null;
+        document.addEventListener('wheel', e => {
+            e.preventDefault();
+            if (t) return;
+            t = setTimeout(() => { t = null; }, 750);
+            e.deltaY > 0 ? this.next() : this.prev();
+        }, { passive: false });
+    }
+}
+
+const deck = new SlidePresentation();
+
+/* =============================================
+   INLINE EDITOR
+   ============================================= */
+class InlineEditor {
+    constructor() {
+        this.isActive    = false;
+        this.editables   = [];
+        this.$toggle     = document.getElementById('editToggle');
+        this.$save       = document.getElementById('saveBtn');
+        this.$hotzone    = document.getElementById('editHotzone');
+        this.hideTimer   = null;
+
+        this.$toggle.addEventListener('click', () => this.toggle());
+        this.setupHotzone();
+        this.setupKeyboard();
+        this.$save.addEventListener('click', () => this.exportFile());
+    }
+
+    setupHotzone() {
+        const show = () => {
+            clearTimeout(this.hideTimer);
+            this.$toggle.classList.add('show');
+        };
+        const hide = () => {
+            this.hideTimer = setTimeout(() => {
+                if (!this.isActive) this.$toggle.classList.remove('show');
+            }, 400);
+        };
+        this.$hotzone.addEventListener('mouseenter', show);
+        this.$hotzone.addEventListener('mouseleave', hide);
+        this.$hotzone.addEventListener('click', () => this.toggle());
+        this.$toggle.addEventListener('mouseenter', show);
+        this.$toggle.addEventListener('mouseleave', hide);
+    }
+
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable'))
+                this.toggle();
+        });
+    }
+
+    toggle() {
+        this.isActive = !this.isActive;
+        if (this.isActive) {
+            this.$toggle.textContent = '\u2713 done';
+            this.$toggle.classList.add('active', 'show');
+            this.$save.classList.add('show');
+            this.enable();
+        } else {
+            this.$toggle.textContent = '\u270F edit';
+            this.$toggle.classList.remove('active');
+            this.$save.classList.remove('show');
+            this.disable();
+            this.saveLocal();
+        }
+    }
+
+    enable() {
+        const sel = 'h1, h2, h3, p, li, td, .body-text, .author-name, .author-sub, .paper-ref, .title-tag, .slide-section';
+        this.editables = Array.from(document.querySelectorAll(sel));
+        this.editables.forEach(el => {
+            el.setAttribute('contenteditable', 'true');
+            el.setAttribute('spellcheck', 'false');
+        });
+    }
+
+    disable() {
+        this.editables.forEach(el => el.removeAttribute('contenteditable'));
+        this.editables = [];
+    }
+
+    saveLocal() {
+        try { localStorage.setItem('iip-slides-v1', document.body.innerHTML); } catch(e) {}
+    }
+
+    exportFile() {
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const a = Object.assign(document.createElement('a'), {
+            href: URL.createObjectURL(new Blob([html], { type: 'text/html' })),
+            download: 'from-diffusion-to-one-step-flow.html'
+        });
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+}
+
+const editor = new InlineEditor();
+</script>
+</body>
+</html>

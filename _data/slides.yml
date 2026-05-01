@@ -25,3 +25,7 @@
 - name: 'Distillation as Divergence Minimization'
   url: /documents/slides/OPD
   src: www  
+  
+- name: 'One-step Image Super-resolution'
+  url: /documents/slides/one_step_IR
+  src: www  
