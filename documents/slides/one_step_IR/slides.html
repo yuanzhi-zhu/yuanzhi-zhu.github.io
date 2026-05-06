@@ -369,10 +369,11 @@ h2.slide-title em {
 }
 .item-list li .marker {
     color: var(--highlight);
-    font-family: var(--font-mono);
-    font-size: 0.8em;
+    font-family: var(--font-hand);    /* hand-drawn glyph instead of monospace */
+    font-size: 0.95em;
+    font-weight: 400;
     flex-shrink: 0;
-    margin-top: 0.2em;
+    margin-top: 0.05em;
     min-width: 1.5em;
 }
 
@@ -940,7 +941,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
     </div>
 
     <div class="title-main">
-        <div class="title-tag">// Imaging in Paris · IHP · 05/12/2026</div>
+        <div class="title-tag">// Imaging in Paris · IHP · 12/May/2026</div>
 
         <div>
             <h1 class="title-h1">
@@ -1375,7 +1376,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
             </div>
             <div style="display: flex; flex-direction: column; gap: var(--element-gap);">
                 <p class="body-text">
-                    Yuanzhi Zhu, Kai Zhang, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool
+                    Yuanzhi Zhu, Kai Zhang&dagger;, Jingyun Liang, Jiezhang Cao, Bihan Wen, Radu Timofte, Luc Van Gool
                 </p>
                 <ul class="item-list">
                     <li><span class="marker">→</span><span>General framework for SR, deblurring, inpainting</span></li>
@@ -1628,7 +1629,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
                 <img src="materials/OFTSR/fig1a_overview.png" alt="OFTSR overview with tunable outputs" style="max-height: min(60vh, 500px); width: auto;">
             </div>
             <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
-                <p class="body-text">Yuanzhi Zhu*, Ruiqing Wang*, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang</p>
+                <p class="body-text">Yuanzhi Zhu*, Ruiqing Wang*, Shilin Lu, Junnan Li, Hanshu Yan, Kai Zhang&dagger;</p>
                 <ul class="item-list">
                     <li><span class="marker">→</span><span><span class="hl-gold">One-step</span> flow-based super-resolution</span></li>
                     <li><span class="marker">→</span><span><span class="hl-blue">Tunable</span> fidelity-realism trade-off at inference</span></li>
@@ -1918,7 +1919,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
                 <img src="materials/MFSR/fig1_results.png" alt="MFSR multi-step results on real-world images" style="max-height: min(60vh, 500px); width: auto;">
             </div>
             <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
-                <p class="body-text">Ruiqing Wang, Kai Zhang, Yuanzhi Zhu, Hanshu Yan, Shilin Lu, Jian Yang</p>
+                <p class="body-text">Ruiqing Wang, Kai Zhang&dagger;, Yuanzhi Zhu, Hanshu Yan, Shilin Lu, Jian Yang</p>
                 <ul class="item-list">
                     <li><span class="marker">→</span><span><span class="hl-gold">MeanFlow</span> distillation for one-step SR</span></li>
                     <li><span class="marker">→</span><span>Designed for <span class="hl-blue">real-world</span> degradations</span></li>
@@ -2183,7 +2184,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
                 <img src="materials/SMFSR/fig1_paradigms.png" alt="SMFSR three paradigms: multi-step, vanilla one-step, noise-started one-step" style="max-height: min(70vh, 580px); width: auto;">
             </div>
             <div style="display: flex; flex-direction: column; gap: var(--element-gap); max-width: 45%;">
-                <p class="body-text" style="color: var(--text2);">Wei Zhu, Kai Zhang, Yu Zheng, Lei Luo, Yong Guo, Jian Yang</p>
+                <p class="body-text" style="color: var(--text2);">Wei Zhu, Kai Zhang&dagger;, Yu Zheng, Lei Luo, Yong Guo, Jian Yang</p>
                 <ul class="item-list">
                     <li><span class="marker">→</span><span><span class="hl-gold">Noise-started</span> one-step Real-SR</span></li>
                     <li><span class="marker">→</span><span>Built on <span class="hl-blue">SplitMeanFlow</span> &mdash; an algebraic alternative to MeanFlow</span></li>
@@ -2446,7 +2447,7 @@ h2.slide-title em > .crayon-text, .title-h1 em > .crayon-text {
     <div class="slide-content" style="gap: var(--content-gap);">
         <div class="reveal delay-1">
             <h2 class="slide-title">Reverse Convolution <span style="font-weight:300; font-style:italic; font-size:0.5em; color: var(--text2);">A True Inverse Operator for Restoration</span></h2>
-            <div class="body-text" style="color: var(--text2); font-size: 1.5em; margin-top: 0.8rem;">Huang, Liu, Zhang, Tai, Yang, Zeng, Zhang &mdash; <span style="color: var(--blue); font-weight: 600;">ICCV 2025</span></div>
+            <div class="body-text" style="color: var(--text2); font-size: 1.5em; margin-top: 0.8rem;">Xuhong Huang, Shiqi Liu, Kai Zhang&dagger;, Ying Tai, Jian Yang, Hui Zeng, Lei Zhang &mdash; <span style="color: var(--blue); font-weight: 600;">ICCV 2025</span></div>
         </div>
 
         <div class="two-col reveal delay-2" style="margin-top: var(--content-gap); grid-template-columns: 1.1fr 1fr;">
