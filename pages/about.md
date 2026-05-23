@@ -49,9 +49,16 @@ permalink: /about/
     </div>
 </div>
 
-<div style="background:#f0f4ff; border-left:4px solid #3b82f6; padding:1rem; border-radius:0.5rem; margin:1rem 0;">
+<!-- <div style="background:#f0f4ff; border-left:4px solid #3b82f6; padding:1rem; border-radius:0.5rem; margin:1rem 0;">
   Scalable generative models (AR, diffusion, etc.) aim to capture data distributions by decomposing likelihoods, inherently requiring multi-step inference. 
   The goal of efficient generative modeling is to uncover principles that enable high-quality generation with minimal steps.
+</div> -->
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,700&display=swap" rel="stylesheet">
+
+<div style="background:#faf9f5; border-radius:0.8rem; padding:1.5rem 1.75rem; margin:1.5rem 0; font-family:Georgia, 'Times New Roman', serif; line-height:1.7;">
+  <span style="color:#1e3a5f; font-size:1.25em; font-style:italic; font-weight:600;">Viva la post-training!</span>
+  <span style="color:#4a5568;"> &mdash; pre-training fits the data; the rest is <span style="font-family:'Cormorant Garamond', Georgia, serif; font-style:italic; font-weight:700; font-size:1.6em; color:#1e3a5f; line-height:1;">craft</span>.</span>
 </div>
 
 <!-- <p style="color:rgb(254, 150, 15);">Do you see the future where human evolution enters cyber era -- or simply approaches extinction?</p> -->
